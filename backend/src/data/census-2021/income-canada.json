@@ -1,0 +1,26 @@
+{
+  "geography": "Canada",
+  "geographyCode": "CA",
+  "geographyType": "country",
+  "year": 2020,
+  "demographic": "all",
+  "demographicLabel": "All persons with employment income",
+  "demographicType": "all",
+  "percentiles": {
+    "p10": 5200,
+    "p25": 16900,
+    "p50": 37358,
+    "p75": 67800,
+    "p90": 102000,
+    "p95": 129700,
+    "p96": 137600,
+    "p97": 149300,
+    "p98": 168500,
+    "p99": 216200
+  },
+  "median": 37358,
+  "average": 53939,
+  "totalRecipients": 27000000,
+  "source": "Statistics Canada, Census of Population, 2021",
+  "notes": "Employment income in 2020 for the population aged 15 years and over with employment income"
+}
