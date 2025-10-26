@@ -57,7 +57,6 @@ income-comparison-canada/
 - **README.md**: Main project overview, features, API docs, and general information
 - **CLAUDE.md**: Documentation for Claude Code - provides context for AI-assisted development
 - **SETUP.md**: Step-by-step setup instructions for local development
-- **GITHUB_SETUP.md**: Instructions for pushing the project to GitHub
 - **CONTRIBUTING.md**: Guidelines for contributing to the project
 - **LICENSE**: MIT License for open source distribution
 - **.gitignore**: Specifies files/folders Git should ignore (node_modules, .env, etc.)
