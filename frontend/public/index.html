@@ -547,14 +547,14 @@
             // Create income brackets with the number of people in each bracket
             // Based on percentile data, we can calculate approximate distributions
             const brackets = [
-                { min: 0, max: 5200, midpoint: 2600, percentage: 10, label: '$0-$5K', percentileLabel: '0-10%' },
-                { min: 5200, max: 16900, midpoint: 11050, percentage: 15, label: '$5K-$17K', percentileLabel: '10-25%' },
-                { min: 16900, max: 37358, midpoint: 27129, percentage: 25, label: '$17K-$37K', percentileLabel: '25-50%' },
-                { min: 37358, max: 67800, midpoint: 52579, percentage: 25, label: '$37K-$68K', percentileLabel: '50-75%' },
-                { min: 67800, max: 102000, midpoint: 84900, percentage: 15, label: '$68K-$102K', percentileLabel: '75-90%' },
-                { min: 102000, max: 129700, midpoint: 115850, percentage: 5, label: '$102K-$130K', percentileLabel: '90-95%' },
-                { min: 129700, max: 216200, midpoint: 172950, percentage: 4, label: '$130K-$216K', percentileLabel: '95-99%' },
-                { min: 216200, max: 350000, midpoint: 283100, percentage: 1, label: '$216K+', percentileLabel: '99-100%' }
+                { min: 0, max: 5200, midpoint: 2600, percentage: 10, label: '$0-$5K', percentileLabel: '10%' },
+                { min: 5200, max: 16900, midpoint: 11050, percentage: 15, label: '$5K-$17K', percentileLabel: '25%' },
+                { min: 16900, max: 37358, midpoint: 27129, percentage: 25, label: '$17K-$37K', percentileLabel: '50%' },
+                { min: 37358, max: 67800, midpoint: 52579, percentage: 25, label: '$37K-$68K', percentileLabel: '75%' },
+                { min: 67800, max: 102000, midpoint: 84900, percentage: 15, label: '$68K-$102K', percentileLabel: '90%' },
+                { min: 102000, max: 129700, midpoint: 115850, percentage: 5, label: '$102K-$130K', percentileLabel: '95%' },
+                { min: 129700, max: 216200, midpoint: 172950, percentage: 4, label: '$130K-$216K', percentileLabel: '99%' },
+                { min: 216200, max: 350000, midpoint: 283100, percentage: 1, label: '$216K+', percentileLabel: '100%' }
             ];
             
             return brackets;
