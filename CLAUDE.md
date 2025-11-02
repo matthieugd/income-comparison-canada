@@ -1,218 +1,284 @@
-# Income Comparison Canada - Claude Code Guide
+# CLAUDE.md
 
-This document provides context for Claude Code to assist with development on this project.
+This document provides context for Claude (or other AI assistants) when working on this project.
 
 ## Project Overview
 
-A web application that allows Canadians to compare their employment income against national and regional distributions using Statistics Canada Census 2021 data. The app features an animated visualization showing where users fall in the income distribution.
+**Income Comparison Canada** is a web application that allows Canadians to compare their employment income against others in their age group using Statistics Canada Census 2021 data.
 
-## Architecture
+## Tech Stack
 
-### Frontend (React + Vite)
-- Located in `/frontend` directory
-- Built with React 18, Vite, Tailwind CSS
-- Main component: `IncomeDistributionViz.jsx` - interactive income distribution with animated character
-- Communicates with backend API for income data
+- **Backend**: Node.js + Express.js
+- **Frontend**: Vanilla HTML/CSS/JavaScript with Chart.js
+- **Data**: JSON files (no database)
+- **API**: RESTful endpoints
 
-### Backend (Node.js + Express)
-- Located in `/backend` directory
-- RESTful API serving census data
-- Data stored in JSON files, loaded into memory (no database)
-- CORS enabled for frontend communication
+## Project Structure
 
-## Key Components
+```
+income-comparison-canada/
+├── backend/
+│   ├── src/
+│   │   ├── data/census-2021/           # Age-specific income JSON files
+│   │   │   ├── income-canada.json      # All ages
+│   │   │   ├── income-canada-age-15-24.json
+│   │   │   ├── income-canada-age-25-34.json
+│   │   │   ├── income-canada-age-35-44.json
+│   │   │   ├── income-canada-age-45-54.json
+│   │   │   ├── income-canada-age-55-64.json
+│   │   │   └── income-canada-age-65plus.json
+│   │   ├── routes/
+│   │   │   └── incomeRoutes.js         # API endpoints
+│   │   ├── services/
+│   │   │   └── dataService.js          # Data loading & calculations
+│   │   └── server.js                   # Express server
+│   └── package.json
+├── frontend/
+│   └── public/
+│       └── index.html                  # Complete standalone app
+├── data/census-2021/                   # Documentation about data
+└── README.md
+```
 
-### Frontend Components
-1. **IncomeDistributionViz.jsx** - Main visualization component
-   - Canvas-based animated distribution curve
-   - Walking character animation
-   - Percentile calculation display
-   - Uses Census 2021 data via API
+## Key Concepts
 
-2. **App.jsx** - Main application wrapper
-   - Routing (if needed)
-   - Global state management
+### Age Groups
+The application divides income data into 6 age groups matching Statistics Canada Census categories:
+- 15-24 years
+- 25-34 years
+- 35-44 years
+- 45-54 years
+- 55-64 years
+- 65+ years
 
-### Backend Services
-1. **dataService.js** - Loads and manages census data
-   - Reads JSON files from `/backend/src/data/`
-   - Provides in-memory data access
-   - Calculates percentiles
-
-2. **incomeRoutes.js** - API endpoints
-   - `/api/income/percentile` - Calculate user's percentile
-   - `/api/income/distribution` - Get distribution data
-   - `/api/geographies` - List available regions
-   - `/api/demographics` - List demographic filters
-
-## Data Structure
-
-Census data is stored in JSON files with this structure:
-
+### Data Structure
+Each age group JSON file contains:
 ```json
 {
   "geography": "Canada",
   "geographyCode": "CA",
   "year": 2020,
-  "demographic": "all",
+  "demographic": "age-25-34",
+  "demographicLabel": "Age 25-34",
   "percentiles": {
-    "p10": 5200,
-    "p25": 16900,
-    "p50": 37358,
-    "p75": 67800,
-    "p90": 102000,
-    "p95": 129700,
-    "p99": 216200
+    "p10": 8200,
+    "p25": 22400,
+    "p50": 43500,
+    "p75": 65200,
+    "p90": 89500,
+    "p95": 108300,
+    "p96": 115100,
+    "p97": 123800,
+    "p98": 138400,
+    "p99": 174200
   },
-  "median": 37358,
-  "average": 53939,
-  "totalRecipients": 27000000
+  "median": 43500,
+  "average": 52100,
+  "totalRecipients": 4900000
 }
 ```
 
-## Development Workflow
+### API Endpoints
 
-### Running Locally
-1. Backend: `cd backend && npm run dev` (runs on port 3001)
-2. Frontend: `cd frontend && npm run dev` (runs on port 5173)
+#### POST /api/income/percentile
+Calculate income percentile for a user.
 
-### Common Tasks
+**Required Parameters:**
+- `income` (number): Annual employment income
+- `age` (number): User's age (15-100)
 
-#### Adding New Geographic Data
-1. Create JSON file in `backend/src/data/census-2021/`
-2. Follow naming convention: `income-{geography-code}.json`
-3. Restart backend server to reload data
+**Response:**
+```json
+{
+  "income": 75000,
+  "age": 45,
+  "ageGroup": "45-54",
+  "geography": "Canada",
+  "demographic": "Age 45-54",
+  "percentile": 72.8,
+  "belowYou": 72,
+  "aboveYou": 28,
+  "bracket": "Top 25%",
+  "median": {
+    "value": 51400,
+    "difference": 23600,
+    "percentDifference": 45.9
+  },
+  "average": {
+    "value": 67200,
+    "difference": 7800,
+    "percentDifference": 11.6
+  }
+}
+```
 
-#### Modifying the Visualization
-- Edit `frontend/src/components/IncomeDistributionViz.jsx`
-- Canvas drawing logic is in the `useEffect` hook
-- Animation logic uses `requestAnimationFrame`
+#### GET /api/income/distribution
+Get full distribution data for an age group.
 
-#### Adding New API Endpoints
-1. Add route in `backend/src/routes/incomeRoutes.js`
-2. Implement logic in `backend/src/services/incomeService.js`
-3. Update API documentation in README.md
+**Required Parameters:**
+- `age` (number): User's age (15-100)
 
-## Key Algorithms
-
-### Percentile Calculation
-Uses linear interpolation between known percentile points:
-- Given user income and percentile data
-- Find bracketing percentiles (e.g., between p75 and p90)
-- Interpolate position within that range
-
-### Distribution Curve Generation
-Creates a skewed distribution curve approximating income distribution:
-- Peak around 30-40th percentile
-- Long tail to the right (high earners)
-- Uses combination of quadratic rise and exponential decay
-
-## Dependencies
-
-### Frontend
-- `react` & `react-dom` - UI framework
-- `vite` - Build tool
-- `tailwindcss` - Styling
-- `lucide-react` - Icons
-- `recharts` - Additional charting
+## Code Conventions
 
 ### Backend
-- `express` - Web framework
-- `cors` - Cross-origin support
-- `dotenv` - Environment variables
-- `nodemon` - Development auto-reload
+- Use ES modules (`import`/`export`)
+- File-based data storage (no database)
+- All data loaded into memory on startup via `dataService.loadAllData()`
+- Percentile calculation uses linear interpolation
+- Age is mapped to demographic codes (e.g., 45 → "age-45-54")
 
-## Environment Variables
+### Frontend
+- Standalone HTML file (no build step required)
+- Uses Chart.js with chartjs-plugin-datalabels
+- Responsive design with media queries
+- Direct API calls with `fetch()`
+- Fallback to client-side calculation if API unavailable
 
-### Backend (.env)
-```
-PORT=3001
-NODE_ENV=development
-```
+## Important Design Decisions
 
-### Frontend (.env)
-```
-VITE_API_URL=http://localhost:3001
-```
+### Age is Mandatory
+The application requires age input because:
+1. Income varies significantly by age
+2. Comparing a 25-year-old to a 55-year-old isn't meaningful
+3. Age-specific comparisons are more actionable
 
-## Testing Approach
+### No Backward Compatibility
+The API was simplified to focus on the core use case:
+- Age parameter is required (not optional)
+- Removed geography/demographic parameters
+- Canada-wide data only
 
-### Manual Testing
-1. Test various income inputs (low, median, high, extreme)
-2. Verify percentile calculations against census data
-3. Check animation smoothness
-4. Test responsive design on mobile
+### Histogram vs Density Curve
+The visualization uses a histogram because:
+- More intuitive for general users
+- Clear representation of population distribution
+- Avoids mathematical complexity of density curves
 
-### API Testing
-Use curl or Postman to test endpoints:
+## When Making Changes
+
+### Adding New Age Groups
+1. Create new JSON file in `backend/src/data/census-2021/`
+2. Update `getAgeDemographic()` function in `incomeRoutes.js`
+3. Update `getAgeGroupLabel()` function in `incomeRoutes.js`
+4. Update frontend age validation
+
+### Adding Geographic Filters (Provinces/Cities)
+1. Add new JSON files with `geographyCode` field
+2. Re-add `geography` parameter to API endpoints
+3. Update `dataService.js` to handle geography lookups
+4. Update frontend to include geography selector
+
+### Modifying Percentile Calculation
+The calculation is in `backend/src/services/dataService.js`:
+- `calculatePercentile()` function uses linear interpolation
+- Handles edge cases (below P10, above P99)
+- Returns values between 0 and 99.9
+
+## Data Source
+
+All income data comes from:
+- **Source**: Statistics Canada, Census of Population 2021
+- **Reference Year**: 2020 (calendar year)
+- **Variable**: Employment income
+- **Definition**: "All income received as wages, salaries and commissions from paid employment and net self-employment income"
+- **Population**: Persons aged 15+ with employment income
+
+## Common Tasks
+
+### Testing the API
 ```bash
-curl "http://localhost:3001/api/income/percentile?income=65000"
+# Test each age group
+curl "http://localhost:3001/api/income/percentile?income=50000&age=25"
+curl "http://localhost:3001/api/income/percentile?income=50000&age=45"
+curl "http://localhost:3001/api/income/percentile?income=50000&age=65"
+
+# Test edge cases
+curl "http://localhost:3001/api/income/percentile?income=0&age=25"
+curl "http://localhost:3001/api/income/percentile?income=300000&age=45"
+
+# Test validation
+curl "http://localhost:3001/api/income/percentile?income=50000"  # Missing age
+curl "http://localhost:3001/api/income/percentile?income=50000&age=10"  # Invalid age
 ```
 
-## Code Style
+### Running the Application
+```bash
+# Backend (required)
+cd backend
+npm install
+npm start  # Runs on http://localhost:3001
 
-- Use ES6+ features (arrow functions, destructuring, etc.)
-- Functional React components with hooks
-- Async/await for asynchronous operations
-- Clear, descriptive variable names
-- Comments for complex logic
+# Frontend (choose one)
+# Option 1: Open directly in browser
+open frontend/public/index.html
 
-## Common Issues
+# Option 2: Serve with local server
+cd frontend
+npx serve public  # Runs on http://localhost:3000
+```
 
-### CORS Errors
-- Ensure backend CORS is configured to allow frontend origin
-- Check that API_URL in frontend matches backend address
+## Known Limitations
 
-### Data Loading Issues
-- Verify JSON files are valid
-- Check file paths in dataService.js
-- Ensure data files are in correct directory structure
-
-### Animation Performance
-- Canvas rendering can be intensive
-- Limit canvas redraw frequency if needed
-- Use requestAnimationFrame for smooth animations
+1. **Data is from 2020**: Most recent complete Census data available
+2. **Canada-wide only**: No provincial or city-level data currently
+3. **Employment income only**: Excludes investment income, pensions, transfers
+4. **No authentication**: Public API with no rate limiting
+5. **In-memory data**: Backend stores all data in RAM (acceptable for current dataset size)
 
 ## Future Enhancements
 
 Potential features to add:
-- [ ] Historical comparison (2019 vs 2020)
-- [ ] Cost of living adjustments by city
-- [ ] Occupation-based comparisons
-- [ ] After-tax income calculator
-- [ ] Social sharing of results
-- [ ] Multiple language support (FR/EN)
+- Provincial/city geographic filters
+- After-tax income calculator
+- Occupation-based comparisons
+- Historical trends (2015 vs 2020)
+- Cost of living adjustments by region
+- API rate limiting
+- Data caching
+- Progressive Web App (PWA) features
 
-## Resources
+## Debugging Tips
 
-- [Statistics Canada Census Data](https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/prof/index.cfm)
-- [React Documentation](https://react.dev)
-- [Express.js Documentation](https://expressjs.com)
-- [Canvas API Documentation](https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API)
+### API Not Returning Data
+1. Check if data files exist in `backend/src/data/census-2021/`
+2. Verify `dataService.loadAllData()` ran successfully on startup
+3. Check console for "✓ Loaded: ..." messages
+4. Verify age maps to correct demographic code
 
-## Project-Specific Conventions
+### Frontend Not Displaying Chart
+1. Check browser console for errors
+2. Verify Chart.js and plugins loaded correctly
+3. Ensure API is running and accessible
+4. Check CORS settings if running on different ports
 
-### File Naming
-- React components: PascalCase (e.g., `IncomeDistributionViz.jsx`)
-- Services/utilities: camelCase (e.g., `dataService.js`)
-- Data files: kebab-case (e.g., `income-canada.json`)
+### Percentile Seems Wrong
+1. Verify correct age group is being used
+2. Check percentile interpolation logic
+3. Compare against raw percentile values in JSON
+4. Remember: same income = different percentiles by age
 
-### Git Commit Messages
-- Use conventional commits format
-- Examples:
-  - `feat: add provincial comparison feature`
-  - `fix: correct percentile calculation for edge cases`
-  - `docs: update API documentation`
-  - `refactor: optimize data loading performance`
+## Getting Help
 
-## Contact & Support
+When asking Claude for help:
+1. Mention this file: "Review CLAUDE.md for context"
+2. Be specific about the issue
+3. Include relevant code snippets
+4. Specify which component (backend/frontend/API)
+5. Provide error messages if any
 
-This is an open-source project. For questions or contributions, please open an issue or pull request on GitHub.
+## Questions Claude Can Help With
+
+- "Add a new age group for ages 0-14"
+- "Change the histogram colors"
+- "Add provincial filtering"
+- "Optimize the percentile calculation"
+- "Make the visualization more mobile-friendly"
+- "Add an occupation field"
+- "Export results as PDF"
+- "Add unit tests"
+- "Implement API rate limiting"
 
 ---
 
-**Note for Claude Code:** When working on this project, prioritize:
-1. Data accuracy (percentile calculations must be correct)
-2. User experience (smooth animations, clear information)
-3. Code maintainability (clean, documented code)
-4. Performance (efficient data loading and rendering)
+**Last Updated**: November 2, 2025  
+**Project Version**: 2.0

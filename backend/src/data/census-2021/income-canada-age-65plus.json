@@ -1,0 +1,26 @@
+{
+  "geography": "Canada",
+  "geographyCode": "CA",
+  "geographyType": "country",
+  "year": 2020,
+  "demographic": "age-65plus",
+  "demographicLabel": "Age 65+",
+  "demographicType": "age",
+  "percentiles": {
+    "p10": 1200,
+    "p25": 4200,
+    "p50": 12800,
+    "p75": 30400,
+    "p90": 58600,
+    "p95": 83200,
+    "p96": 91800,
+    "p97": 102400,
+    "p98": 120600,
+    "p99": 172800
+  },
+  "median": 12800,
+  "average": 26400,
+  "totalRecipients": 4100000,
+  "source": "Statistics Canada, Census of Population, 2021",
+  "notes": "Employment income in 2020 for the population aged 65 years and over with employment income"
+}

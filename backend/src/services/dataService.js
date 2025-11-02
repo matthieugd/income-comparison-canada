@@ -26,9 +26,6 @@ export function loadAllData() {
       fs.mkdirSync(dataDir, { recursive: true });
     }
 
-    // Load default Canada data
-    loadDefaultData();
-
     // Read all JSON files from data directory
     const files = fs.readdirSync(dataDir).filter(file => file.endsWith('.json'));
     
@@ -77,50 +74,7 @@ export function loadAllData() {
 
   } catch (error) {
     console.error('Error loading data:', error);
-    // Ensure we have at least default data
-    loadDefaultData();
   }
-}
-
-/**
- * Load default Canada-wide data if no files exist
- */
-function loadDefaultData() {
-  const defaultData = {
-    geography: 'Canada',
-    geographyCode: 'CA',
-    geographyType: 'country',
-    year: 2020,
-    demographic: 'all',
-    demographicLabel: 'All persons',
-    percentiles: {
-      p10: 5200,
-      p25: 16900,
-      p50: 37358,
-      p75: 67800,
-      p90: 102000,
-      p95: 129700,
-      p96: 137600,
-      p97: 149300,
-      p98: 168500,
-      p99: 216200
-    },
-    median: 37358,
-    average: 53939,
-    totalRecipients: 27000000
-  };
-
-  dataStore.distributions.set('CA-all', defaultData);
-  
-  if (!dataStore.geographies.find(g => g.code === 'CA')) {
-    dataStore.geographies.push({
-      code: 'CA',
-      name: 'Canada',
-      type: 'country'
-    });
-  }
-
-  console.log('✓ Default Canada data loaded');
 }
 
 /**
@@ -129,12 +83,6 @@ function loadDefaultData() {
 export function getDistribution(geographyCode = 'CA', demographic = 'all') {
   const key = `${geographyCode}-${demographic}`;
   const data = dataStore.distributions.get(key);
-  
-  if (!data) {
-    // Fall back to 'all' demographic if specific demographic not found
-    const fallbackKey = `${geographyCode}-all`;
-    return dataStore.distributions.get(fallbackKey);
-  }
   
   return data;
 }

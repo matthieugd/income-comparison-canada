@@ -1,8 +1,6 @@
 import express from 'express';
 import { 
   getDistribution, 
-  getGeographies, 
-  getDemographics,
   calculatePercentile,
   getIncomeBracket
 } from '../services/dataService.js';
@@ -10,19 +8,43 @@ import {
 const router = express.Router();
 
 /**
+ * Helper function to determine age demographic code from age
+ */
+function getAgeDemographic(age) {
+  if (age >= 15 && age <= 24) return 'age-15-24';
+  if (age >= 25 && age <= 34) return 'age-25-34';
+  if (age >= 35 && age <= 44) return 'age-35-44';
+  if (age >= 45 && age <= 54) return 'age-45-54';
+  if (age >= 55 && age <= 64) return 'age-55-64';
+  if (age >= 65) return 'age-65plus';
+  return 'all';
+}
+
+/**
+ * Helper function to get age group label
+ */
+function getAgeGroupLabel(age) {
+  if (age >= 15 && age <= 24) return '15-24';
+  if (age >= 25 && age <= 34) return '25-34';
+  if (age >= 35 && age <= 44) return '35-44';
+  if (age >= 45 && age <= 54) return '45-54';
+  if (age >= 55 && age <= 64) return '55-64';
+  if (age >= 65) return '65+';
+  return null;
+}
+
+/**
  * GET /api/income/percentile
- * Calculate percentile rank for a given income
+ * Calculate percentile rank for a given income and age
  * 
  * Query params:
  *   - income (required): Annual employment income
- *   - geography (optional): Geography code (default: CA)
- *   - demographic (optional): Demographic filter (default: all)
+ *   - age (required): User's age (15-100)
  */
 router.get('/percentile', (req, res) => {
   try {
     const income = parseFloat(req.query.income);
-    const geography = req.query.geography || 'CA';
-    const demographic = req.query.demographic || 'all';
+    const age = parseInt(req.query.age);
 
     // Validate income
     if (isNaN(income) || income < 0) {
@@ -32,13 +54,24 @@ router.get('/percentile', (req, res) => {
       });
     }
 
+    // Validate age (required)
+    if (!req.query.age || isNaN(age) || age < 15 || age > 100) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'Age is required and must be between 15 and 100'
+      });
+    }
+
+    const demographic = getAgeDemographic(age);
+    const geography = 'CA';
+
     // Get distribution data
     const distribution = getDistribution(geography, demographic);
     
     if (!distribution) {
       return res.status(404).json({
         error: 'Not Found',
-        message: `No data found for geography: ${geography}, demographic: ${demographic}`
+        message: `No data found for age group: ${demographic}`
       });
     }
 
@@ -58,16 +91,17 @@ router.get('/percentile', (req, res) => {
     const diffFromAverage = income - average;
     const percentDiffFromAverage = ((diffFromAverage / average) * 100).toFixed(1);
 
-    // Estimate number of people below (rough approximation)
+    // Estimate number of people below
     const estimatedPeopleBelowYou = Math.floor((belowYou / 100) * distribution.totalRecipients);
 
     res.json({
       income,
+      age,
+      ageGroup: getAgeGroupLabel(age),
       geography: distribution.geography,
-      geographyCode: distribution.geographyCode,
-      demographic: distribution.demographicLabel || 'All persons',
+      demographic: distribution.demographicLabel,
       year: distribution.year,
-      percentile: Math.round(percentile * 10) / 10, // Round to 1 decimal
+      percentile: Math.round(percentile * 10) / 10,
       belowYou,
       aboveYou,
       bracket,
@@ -96,23 +130,30 @@ router.get('/percentile', (req, res) => {
 
 /**
  * GET /api/income/distribution
- * Get income distribution data
+ * Get income distribution data for an age group
  * 
  * Query params:
- *   - geography (optional): Geography code (default: CA)
- *   - demographic (optional): Demographic filter (default: all)
+ *   - age (required): User's age to determine age group
  */
 router.get('/distribution', (req, res) => {
   try {
-    const geography = req.query.geography || 'CA';
-    const demographic = req.query.demographic || 'all';
+    const age = parseInt(req.query.age);
+    
+    if (!req.query.age || isNaN(age) || age < 15 || age > 100) {
+      return res.status(400).json({
+        error: 'Bad Request',
+        message: 'Age is required and must be between 15 and 100'
+      });
+    }
 
+    const demographic = getAgeDemographic(age);
+    const geography = 'CA';
     const distribution = getDistribution(geography, demographic);
     
     if (!distribution) {
       return res.status(404).json({
         error: 'Not Found',
-        message: `No data found for geography: ${geography}, demographic: ${demographic}`
+        message: `No data found for age group`
       });
     }
 
@@ -123,46 +164,6 @@ router.get('/distribution', (req, res) => {
     res.status(500).json({
       error: 'Internal Server Error',
       message: 'Failed to fetch distribution data'
-    });
-  }
-});
-
-/**
- * GET /api/income/geographies
- * Get list of available geographies
- */
-router.get('/geographies', (req, res) => {
-  try {
-    const geographies = getGeographies();
-    res.json({
-      count: geographies.length,
-      geographies
-    });
-  } catch (error) {
-    console.error('Error fetching geographies:', error);
-    res.status(500).json({
-      error: 'Internal Server Error',
-      message: 'Failed to fetch geographies'
-    });
-  }
-});
-
-/**
- * GET /api/income/demographics
- * Get list of available demographic filters
- */
-router.get('/demographics', (req, res) => {
-  try {
-    const demographics = getDemographics();
-    res.json({
-      count: demographics.length,
-      demographics
-    });
-  } catch (error) {
-    console.error('Error fetching demographics:', error);
-    res.status(500).json({
-      error: 'Internal Server Error',
-      message: 'Failed to fetch demographics'
     });
   }
 });

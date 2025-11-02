@@ -1,0 +1,26 @@
+{
+  "geography": "Canada",
+  "geographyCode": "CA",
+  "geographyType": "country",
+  "year": 2020,
+  "demographic": "age-25-34",
+  "demographicLabel": "Age 25-34",
+  "demographicType": "age",
+  "percentiles": {
+    "p10": 8200,
+    "p25": 22400,
+    "p50": 43500,
+    "p75": 65200,
+    "p90": 89500,
+    "p95": 108300,
+    "p96": 115100,
+    "p97": 123800,
+    "p98": 138400,
+    "p99": 174200
+  },
+  "median": 43500,
+  "average": 52100,
+  "totalRecipients": 4900000,
+  "source": "Statistics Canada, Census of Population, 2021",
+  "notes": "Employment income in 2020 for the population aged 25-34 years with employment income"
+}
