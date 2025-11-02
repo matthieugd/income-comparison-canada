@@ -1,0 +1,25 @@
+{
+  "geography": "Canada",
+  "geographyCode": "CA",
+  "geographyType": "country",
+  "year": 2020,
+  "demographic": "age-30-34",
+  "demographicLabel": "Age 30-34",
+  "demographicType": "age",
+  "percentiles": {
+    "p10": 7700,
+    "p25": 22600,
+    "p50": 46400,
+    "p75": 72500,
+    "p90": 99000,
+    "p95": 119000,
+    "p96": 127000,
+    "p97": 137000,
+    "p98": 153000,
+    "p99": 186000
+  },
+  "median": 46400,
+  "average": 52550,
+  "source": "Statistics Canada, Census of Population, 2021",
+  "notes": "Wages, salaries and commissions in 2020 for the population aged 30-34 years with employment income"
+}

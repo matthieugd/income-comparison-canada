@@ -1,0 +1,25 @@
+{
+  "geography": "Canada",
+  "geographyCode": "CA",
+  "geographyType": "country",
+  "year": 2020,
+  "demographic": "age-50-54",
+  "demographicLabel": "Age 50-54",
+  "demographicType": "age",
+  "percentiles": {
+    "p10": 11900,
+    "p25": 32000,
+    "p50": 57600,
+    "p75": 91000,
+    "p90": 130000,
+    "p95": 168000,
+    "p96": 182000,
+    "p97": 204000,
+    "p98": 240000,
+    "p99": 324000
+  },
+  "median": 57600,
+  "average": 71900,
+  "source": "Statistics Canada, Census of Population, 2021",
+  "notes": "Wages, salaries and commissions in 2020 for the population aged 50-54 years with employment income"
+}

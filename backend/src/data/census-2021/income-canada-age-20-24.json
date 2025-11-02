@@ -1,0 +1,25 @@
+{
+  "geography": "Canada",
+  "geographyCode": "CA",
+  "geographyType": "country",
+  "year": 2020,
+  "demographic": "age-20-24",
+  "demographicLabel": "Age 20-24",
+  "demographicType": "age",
+  "percentiles": {
+    "p10": 2620,
+    "p25": 6900,
+    "p50": 15100,
+    "p75": 28600,
+    "p90": 44800,
+    "p95": 56000,
+    "p96": 60000,
+    "p97": 64500,
+    "p98": 71500,
+    "p99": 83000
+  },
+  "median": 15100,
+  "average": 20320,
+  "source": "Statistics Canada, Census of Population, 2021",
+  "notes": "Wages, salaries and commissions in 2020 for the population aged 20-24 years with employment income"
+}

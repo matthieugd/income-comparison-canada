@@ -11,11 +11,16 @@ const router = express.Router();
  * Helper function to determine age demographic code from age
  */
 function getAgeDemographic(age) {
-  if (age >= 15 && age <= 24) return 'age-15-24';
-  if (age >= 25 && age <= 34) return 'age-25-34';
-  if (age >= 35 && age <= 44) return 'age-35-44';
-  if (age >= 45 && age <= 54) return 'age-45-54';
-  if (age >= 55 && age <= 64) return 'age-55-64';
+  if (age >= 15 && age <= 19) return 'age-15-19';
+  if (age >= 20 && age <= 24) return 'age-20-24';
+  if (age >= 25 && age <= 29) return 'age-25-29';
+  if (age >= 30 && age <= 34) return 'age-30-34';
+  if (age >= 35 && age <= 39) return 'age-35-39';
+  if (age >= 40 && age <= 44) return 'age-40-44';
+  if (age >= 45 && age <= 49) return 'age-45-49';
+  if (age >= 50 && age <= 54) return 'age-50-54';
+  if (age >= 55 && age <= 59) return 'age-55-59';
+  if (age >= 60 && age <= 64) return 'age-60-64';
   if (age >= 65) return 'age-65plus';
   return 'all';
 }
@@ -24,11 +29,16 @@ function getAgeDemographic(age) {
  * Helper function to get age group label
  */
 function getAgeGroupLabel(age) {
-  if (age >= 15 && age <= 24) return '15-24';
-  if (age >= 25 && age <= 34) return '25-34';
-  if (age >= 35 && age <= 44) return '35-44';
-  if (age >= 45 && age <= 54) return '45-54';
-  if (age >= 55 && age <= 64) return '55-64';
+  if (age >= 15 && age <= 19) return '15-19';
+  if (age >= 20 && age <= 24) return '20-24';
+  if (age >= 25 && age <= 29) return '25-29';
+  if (age >= 30 && age <= 34) return '30-34';
+  if (age >= 35 && age <= 39) return '35-39';
+  if (age >= 40 && age <= 44) return '40-44';
+  if (age >= 45 && age <= 49) return '45-49';
+  if (age >= 50 && age <= 54) return '50-54';
+  if (age >= 55 && age <= 59) return '55-59';
+  if (age >= 60 && age <= 64) return '60-64';
   if (age >= 65) return '65+';
   return null;
 }

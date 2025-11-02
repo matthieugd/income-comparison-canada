@@ -493,83 +493,42 @@
     </div>
 
     <script>
-        // Census 2021 data - Employment Income 2020
-        const percentileData = {
-            p10: 5200,
-            p25: 16900,
-            p50: 37358,   // Median
-            p75: 67800,
-            p90: 102000,
-            p95: 129700,
-            p96: 137600,
-            p97: 149300,
-            p98: 168500,
-            p99: 216200
-        };
-        
-        const medianIncome = 37358;
-        const averageIncome = 53939;
-        
         let chart = null;
         
-        function calculatePercentile(userIncome) {
-            const percentiles = [
-                { p: 0, income: 0 },
-                { p: 10, income: percentileData.p10 },
-                { p: 25, income: percentileData.p25 },
-                { p: 50, income: percentileData.p50 },
-                { p: 75, income: percentileData.p75 },
-                { p: 90, income: percentileData.p90 },
-                { p: 95, income: percentileData.p95 },
-                { p: 96, income: percentileData.p96 },
-                { p: 97, income: percentileData.p97 },
-                { p: 98, income: percentileData.p98 },
-                { p: 99, income: percentileData.p99 },
-                { p: 100, income: 300000 }
-            ];
-            
-            // Find bracketing percentiles
-            for (let i = 0; i < percentiles.length - 1; i++) {
-                const lower = percentiles[i];
-                const upper = percentiles[i + 1];
-                
-                if (userIncome >= lower.income && userIncome <= upper.income) {
-                    // Linear interpolation
-                    const ratio = (userIncome - lower.income) / (upper.income - lower.income);
-                    return lower.p + ratio * (upper.p - lower.p);
-                }
-            }
-            
-            return userIncome > percentiles[percentiles.length - 1].income ? 99.9 : 0;
-        }
-        
-        function generateDistributionData() {
+        function generateDistributionData(percentiles) {
             // Create income brackets with the number of people in each bracket
             // Based on percentile data, we can calculate approximate distributions
+            const p10 = percentiles.p10;
+            const p25 = percentiles.p25;
+            const p50 = percentiles.p50;
+            const p75 = percentiles.p75;
+            const p90 = percentiles.p90;
+            const p95 = percentiles.p95;
+            const p99 = percentiles.p99;
+
             const brackets = [
-                { min: 0, max: 5200, midpoint: 2600, percentage: 10, label: '$0-$5K', percentileLabel: '10%' },
-                { min: 5200, max: 16900, midpoint: 11050, percentage: 15, label: '$5K-$17K', percentileLabel: '25%' },
-                { min: 16900, max: 37358, midpoint: 27129, percentage: 25, label: '$17K-$37K', percentileLabel: '50%' },
-                { min: 37358, max: 67800, midpoint: 52579, percentage: 25, label: '$37K-$68K', percentileLabel: '75%' },
-                { min: 67800, max: 102000, midpoint: 84900, percentage: 15, label: '$68K-$102K', percentileLabel: '90%' },
-                { min: 102000, max: 129700, midpoint: 115850, percentage: 5, label: '$102K-$130K', percentileLabel: '95%' },
-                { min: 129700, max: 216200, midpoint: 172950, percentage: 4, label: '$130K-$216K', percentileLabel: '99%' },
-                { min: 216200, max: 350000, midpoint: 283100, percentage: 1, label: '$216K+', percentileLabel: '100%' }
+                { min: 0, max: p10, midpoint: p10/2, percentage: 10, label: `$0-$${Math.round(p10/1000)}K`, percentileLabel: '10%' },
+                { min: p10, max: p25, midpoint: (p10+p25)/2, percentage: 15, label: `$${Math.round(p10/1000)}K-$${Math.round(p25/1000)}K`, percentileLabel: '25%' },
+                { min: p25, max: p50, midpoint: (p25+p50)/2, percentage: 25, label: `$${Math.round(p25/1000)}K-$${Math.round(p50/1000)}K`, percentileLabel: '50%' },
+                { min: p50, max: p75, midpoint: (p50+p75)/2, percentage: 25, label: `$${Math.round(p50/1000)}K-$${Math.round(p75/1000)}K`, percentileLabel: '75%' },
+                { min: p75, max: p90, midpoint: (p75+p90)/2, percentage: 15, label: `$${Math.round(p75/1000)}K-$${Math.round(p90/1000)}K`, percentileLabel: '90%' },
+                { min: p90, max: p95, midpoint: (p90+p95)/2, percentage: 5, label: `$${Math.round(p90/1000)}K-$${Math.round(p95/1000)}K`, percentileLabel: '95%' },
+                { min: p95, max: p99, midpoint: (p95+p99)/2, percentage: 4, label: `$${Math.round(p95/1000)}K-$${Math.round(p99/1000)}K`, percentileLabel: '99%' },
+                { min: p99, max: p99 * 1.5, midpoint: p99 * 1.25, percentage: 1, label: `$${Math.round(p99/1000)}K+`, percentileLabel: '100%' }
             ];
-            
+
             return brackets;
         }
         
-        function createChart(userIncome) {
+        function createChart(userIncome, percentiles) {
             const ctx = document.getElementById('distributionChart').getContext('2d');
-            
+
             if (chart) {
                 chart.destroy();
             }
-            
-            const brackets = generateDistributionData();
-            const userPercentile = calculatePercentile(userIncome);
-            
+
+            const brackets = generateDistributionData(percentiles);
+
             // Find which bracket the user falls into
             let userBracketIndex = -1;
             for (let i = 0; i < brackets.length; i++) {
@@ -660,13 +619,13 @@
             };
             
             const percentileLabels = [
-                { key: 'p10', label: 'P10', value: percentileData.p10 },
-                { key: 'p25', label: 'P25', value: percentileData.p25 },
-                { key: 'p50', label: 'Median', value: percentileData.p50 },
-                { key: 'p75', label: 'P75', value: percentileData.p75 },
-                { key: 'p90', label: 'P90', value: percentileData.p90 },
-                { key: 'p95', label: 'P95', value: percentileData.p95 },
-                { key: 'p99', label: 'P99', value: percentileData.p99 }
+                { key: 'p10', label: 'P10', value: percentiles.p10 },
+                { key: 'p25', label: 'P25', value: percentiles.p25 },
+                { key: 'p50', label: 'Median', value: percentiles.p50 },
+                { key: 'p75', label: 'P75', value: percentiles.p75 },
+                { key: 'p90', label: 'P90', value: percentiles.p90 },
+                { key: 'p95', label: 'P95', value: percentiles.p95 },
+                { key: 'p99', label: 'P99', value: percentiles.p99 }
             ];
             
             // No longer adding percentile border lines - they're now shown as labels on bars
@@ -757,18 +716,18 @@
             });
         }
         
-        function updateLegend() {
+        function updateLegend(percentiles) {
             const legendGrid = document.getElementById('legendGrid');
             const percentileLabels = [
-                { label: '10th Percentile (P10)', value: percentileData.p10 },
-                { label: '25th Percentile (P25)', value: percentileData.p25 },
-                { label: '50th Percentile (Median)', value: percentileData.p50 },
-                { label: '75th Percentile (P75)', value: percentileData.p75 },
-                { label: '90th Percentile (P90)', value: percentileData.p90 },
-                { label: '95th Percentile (P95)', value: percentileData.p95 },
-                { label: '99th Percentile (P99)', value: percentileData.p99 }
+                { label: '10th Percentile (P10)', value: percentiles.p10 },
+                { label: '25th Percentile (P25)', value: percentiles.p25 },
+                { label: '50th Percentile (Median)', value: percentiles.p50 },
+                { label: '75th Percentile (P75)', value: percentiles.p75 },
+                { label: '90th Percentile (P90)', value: percentiles.p90 },
+                { label: '95th Percentile (P95)', value: percentiles.p95 },
+                { label: '99th Percentile (P99)', value: percentiles.p99 }
             ];
-            
+
             legendGrid.innerHTML = percentileLabels.map(item => `
                 <div class="legend-item">
                     <div class="legend-percentile">${item.label}</div>
@@ -777,72 +736,70 @@
             `).join('');
         }
         
-        function calculatePosition() {
+        async function calculatePosition() {
             const income = parseFloat(document.getElementById('income').value);
             const age = parseInt(document.getElementById('age').value);
-            
+
             if (isNaN(income) || income < 0) {
                 alert('Please enter a valid income amount');
                 return;
             }
-            
+
             if (isNaN(age) || age < 15 || age > 100) {
                 alert('Please enter a valid age (15-100)');
                 return;
             }
-            
-            const percentile = calculatePercentile(income);
-            const diff = income - medianIncome;
-            const percentDiff = ((diff / medianIncome) * 100).toFixed(1);
-            
-            // Determine bracket
-            let bracket;
-            if (percentile >= 99) bracket = 'Top 1%';
-            else if (percentile >= 95) bracket = 'Top 5%';
-            else if (percentile >= 90) bracket = 'Top 10%';
-            else if (percentile >= 75) bracket = 'Top 25%';
-            else if (percentile >= 50) bracket = 'Above Median';
-            else if (percentile >= 25) bracket = 'Below Median';
-            else bracket = 'Bottom 25%';
-            
-            // Determine age group for display
-            let ageGroup;
-            if (age >= 15 && age <= 24) ageGroup = '15-24';
-            else if (age >= 25 && age <= 34) ageGroup = '25-34';
-            else if (age >= 35 && age <= 44) ageGroup = '35-44';
-            else if (age >= 45 && age <= 54) ageGroup = '45-54';
-            else if (age >= 55 && age <= 64) ageGroup = '55-64';
-            else ageGroup = '65+';
-            
-            // Generate message
-            let message = `<p><strong>At age ${age}, you earn more than ${percentile.toFixed(1)}% of Canadians with employment income in your age group (${ageGroup}).</strong></p>`;
-            
-            if (diff > 0) {
-                message += `<p>You earn $${Math.abs(diff).toLocaleString()} (${Math.abs(percentDiff)}%) <strong>more</strong> than the median Canadian worker ($${medianIncome.toLocaleString()}).</p>`;
-            } else if (diff < 0) {
-                message += `<p>You earn $${Math.abs(diff).toLocaleString()} (${Math.abs(percentDiff)}%) <strong>less</strong> than the median Canadian worker ($${medianIncome.toLocaleString()}).</p>`;
-            } else {
-                message += `<p>You earn exactly the median income ($${medianIncome.toLocaleString()}).</p>`;
+
+            try {
+                // Call the backend API
+                const response = await fetch(`http://localhost:3001/api/income/percentile?income=${income}&age=${age}`);
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data from API');
+                }
+
+                const data = await response.json();
+
+                // Generate message using API data
+                let message = `<p><strong>At age ${age}, you earn more than ${data.percentile.toFixed(1)}% of Canadians with employment income in your age group (${data.ageGroup}).</strong></p>`;
+
+                const diff = data.median.difference;
+                const percentDiff = Math.abs(data.median.percentDifference);
+
+                if (diff > 0) {
+                    message += `<p>You earn $${Math.abs(diff).toLocaleString()} (${percentDiff.toFixed(1)}%) <strong>more</strong> than the median income for your age group ($${data.median.value.toLocaleString()}).</p>`;
+                } else if (diff < 0) {
+                    message += `<p>You earn $${Math.abs(diff).toLocaleString()} (${percentDiff.toFixed(1)}%) <strong>less</strong> than the median income for your age group ($${data.median.value.toLocaleString()}).</p>`;
+                } else {
+                    message += `<p>You earn exactly the median income for your age group ($${data.median.value.toLocaleString()}).</p>`;
+                }
+
+                message += `<p>Income bracket: <strong>${data.bracket}</strong></p>`;
+
+                document.getElementById('message').innerHTML = message;
+
+                // Update URL with parameters for sharing
+                const url = new URL(window.location.href);
+                url.searchParams.set('income', income);
+                url.searchParams.set('age', age);
+                window.history.pushState({}, '', url);
+
+                // Fetch distribution data for the chart
+                const distResponse = await fetch(`http://localhost:3001/api/income/distribution?age=${age}`);
+                const distData = await distResponse.json();
+
+                // Show results and message box
+                document.getElementById('message').style.display = 'block';
+                document.getElementById('results').classList.add('show');
+                updateLegend(distData.percentiles);
+                createChart(income, distData.percentiles);
+
+                // Scroll to results
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error connecting to the backend API. Please make sure the server is running on port 3001.');
             }
-            
-            message += `<p>Income bracket: <strong>${bracket}</strong></p>`;
-            
-            document.getElementById('message').innerHTML = message;
-
-            // Update URL with parameters for sharing
-            const url = new URL(window.location.href);
-            url.searchParams.set('income', income);
-            url.searchParams.set('age', age);
-            window.history.pushState({}, '', url);
-
-            // Show results and message box
-            document.getElementById('message').style.display = 'block';
-            document.getElementById('results').classList.add('show');
-            updateLegend();
-            createChart(income);
-
-            // Scroll to results
-            document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
         }
         
         // Load values from URL parameters on page load

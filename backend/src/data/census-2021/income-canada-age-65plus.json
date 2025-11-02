@@ -7,20 +7,19 @@
   "demographicLabel": "Age 65+",
   "demographicType": "age",
   "percentiles": {
-    "p10": 1200,
-    "p25": 4200,
-    "p50": 12800,
-    "p75": 30400,
-    "p90": 58600,
-    "p95": 83200,
-    "p96": 91800,
-    "p97": 102400,
-    "p98": 120600,
-    "p99": 172800
+    "p10": 76,
+    "p25": 564,
+    "p50": 9700,
+    "p75": 38000,
+    "p90": 75000,
+    "p95": 108000,
+    "p96": 120000,
+    "p97": 139000,
+    "p98": 166000,
+    "p99": 226000
   },
-  "median": 12800,
-  "average": 26400,
-  "totalRecipients": 4100000,
+  "median": 9700,
+  "average": 29800,
   "source": "Statistics Canada, Census of Population, 2021",
-  "notes": "Employment income in 2020 for the population aged 65 years and over with employment income"
+  "notes": "Wages, salaries and commissions in 2020 for the population aged 65 years and over with employment income"
 }
