@@ -3,36 +3,30 @@
   "geographyCode": "CA",
   "year": 2020,
   "type": "household",
-  "source": "Statistics Canada - Annual Income Estimates for Census Families and Individuals (Table 11-10-0190-01)",
   "quintiles": {
     "q1": {
       "label": "First Quintile (Q1)",
-      "min": 0,
-      "max": 39927,
+      "average": 39927,
       "percentage": 20
     },
     "q2": {
       "label": "Second Quintile (Q2)",
-      "min": 39927,
-      "max": 80795,
+      "average": 80795,
       "percentage": 20
     },
     "q3": {
       "label": "Third Quintile (Q3)",
-      "min": 80795,
-      "max": 119126,
+      "average": 119126,
       "percentage": 20
     },
     "q4": {
       "label": "Fourth Quintile (Q4)",
-      "min": 119126,
-      "max": 172691,
+      "average": 172691,
       "percentage": 20
     },
     "q5": {
       "label": "Fifth Quintile (Q5)",
-      "min": 172691,
-      "max": 321756,
+      "average": 321756,
       "percentage": 20
     }
   }

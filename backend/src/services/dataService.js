@@ -175,6 +175,7 @@ export function getHouseholdData() {
 
 /**
  * Calculate which quintile a household income falls into
+ * Uses midpoints between quintile averages to determine boundaries
  */
 export function calculateHouseholdQuintile(income) {
   if (!dataStore.householdData || !dataStore.householdData.quintiles) {
@@ -182,57 +183,85 @@ export function calculateHouseholdQuintile(income) {
   }
 
   const quintiles = dataStore.householdData.quintiles;
+  const averages = [
+    quintiles.q1.average,
+    quintiles.q2.average,
+    quintiles.q3.average,
+    quintiles.q4.average,
+    quintiles.q5.average
+  ];
 
-  // Check each quintile
-  const quintileKeys = ['q1', 'q2', 'q3', 'q4', 'q5'];
-  for (let i = 0; i < quintileKeys.length; i++) {
-    const key = quintileKeys[i];
-    const quintile = quintiles[key];
-
-    if (income >= quintile.min && income < quintile.max) {
-      return {
-        quintile: i + 1,
-        label: quintile.label,
-        min: quintile.min,
-        max: quintile.max
-      };
-    }
+  // Calculate midpoints between quintile averages
+  const midpoints = [];
+  for (let i = 0; i < averages.length - 1; i++) {
+    midpoints.push((averages[i] + averages[i + 1]) / 2);
   }
 
-  // If income is above Q5 max, return Q5
+  // Determine which quintile based on midpoints
+  let quintileIndex = 0;
+  for (let i = 0; i < midpoints.length; i++) {
+    if (income < midpoints[i]) {
+      quintileIndex = i;
+      break;
+    }
+    quintileIndex = i + 1;
+  }
+
+  const quintileKeys = ['q1', 'q2', 'q3', 'q4', 'q5'];
+  const key = quintileKeys[quintileIndex];
+
   return {
-    quintile: 5,
-    label: quintiles.q5.label,
-    min: quintiles.q5.min,
-    max: quintiles.q5.max
+    quintile: quintileIndex + 1,
+    label: quintiles[key].label,
+    average: quintiles[key].average
   };
 }
 
 /**
  * Calculate percentile for household income based on quintiles
- * Returns approximate percentile (quintiles divide into 20% chunks)
+ * Uses linear interpolation between quintile averages
  */
 export function calculateHouseholdPercentile(income) {
+  const quintiles = dataStore.householdData.quintiles;
   const quintileInfo = calculateHouseholdQuintile(income);
-  const quintile = quintileInfo.quintile;
+  const quintileIndex = quintileInfo.quintile - 1;
 
-  // Calculate position within quintile
-  const quintileMin = quintileInfo.min;
-  const quintileMax = quintileInfo.max;
-  const range = quintileMax - quintileMin;
+  const averages = [
+    quintiles.q1.average,
+    quintiles.q2.average,
+    quintiles.q3.average,
+    quintiles.q4.average,
+    quintiles.q5.average
+  ];
 
-  // Avoid division by zero for the last quintile
-  let positionInQuintile = 0.5;
-  if (range > 0) {
-    positionInQuintile = (income - quintileMin) / range;
+  // Base percentile (middle of the quintile)
+  const basePercentile = quintileIndex * 20 + 10;
+
+  // For more accuracy, interpolate position within the quintile
+  let percentile = basePercentile;
+
+  if (quintileIndex === 0) {
+    // First quintile: interpolate between 0 and Q1-Q2 midpoint
+    const midpoint = (averages[0] + averages[1]) / 2;
+    const position = income / midpoint;
+    percentile = Math.min(20, position * 20);
+  } else if (quintileIndex === 4) {
+    // Last quintile: interpolate from Q4-Q5 midpoint onwards
+    const midpoint = (averages[3] + averages[4]) / 2;
+    if (income >= averages[4]) {
+      percentile = 90 + Math.min(9.9, (income / averages[4] - 1) * 10);
+    } else {
+      const position = (income - midpoint) / (averages[4] - midpoint);
+      percentile = 80 + position * 20;
+    }
+  } else {
+    // Middle quintiles: interpolate between midpoints
+    const lowerMidpoint = (averages[quintileIndex - 1] + averages[quintileIndex]) / 2;
+    const upperMidpoint = (averages[quintileIndex] + averages[quintileIndex + 1]) / 2;
+    const range = upperMidpoint - lowerMidpoint;
+    const position = (income - lowerMidpoint) / range;
+    percentile = (quintileIndex * 20) + (position * 20);
   }
-
-  // Each quintile represents 20% of households
-  // Base percentile is the start of the quintile
-  const basePercentile = (quintile - 1) * 20;
-
-  // Add position within quintile (0-20 percentage points)
-  const percentile = basePercentile + (positionInQuintile * 20);
 
   return Math.min(99.9, Math.max(0, percentile));
 }

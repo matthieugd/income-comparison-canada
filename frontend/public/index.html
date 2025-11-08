@@ -817,8 +817,8 @@
                     household_result_message_bracket: "Income bracket: <strong>{{bracket}}</strong>",
                     household_explanation_title: "💡 Understanding Quintiles",
                     household_quintile_definition: "<strong>What is a quintile?</strong> A quintile divides households into 5 equal groups of 20% each, based on income.",
-                    household_quintile_example: "<strong>Example:</strong> The <strong>First Quintile (Q1) ranges from {{q1_min}} to {{q1_max}}</strong>. This represents the bottom 20% of Canadian households by income.",
-                    household_quintile_middle: "<strong>The Third Quintile (Q3) ranges from {{q3_min}} to {{q3_max}}</strong>. This represents the middle 20% of households and is often considered \"middle class\" income.",
+                    household_quintile_example: "<strong>Example:</strong> The <strong>First Quintile (Q1) has an average income of {{q1_avg}}</strong>. This represents the bottom 20% of Canadian households by income.",
+                    household_quintile_middle: "<strong>The Third Quintile (Q3) has an average income of {{q3_avg}}</strong>. This represents the middle 20% of households and is often considered \"middle class\" income.",
                     quintile_q1: "First Quintile (Q1) - Bottom 20%",
                     quintile_q2: "Second Quintile (Q2)",
                     quintile_q3: "Third Quintile (Q3) - Middle 20%",
@@ -889,8 +889,8 @@
                     household_result_message_bracket: "Tranche de revenu : <strong>{{bracket}}</strong>",
                     household_explanation_title: "💡 Comprendre les Quintiles",
                     household_quintile_definition: "<strong>Qu'est-ce qu'un quintile?</strong> Un quintile divise les ménages en 5 groupes égaux de 20 % chacun, selon leur revenu.",
-                    household_quintile_example: "<strong>Exemple:</strong> Le <strong>Premier Quintile (Q1) va de {{q1_min}} à {{q1_max}}</strong>. Cela représente les 20 % des ménages canadiens ayant les revenus les plus faibles.",
-                    household_quintile_middle: "<strong>Le Troisième Quintile (Q3) va de {{q3_min}} à {{q3_max}}</strong>. Cela représente les 20 % des ménages au milieu et est souvent considéré comme le revenu de la \"classe moyenne\".",
+                    household_quintile_example: "<strong>Exemple:</strong> Le <strong>Premier Quintile (Q1) a un revenu moyen de {{q1_avg}}</strong>. Cela représente les 20 % des ménages canadiens ayant les revenus les plus faibles.",
+                    household_quintile_middle: "<strong>Le Troisième Quintile (Q3) a un revenu moyen de {{q3_avg}}</strong>. Cela représente les 20 % des ménages au milieu et est souvent considéré comme le revenu de la \"classe moyenne\".",
                     quintile_q1: "Premier Quintile (Q1) - 20 % Inférieur",
                     quintile_q2: "Deuxième Quintile (Q2)",
                     quintile_q3: "Troisième Quintile (Q3) - 20 % Moyen",
@@ -1325,10 +1325,11 @@
         }
 
         function updateQuintileExamples(quintiles) {
-            const q1_min = '$' + quintiles.q1.min.toLocaleString();
-            const q1_max = '$' + quintiles.q1.max.toLocaleString();
-            const q3_min = '$' + quintiles.q3.min.toLocaleString();
-            const q3_max = '$' + quintiles.q3.max.toLocaleString();
+            const q1_avg = '$' + quintiles.q1.average.toLocaleString();
+            const q2_avg = '$' + quintiles.q2.average.toLocaleString();
+            const q3_avg = '$' + quintiles.q3.average.toLocaleString();
+            const q4_avg = '$' + quintiles.q4.average.toLocaleString();
+            const q5_avg = '$' + quintiles.q5.average.toLocaleString();
 
             // Update legend title
             document.querySelector('.legend-title').innerHTML =
@@ -1344,10 +1345,10 @@
 
             // Update examples
             document.getElementById('percentileExample').innerHTML =
-                i18next.t('household_quintile_example', { q1_min: q1_min, q1_max: q1_max });
+                i18next.t('household_quintile_example', { q1_avg: q1_avg });
 
             document.getElementById('medianExample').innerHTML =
-                i18next.t('household_quintile_middle', { q3_min: q3_min, q3_max: q3_max });
+                i18next.t('household_quintile_middle', { q3_avg: q3_avg });
         }
         
         async function calculateIndividual() {
@@ -1440,44 +1441,64 @@
 
         // Generate distribution data for household income (quintile-based)
         function generateHouseholdDistributionData(quintiles) {
-            // Create 5 brackets based on quintiles using actual data
+            // Extract averages
+            const averages = [
+                quintiles.q1.average,
+                quintiles.q2.average,
+                quintiles.q3.average,
+                quintiles.q4.average,
+                quintiles.q5.average
+            ];
+
+            // Calculate midpoints between averages to create boundaries
+            const midpoints = [];
+            for (let i = 0; i < averages.length - 1; i++) {
+                midpoints.push((averages[i] + averages[i + 1]) / 2);
+            }
+
+            // Create 5 brackets based on quintiles using calculated boundaries
             const brackets = [
                 {
-                    label: formatCurrencyK(quintiles.q1.min) + ' - ' + formatCurrencyK(quintiles.q1.max),
-                    min: quintiles.q1.min,
-                    max: quintiles.q1.max,
+                    label: '$0 - ' + formatCurrencyK(midpoints[0]),
+                    min: 0,
+                    max: midpoints[0],
+                    average: averages[0],
                     percentage: 20,
                     percentileLabel: 'Q1 (0-20th)',
                     quintile: 1
                 },
                 {
-                    label: formatCurrencyK(quintiles.q2.min) + ' - ' + formatCurrencyK(quintiles.q2.max),
-                    min: quintiles.q2.min,
-                    max: quintiles.q2.max,
+                    label: formatCurrencyK(midpoints[0]) + ' - ' + formatCurrencyK(midpoints[1]),
+                    min: midpoints[0],
+                    max: midpoints[1],
+                    average: averages[1],
                     percentage: 20,
                     percentileLabel: 'Q2 (20-40th)',
                     quintile: 2
                 },
                 {
-                    label: formatCurrencyK(quintiles.q3.min) + ' - ' + formatCurrencyK(quintiles.q3.max),
-                    min: quintiles.q3.min,
-                    max: quintiles.q3.max,
+                    label: formatCurrencyK(midpoints[1]) + ' - ' + formatCurrencyK(midpoints[2]),
+                    min: midpoints[1],
+                    max: midpoints[2],
+                    average: averages[2],
                     percentage: 20,
                     percentileLabel: 'Q3 (40-60th)',
                     quintile: 3
                 },
                 {
-                    label: formatCurrencyK(quintiles.q4.min) + ' - ' + formatCurrencyK(quintiles.q4.max),
-                    min: quintiles.q4.min,
-                    max: quintiles.q4.max,
+                    label: formatCurrencyK(midpoints[2]) + ' - ' + formatCurrencyK(midpoints[3]),
+                    min: midpoints[2],
+                    max: midpoints[3],
+                    average: averages[3],
                     percentage: 20,
                     percentileLabel: 'Q4 (60-80th)',
                     quintile: 4
                 },
                 {
-                    label: formatCurrencyK(quintiles.q5.min) + '+',
-                    min: quintiles.q5.min,
-                    max: quintiles.q5.max,
+                    label: formatCurrencyK(midpoints[3]) + '+',
+                    min: midpoints[3],
+                    max: averages[4] * 1.5, // Extend beyond Q5 average
+                    average: averages[4],
                     percentage: 20,
                     percentileLabel: 'Q5 (80-100th)',
                     quintile: 5
@@ -1550,17 +1571,17 @@
             const legendGrid = document.getElementById('legendGrid');
 
             const quintileLabels = [
-                { key: 'quintile_q1', min: householdData.quintiles.q1.min, max: householdData.quintiles.q1.max },
-                { key: 'quintile_q2', min: householdData.quintiles.q2.min, max: householdData.quintiles.q2.max },
-                { key: 'quintile_q3', min: householdData.quintiles.q3.min, max: householdData.quintiles.q3.max },
-                { key: 'quintile_q4', min: householdData.quintiles.q4.min, max: householdData.quintiles.q4.max },
-                { key: 'quintile_q5', min: householdData.quintiles.q5.min, max: householdData.quintiles.q5.max }
+                { key: 'quintile_q1', average: householdData.quintiles.q1.average },
+                { key: 'quintile_q2', average: householdData.quintiles.q2.average },
+                { key: 'quintile_q3', average: householdData.quintiles.q3.average },
+                { key: 'quintile_q4', average: householdData.quintiles.q4.average },
+                { key: 'quintile_q5', average: householdData.quintiles.q5.average }
             ];
 
             legendGrid.innerHTML = quintileLabels.map(item => `
                 <div class="legend-item">
                     <div class="legend-percentile">${i18next.t(item.key)}</div>
-                    <div class="legend-income">$${item.min.toLocaleString()} - $${item.max.toLocaleString()}</div>
+                    <div class="legend-income">Avg: $${item.average.toLocaleString()}</div>
                 </div>
             `).join('');
         }
