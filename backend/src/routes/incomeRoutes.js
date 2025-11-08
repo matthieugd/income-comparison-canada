@@ -217,9 +217,6 @@ router.get('/household-percentile', (req, res) => {
     const aboveYou = 100 - belowYou;
     const bracket = getHouseholdBracket(quintileInfo.quintile);
 
-    // Estimate number of households below
-    const estimatedHouseholdsBelowYou = Math.floor((belowYou / 100) * householdData.totalHouseholds);
-
     res.json({
       income,
       geography: householdData.geography,
@@ -229,9 +226,7 @@ router.get('/household-percentile', (req, res) => {
       percentile: Math.round(percentile * 10) / 10,
       belowYou,
       aboveYou,
-      bracket,
-      estimatedHouseholdsBelowYou,
-      totalHouseholds: householdData.totalHouseholds
+      bracket
     });
 
   } catch (error) {

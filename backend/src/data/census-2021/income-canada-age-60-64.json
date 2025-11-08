@@ -19,7 +19,5 @@
     "p99": 276000
   },
   "median": 40000,
-  "average": 54450,
-  "source": "Statistics Canada, Census of Population, 2021",
-  "notes": "Wages, salaries and commissions in 2020 for the population aged 60-64 years with employment income"
+  "average": 54450
 }
