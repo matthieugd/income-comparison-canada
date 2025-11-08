@@ -4,7 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Income Comparison - Canada</title>
+    <meta name="description" content="Compare your salary to Canadian income distribution using Statistics Canada 2021 Census data. Find out where your income stands by age group with detailed percentile analysis.">
+    <meta name="keywords" content="Canada salary comparison, income percentile, Statistics Canada, census data, wage comparison, Canadian income distribution">
+    <link rel="canonical" href="https://yoursite.com/">
+
+    <!-- Open Graph / Social Media -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://yoursite.com/">
+    <meta property="og:title" content="Compare Your Salary In Canada">
+    <meta property="og:description" content="Compare your income against Canadian income distribution using Statistics Canada 2021 Census data. See where you stand by age group.">
+    <meta property="og:site_name" content="Income Comparison Canada">
+
+    <!-- Twitter Card -->
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Compare Your Salary In Canada">
+    <meta name="twitter:description" content="Compare your income against Canadian income distribution using Statistics Canada 2021 Census data.">
+
+    <!-- Language Alternates -->
+    <link rel="alternate" hreflang="en" href="https://yoursite.com/?lang=en">
+    <link rel="alternate" hreflang="fr" href="https://yoursite.com/?lang=fr">
+    <link rel="alternate" hreflang="x-default" href="https://yoursite.com/">
+
+    <!-- Favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💰</text></svg>">
+
+    <!-- Preconnect to CDNs for performance -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net">
+    <link rel="dns-prefetch" href="https://cdn.jsdelivr.net">
+
+    <!-- Structured Data -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "Income Comparison Canada",
+      "description": "Compare your salary against Canadian income distribution using Statistics Canada 2021 Census data",
+      "url": "https://yoursite.com/",
+      "applicationCategory": "FinanceApplication",
+      "operatingSystem": "Any",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "CAD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Matthieu Guyonnet-Duluc"
+      },
+      "inLanguage": ["en", "fr"],
+      "isAccessibleForFree": true
+    }
+    </script>
+
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
@@ -696,12 +747,25 @@
     </div>
 
     <script>
+        // ============================================
+        // Income Comparison Canada - Main Application
+        // ============================================
+        // NOTE: For production, minify this script using:
+        // - Terser (https://terser.org/) for JavaScript
+        // - cssnano for CSS (inline in <style> tag above)
+        // - html-minifier for HTML
+        // Or use an online tool like: https://www.toptal.com/developers/javascript-minifier
+        // ============================================
+
         // i18next initialization
         const translations = {
             en: {
                 translation: {
                     title: "🇨🇦 Compare Your Salary In Canada",
                     subtitle: "Compare your income against Canadian income distribution.",
+                    meta_description: "Compare your salary to Canadian income distribution using Statistics Canada 2021 Census data. Find out where your income stands by age group with detailed percentile analysis.",
+                    og_title: "Compare Your Salary In Canada",
+                    og_description: "Compare your income against Canadian income distribution using Statistics Canada 2021 Census data. See where you stand by age group.",
                     income_label: "Your annual wage ($)",
                     income_placeholder: "65000",
                     age_label: "Your age",
@@ -769,6 +833,9 @@
                 translation: {
                     title: "🇨🇦 Comparez Votre Salaire au Canada",
                     subtitle: "Comparez votre salaire avec la distribution des revenus canadiens.",
+                    meta_description: "Comparez votre salaire à la distribution des revenus canadiens en utilisant les données du recensement 2021 de Statistique Canada. Découvrez où se situe votre revenu par groupe d'âge avec une analyse détaillée des percentiles.",
+                    og_title: "Comparez Votre Salaire au Canada",
+                    og_description: "Comparez votre revenu à la distribution des revenus canadiens en utilisant les données du recensement 2021 de Statistique Canada. Découvrez où vous vous situez par groupe d'âge.",
                     income_label: "Votre salaire annuel ($)",
                     income_placeholder: "65000",
                     age_label: "Votre âge",
@@ -868,6 +935,13 @@
             // Update document title and HTML lang attribute using the same translation as h1
             document.documentElement.lang = currentLanguage;
             document.title = i18next.t('title');
+
+            // Update SEO meta tags
+            document.querySelector('meta[name="description"]').setAttribute('content', i18next.t('meta_description'));
+            document.querySelector('meta[property="og:title"]').setAttribute('content', i18next.t('og_title'));
+            document.querySelector('meta[property="og:description"]').setAttribute('content', i18next.t('og_description'));
+            document.querySelector('meta[name="twitter:title"]').setAttribute('content', i18next.t('og_title'));
+            document.querySelector('meta[name="twitter:description"]').setAttribute('content', i18next.t('og_description'));
         }
 
         // Language switcher function
