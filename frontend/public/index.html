@@ -254,6 +254,31 @@
             font-size: 0.95em;
         }
 
+        .footer {
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid #e0e0e0;
+            text-align: center;
+            font-size: 0.85em;
+            color: #666;
+        }
+
+        .footer p {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+
+        .footer a {
+            color: #d52b1e;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer a:hover {
+            color: #a32216;
+            text-decoration: underline;
+        }
+
         .language-switcher {
             position: absolute;
             top: 20px;
@@ -618,48 +643,54 @@
             <h2 class="faq-title" data-i18n="faq_title">❓ Frequently Asked Questions</h2>
 
             <div class="faq-item">
-                <div class="faq-question" data-i18n="faq1_question">What's the purpose of their website?</div>
+                <div class="faq-question" data-i18n="faq1_question">What's the purpose of this website?</div>
                 <div class="faq-answer" data-i18n="[html]faq1_answer">
-                    We often heard talking about the "average salary" in Canada, but averages can be misleading due to high earners skewing the data. This website aims to provide a clearer picture of income distribution using percentiles, allowing individuals to see how their earnings compare to others in Canada based on reliable census data and annual surveys.
+                    We often hear about the "average salary" in Canada, but averages can be misleading due to high earners skewing the data. This website aims to provide a clearer picture of income distribution using percentiles, allowing individuals to see how their earnings compare to others in Canada based on reliable census data and annual surveys.
                 </div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question" data-i18n="faq6_question">What's the difference between Individual Salary and Household Income comparisons?</div>
                 <div class="faq-answer" data-i18n="[html]faq6_answer">
-                    <strong>Individual Salary</strong> compares your personal employment income to other individuals in your age group using detailed census percentile data. <strong>Household Income</strong> compares the combined income of all people in your household to other Canadian households using quintile data. These income annual surveys measure <strong>household-level income</strong> rather than individual earnings. They also use broader economic concepts like "compensation" that include employer benefits and contributions, which don't match what people think of as their "salary." The Census provides <strong>individual wage and salaries</strong> data with detailed percentiles, making it much better for personal comparisons. The trade-off is that Census data is only updated every 5 years, while household surveys are annual.
+                    <strong>Individual Salary</strong> compares your personal employment income (wages and salaries) to other individuals in your age group using detailed census percentile data (P10, P25, P50, P75, P90, P95, P99). This is best for understanding where your personal earnings stand. <strong>Household Income</strong> compares the combined income of all people in your household to other Canadian households using quintile data (5 groups of 20% each). This gives a broader picture of your household's economic situation, regardless of how many earners contribute. Note that household data is not age-specific and uses broader income ranges.
                 </div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question" data-i18n="faq2_question">Where does this data come from?</div>
                 <div class="faq-answer" data-i18n="[html]faq2_answer">
-                    This data comes from <strong><a href="https://www12.statcan.gc.ca/census-recensement/index-eng.cfm" title="Census wesbite">Statistics Canada's Census of Population 2021</a></strong>, which is the most comprehensive and reliable source for income distribution in Canada. The census surveys millions of Canadians and provides official government statistics on employment income. The household income data comes from Statistics Canada's annual <strong><a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610058701" title="Household income survey">Household Income Survey (table 36-10-0587-01)</a></strong>.
+                    The individual salary data comes from <strong><a href="https://www12.statcan.gc.ca/census-recensement/index-eng.cfm" title="Census website">Statistics Canada's Census of Population 2021</a></strong>, which is the most comprehensive and reliable source for income distribution in Canada. The census surveys millions of Canadians and provides official government statistics on employment income. The household income data comes from Statistics Canada's annual <strong><a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610058701" title="Household income survey">Household Income Survey (table 36-10-0587-01)</a></strong>.
                 </div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question" data-i18n="faq3_question">How current is this data?</div>
                 <div class="faq-answer" data-i18n="[html]faq3_answer">
-                    The income data reflects the <strong>2020 calendar year</strong> (collected during the 2021 Census). While this is the most recent comprehensive census data available, please note that income levels and distributions may have changed since 2020 due to inflation, economic growth, and other factors. The website will be updated when the next census data will be available in 2026-2027. For the household income data, it reflects the <strong>2024 calendar year</strong> (collected during the 2025 survey). This is the most recent annual household income data available from Statistics Canada.
+                    The individual salary data reflects the <strong>2020 calendar year</strong> (collected during the 2021 Census). While this is the most recent comprehensive census data available, please note that income levels and distributions may have changed since 2020 due to inflation, economic growth, and other factors. The website will be updated when the next census data becomes available in 2026-2027. The household income data reflects the <strong>2024 calendar year</strong> (collected during the 2025 survey). This is the most recent annual household income data available from Statistics Canada.
                 </div>
             </div>
 
             <div class="faq-item">
-                <div class="faq-question" data-i18n="faq5_question">What does "wage" include?</div>
-                <div class="faq-answer" data-i18n="[html]faq5_answer">
-                    Gross wages and salaries before deductions for such items as income taxes, pension plan contributions and employment insurance premiums during the reference period. <a href="https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-eng.cfm?ID=pop128" title="Statistics Canada definition">Source</a>
+                <div class="faq-question" data-i18n="faq4_question">What does "wage" include?</div>
+                <div class="faq-answer" data-i18n="[html]faq4_answer">
+                    Gross wages and salaries before deductions for such items as income taxes, pension plan contributions, and employment insurance premiums during the reference period. <a href="https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-eng.cfm?ID=pop128" title="Statistics Canada definition">Source</a>
                 </div>
             </div>
 
             <div class="faq-item">
                 <div class="faq-question" data-i18n="faq5_question">What does "household income" include?</div>
                 <div class="faq-answer" data-i18n="[html]faq5_answer">
-                    It's based on the table Household Income Survey (table 36-10-0587-01) which doesn't have the same level of details as the census income data. To get an approximation of the income as we think (i.e. the one we see in our employement contract before taxes) we added back to the disposable income the "current transfers paid".
+                    It's based on the Household Income Survey (table 36-10-0587-01), which doesn't have the same level of detail as the census income data. To get an approximation of the income as we commonly think of it (i.e., the amount we see in our employment contract before taxes), we added back the "current transfers paid" to the disposable income.
                 </div>
             </div>
 
-            
+
+        </div>
+
+        <div class="footer">
+            <p data-i18n="[html]footer_author">Created by <a href="https://matthieugd.com" target="_blank" rel="noopener noreferrer">Matthieu Guyonnet-Duluc</a>.</p>
+            <p data-i18n="[html]footer_thanks">Special thanks to <a href="https://x.com/PhilSmith26" target="_blank" rel="noopener noreferrer">Philip Smith</a> for his invaluable help. Any errors are my own.</p>
+            <p data-i18n="[html]footer_contact">Questions or feedback? <a href="https://matthieugd.com" target="_blank" rel="noopener noreferrer">Contact me</a>.</p>
         </div>
     </div>
 
@@ -682,15 +713,15 @@
                     median_example: "<strong>The median (P50) is ${{p50}}</strong>. This is the middle point where exactly 50% of people earn less and 50% earn more. It's the most common way to describe \"typical\" income.",
                     faq_title: "❓ Frequently Asked Questions",
                     faq1_question: "What's the purpose of this website?",
-                    faq1_answer: "We often hear about the \"average salary\" in Canada, but averages can be misleading due to high earners skewing the data. This website aims to provide a clearer picture of income distribution using percentiles, allowing individuals to see how their earnings compare to others in Canada based on reliable census data.",
+                    faq1_answer: "We often hear about the \"average salary\" in Canada, but averages can be misleading due to high earners skewing the data. This website aims to provide a clearer picture of income distribution using percentiles, allowing individuals to see how their earnings compare to others in Canada based on reliable census data and annual surveys.",
                     faq2_question: "Where does this data come from?",
-                    faq2_answer: "This data comes from <strong><a href=\"https://www12.statcan.gc.ca/census-recensement/index-eng.cfm\" title=\"Census website\">Statistics Canada's Census of Population 2021</a></strong>, which is the most comprehensive and reliable source for income distribution in Canada. The census surveys millions of Canadians and provides official government statistics on employment income.",
+                    faq2_answer: "The individual salary data comes from <strong><a href=\"https://www12.statcan.gc.ca/census-recensement/index-eng.cfm\" title=\"Census website\">Statistics Canada's Census of Population 2021</a></strong>, which is the most comprehensive and reliable source for income distribution in Canada. The census surveys millions of Canadians and provides official government statistics on employment income. The household income data comes from Statistics Canada's annual <strong><a href=\"https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610058701\" title=\"Household income survey\">Household Income Survey (table 36-10-0587-01)</a></strong>.",
                     faq3_question: "How current is this data?",
-                    faq3_answer: "The income data reflects the <strong>2020 calendar year</strong> (collected during the 2021 Census). While this is the most recent comprehensive census data available, please note that income levels and distributions may have changed since 2020 due to inflation, economic growth, and other factors. The website will be updated when the next census data will be available in 2026-2027.",
-                    faq4_question: "Why not use the annual household income survey instead?",
-                    faq4_answer: "While Statistics Canada does publish annual household income data (such as Table 36-10-0587), these surveys measure <strong>household-level income</strong> rather than individual earnings. They also use broader economic concepts like \"compensation\" that include employer benefits and contributions, which don't match what people think of as their \"salary.\" The Census provides <strong>individual wage and salaries</strong> data with detailed percentiles, making it much better for personal comparisons. The trade-off is that Census data is only updated every 5 years, while household surveys are annual. In a future version of this website we will offer to compare the household income data as well.",
-                    faq5_question: "What does \"wage\" include?",
-                    faq5_answer: "Gross wages and salaries before deductions for such items as income taxes, pension plan contributions and employment insurance premiums during the reference period. <a href=\"https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-eng.cfm?ID=pop128\" title=\"Statistics Canada definition\">Source</a>",
+                    faq3_answer: "The individual salary data reflects the <strong>2020 calendar year</strong> (collected during the 2021 Census). While this is the most recent comprehensive census data available, please note that income levels and distributions may have changed since 2020 due to inflation, economic growth, and other factors. The website will be updated when the next census data becomes available in 2026-2027. The household income data reflects the <strong>2024 calendar year</strong> (collected during the 2025 survey). This is the most recent annual household income data available from Statistics Canada.",
+                    faq4_question: "What does \"wage\" include?",
+                    faq4_answer: "Gross wages and salaries before deductions for such items as income taxes, pension plan contributions, and employment insurance premiums during the reference period. <a href=\"https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-eng.cfm?ID=pop128\" title=\"Statistics Canada definition\">Source</a>",
+                    faq5_question: "What does \"household income\" include?",
+                    faq5_answer: "It's based on the Household Income Survey (table 36-10-0587-01), which doesn't have the same level of detail as the census income data. To get an approximation of the income as we commonly think of it (i.e., the amount we see in our employment contract before taxes), we added back the \"current transfers paid\" to the disposable income.",
                     percentile_p10: "10th Percentile (P10)",
                     percentile_p25: "25th Percentile (P25)",
                     percentile_p50: "50th Percentile (Median)",
@@ -727,7 +758,10 @@
                     quintile_q4: "Fourth Quintile (Q4)",
                     quintile_q5: "Fifth Quintile (Q5) - Top 20%",
                     faq6_question: "What's the difference between Individual Salary and Household Income comparisons?",
-                    faq6_answer: "<strong>Individual Salary</strong> compares your personal employment income (wages and salaries) to other individuals in your age group using detailed census percentile data (P10, P25, P50, P75, P90, P95, P99). This is best for understanding where your personal earnings stand.<br><br><strong>Household Income</strong> compares the combined income of all people in your household to other Canadian households using quintile data (5 groups of 20% each). This gives a broader picture of your household's economic situation, regardless of how many earners contribute. Note that household data is not age-specific and uses broader income ranges."
+                    faq6_answer: "<strong>Individual Salary</strong> compares your personal employment income (wages and salaries) to other individuals in your age group using detailed census percentile data (P10, P25, P50, P75, P90, P95, P99). This is best for understanding where your personal earnings stand.<br><br><strong>Household Income</strong> compares the combined income of all people in your household to other Canadian households using quintile data (5 groups of 20% each). This gives a broader picture of your household's economic situation, regardless of how many earners contribute. Note that household data is not age-specific and uses broader income ranges.",
+                    footer_author: "Created by <a href=\"https://matthieugd.com\" target=\"_blank\" rel=\"noopener noreferrer\">Matthieu Guyonnet-Duluc</a>.",
+                    footer_thanks: "Special thanks to <a href=\"https://x.com/PhilSmith26\" target=\"_blank\" rel=\"noopener noreferrer\">Philip Smith</a> for his invaluable help. Any errors are my own.",
+                    footer_contact: "Questions or feedback? <a href=\"https://matthieugd.com\" target=\"_blank\" rel=\"noopener noreferrer\">Contact me</a>."
                 }
             },
             fr: {
@@ -746,15 +780,15 @@
                     median_example: "<strong>La médiane (P50) est de {{p50}} $</strong>. C'est le point médian où exactement 50 % des personnes gagnent moins et 50 % gagnent plus. C'est la façon la plus courante de décrire le revenu \"typique\".",
                     faq_title: "❓ Questions Fréquemment Posées",
                     faq1_question: "Quel est le but de ce site web?",
-                    faq1_answer: "On entend souvent parler du \"salaire moyen\" au Canada, mais les moyennes peuvent être trompeuses en raison des hauts salaires qui faussent les données. Ce site vise à fournir une image plus claire de la distribution des revenus en utilisant les percentiles, permettant aux individus de voir comment leurs gains se comparent aux autres au Canada selon des données de recensement fiables.",
+                    faq1_answer: "On entend souvent parler du \"salaire moyen\" au Canada, mais les moyennes peuvent être trompeuses en raison des hauts salaires qui faussent les données. Ce site vise à fournir une image plus claire de la distribution des revenus en utilisant les percentiles, permettant aux individus de voir comment leurs gains se comparent aux autres au Canada selon des données de recensement fiables et des enquêtes annuelles.",
                     faq2_question: "D'où proviennent ces données?",
-                    faq2_answer: "Ces données proviennent du <strong><a href=\"https://www12.statcan.gc.ca/census-recensement/index-fra.cfm\" title=\"Site du recensement\">Recensement de la population 2021 de Statistique Canada</a></strong>, qui est la source la plus complète et fiable pour la distribution des revenus au Canada. Le recensement interroge des millions de Canadiens et fournit des statistiques gouvernementales officielles sur les revenus d'emploi.",
+                    faq2_answer: "Les données de salaire individuel proviennent du <strong><a href=\"https://www12.statcan.gc.ca/census-recensement/index-fra.cfm\" title=\"Site du recensement\">Recensement de la population 2021 de Statistique Canada</a></strong>, qui est la source la plus complète et fiable pour la distribution des revenus au Canada. Le recensement interroge des millions de Canadiens et fournit des statistiques gouvernementales officielles sur les revenus d'emploi. Les données de revenu des ménages proviennent de l'<strong><a href=\"https://www150.statcan.gc.ca/t1/tbl1/fr/tv.action?pid=3610058701\" title=\"Enquête sur le revenu des ménages\">Enquête annuelle sur le revenu des ménages de Statistique Canada (tableau 36-10-0587-01)</a></strong>.",
                     faq3_question: "À quel point ces données sont-elles récentes?",
-                    faq3_answer: "Les données de revenus reflètent l'<strong>année civile 2020</strong> (collectées lors du recensement de 2021). Bien qu'il s'agisse des données de recensement complètes les plus récentes disponibles, veuillez noter que les niveaux de revenus et les distributions peuvent avoir changé depuis 2020 en raison de l'inflation, de la croissance économique et d'autres facteurs. Le site sera mis à jour lorsque les prochaines données de recensement seront disponibles en 2026-2027.",
-                    faq4_question: "Pourquoi ne pas utiliser l'enquête annuelle sur le revenu des ménages?",
-                    faq4_answer: "Bien que Statistique Canada publie des données annuelles sur le revenu des ménages (comme le tableau 36-10-0587), ces enquêtes mesurent le <strong>revenu au niveau des ménages</strong> plutôt que les gains individuels. Elles utilisent également des concepts économiques plus larges comme la \"rémunération\" qui incluent les avantages sociaux et les contributions de l'employeur, qui ne correspondent pas à ce que les gens considèrent comme leur \"salaire\". Le recensement fournit des données sur les <strong>salaires individuels</strong> avec des percentiles détaillés, ce qui le rend bien meilleur pour les comparaisons personnelles. Le compromis est que les données du recensement ne sont mises à jour que tous les 5 ans, tandis que les enquêtes sur les ménages sont annuelles. Dans une future version de ce site, nous offrirons également de comparer les données de revenu des ménages.",
-                    faq5_question: "Que comprend le \"salaire\"?",
-                    faq5_answer: "Les salaires et traitements bruts avant les retenues pour les impôts sur le revenu et les cotisations à un régime de pension et au programme d'assurance‑emploi au cours de la période de référence. <a href=\"https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-fra.cfm?ID=pop128\" title=\"Définition de Statistique Canada\">Source</a>",
+                    faq3_answer: "Les données de salaire individuel reflètent l'<strong>année civile 2020</strong> (collectées lors du recensement de 2021). Bien qu'il s'agisse des données de recensement complètes les plus récentes disponibles, veuillez noter que les niveaux de revenus et les distributions peuvent avoir changé depuis 2020 en raison de l'inflation, de la croissance économique et d'autres facteurs. Le site sera mis à jour lorsque les prochaines données de recensement seront disponibles en 2026-2027. Les données de revenu des ménages reflètent l'<strong>année civile 2024</strong> (collectées lors de l'enquête de 2025). Il s'agit des données annuelles les plus récentes disponibles de Statistique Canada sur le revenu des ménages.",
+                    faq4_question: "Que comprend le \"salaire\"?",
+                    faq4_answer: "Les salaires et traitements bruts avant les retenues pour les impôts sur le revenu, les cotisations à un régime de pension et au programme d'assurance-emploi au cours de la période de référence. <a href=\"https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-fra.cfm?ID=pop128\" title=\"Définition de Statistique Canada\">Source</a>",
+                    faq5_question: "Que comprend le \"revenu des ménages\"?",
+                    faq5_answer: "Il est basé sur l'Enquête sur le revenu des ménages (tableau 36-10-0587-01), qui ne présente pas le même niveau de détail que les données de revenu du recensement. Pour obtenir une approximation du revenu tel que nous le concevons couramment (c'est-à-dire le montant que nous voyons dans notre contrat de travail avant les impôts), nous avons ajouté les \"transferts courants versés\" au revenu disponible.",
                     percentile_p10: "10e Percentile (P10)",
                     percentile_p25: "25e Percentile (P25)",
                     percentile_p50: "50e Percentile (Médiane)",
@@ -791,7 +825,10 @@
                     quintile_q4: "Quatrième Quintile (Q4)",
                     quintile_q5: "Cinquième Quintile (Q5) - 20 % Supérieur",
                     faq6_question: "Quelle est la différence entre les comparaisons de Salaire Individuel et de Revenu du Ménage?",
-                    faq6_answer: "<strong>Salaire Individuel</strong> compare votre revenu d'emploi personnel (salaires et traitements) à d'autres individus de votre groupe d'âge en utilisant des données de percentiles détaillées du recensement (P10, P25, P50, P75, P90, P95, P99). C'est idéal pour comprendre où se situent vos gains personnels.<br><br><strong>Revenu du Ménage</strong> compare le revenu combiné de toutes les personnes de votre ménage à d'autres ménages canadiens en utilisant des données de quintiles (5 groupes de 20 % chacun). Cela donne une image plus large de la situation économique de votre ménage, peu importe le nombre de personnes qui contribuent. Notez que les données des ménages ne sont pas spécifiques à l'âge et utilisent des fourchettes de revenus plus larges."
+                    faq6_answer: "<strong>Salaire Individuel</strong> compare votre revenu d'emploi personnel (salaires et traitements) à d'autres individus de votre groupe d'âge en utilisant des données de percentiles détaillées du recensement (P10, P25, P50, P75, P90, P95, P99). C'est idéal pour comprendre où se situent vos gains personnels. <strong>Revenu du Ménage</strong> compare le revenu combiné de toutes les personnes de votre ménage à d'autres ménages canadiens en utilisant des données de quintiles (5 groupes de 20 % chacun). Cela donne une image plus large de la situation économique de votre ménage, peu importe le nombre de personnes qui contribuent. Notez que les données des ménages ne sont pas spécifiques à l'âge et utilisent des fourchettes de revenus plus larges.",
+                    footer_author: "Créé par <a href=\"https://matthieugd.com\" target=\"_blank\" rel=\"noopener noreferrer\">Matthieu Guyonnet-Duluc</a>.",
+                    footer_thanks: "Remerciements spéciaux à <a href=\"https://x.com/PhilSmith26\" target=\"_blank\" rel=\"noopener noreferrer\">Philip Smith</a> pour son aide précieuse. Toutes les erreurs sont les miennes.",
+                    footer_contact: "Questions ou commentaires? <a href=\"https://matthieugd.com\" target=\"_blank\" rel=\"noopener noreferrer\">Contactez-moi</a>."
                 }
             }
         };
