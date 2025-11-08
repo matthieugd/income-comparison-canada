@@ -292,41 +292,59 @@
         /* Tab Navigation */
         .comparison-tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #e0e0e0;
+            gap: 4px;
+            margin-bottom: 0;
+            border-bottom: none;
         }
 
         .tab-btn {
-            padding: 12px 24px;
+            padding: 14px 28px;
             font-size: 1em;
             font-weight: 600;
-            background: transparent;
+            background: #f5f5f5;
             color: #666;
-            border: none;
-            border-bottom: 3px solid transparent;
+            border: 1px solid #e0e0e0;
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
             cursor: pointer;
             transition: all 0.3s;
+            position: relative;
         }
 
         .tab-btn:hover {
-            transform: none;
-            box-shadow: none;
-            color: #d52b1e;
-            background: #f8f9fa;
+            background: #e8e8e8;
+            color: #333;
         }
 
         .tab-btn.active {
-            color: #d52b1e;
-            border-bottom-color: #d52b1e;
+            background: #d52b1e;
+            color: white;
+            border-color: #d52b1e;
+            z-index: 1;
+        }
+
+        .tab-btn.active:hover {
+            background: #c02718;
         }
 
         .tab-content {
             display: none;
+            border: 1px solid #e0e0e0;
+            border-top: 2px solid #d52b1e;
+            border-radius: 0 8px 8px 8px;
+            background: white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .tab-content.active {
             display: block;
+        }
+
+        .tab-content .input-section {
+            padding: 24px;
+            margin: 0;
+            background: white;
+            border-radius: 0 0 8px 8px;
         }
 
         .info-note {
