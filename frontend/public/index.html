@@ -962,6 +962,12 @@
                 // Update URL parameter
                 const url = new URL(window.location.href);
                 url.searchParams.set('lang', lang);
+
+                // Preserve mode parameter
+                if (currentMode) {
+                    url.searchParams.set('mode', currentMode);
+                }
+
                 window.history.pushState({}, '', url);
 
                 // Re-render chart and results if they're visible
@@ -985,7 +991,7 @@
         // Tab switching functionality
         let currentMode = 'individual'; // 'individual' or 'household'
 
-        function switchTab(mode) {
+        function switchTab(mode, preserveData = false) {
             currentMode = mode;
 
             // Update tab buttons
@@ -999,14 +1005,22 @@
             });
             document.getElementById(`${mode}-tab`).classList.add('active');
 
-            // Update URL parameter
+            // Update URL parameters
             const url = new URL(window.location.href);
             url.searchParams.set('mode', mode);
-            window.history.pushState({}, '', url);
 
-            // Hide results when switching tabs
-            document.getElementById('results').classList.remove('show');
-            document.getElementById('message').style.display = 'none';
+            // Remove all income-related parameters when switching tabs (unless preserving data)
+            if (!preserveData) {
+                url.searchParams.delete('income');
+                url.searchParams.delete('age');
+                url.searchParams.delete('household-income');
+
+                // Hide results when switching tabs
+                document.getElementById('results').classList.remove('show');
+                document.getElementById('message').style.display = 'none';
+            }
+
+            window.history.pushState({}, '', url);
         }
 
         // Initialize language switcher buttons and tab switching
@@ -1025,16 +1039,8 @@
                 });
             });
 
-            // Check for URL parameters
+            // Check for language parameter first
             const urlParams = new URLSearchParams(window.location.search);
-
-            // Check for mode parameter
-            const modeParam = urlParams.get('mode');
-            if (modeParam && (modeParam === 'individual' || modeParam === 'household')) {
-                switchTab(modeParam);
-            }
-
-            // Check for language parameter
             const langParam = urlParams.get('lang');
             if (langParam && (langParam === 'en' || langParam === 'fr')) {
                 switchLanguage(langParam);
@@ -1047,6 +1053,9 @@
                     updatePageTranslations();
                 }
             }
+
+            // Load data from URL (this will handle mode switching and data loading)
+            loadFromURL();
         });
 
         function generateDistributionData(percentiles) {
@@ -1723,32 +1732,53 @@
         // Load values from URL parameters on page load
         function loadFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
+            const mode = urlParams.get('mode');
             const income = urlParams.get('income');
             const age = urlParams.get('age');
+            const householdIncome = urlParams.get('household-income');
 
-            if (income && age) {
-                document.getElementById('income').value = income;
-                document.getElementById('age').value = age;
-                // Automatically calculate if both parameters are present
-                calculatePosition();
+            // Determine which mode to use
+            if (householdIncome || mode === 'household') {
+                // Switch to household tab (preserve data during initial load)
+                switchTab('household', true);
+                if (householdIncome) {
+                    document.getElementById('household-income').value = householdIncome;
+                    // Automatically calculate
+                    calculateHousehold();
+                }
+            } else if ((income && age) || mode === 'individual') {
+                // Switch to individual tab (preserve data during initial load)
+                switchTab('individual', true);
+                if (income && age) {
+                    document.getElementById('income').value = income;
+                    document.getElementById('age').value = age;
+                    // Automatically calculate
+                    calculateIndividual();
+                }
+            } else {
+                // Default to individual tab if no mode specified
+                switchTab('individual', false);
             }
         }
 
         // Allow Enter key to submit from either input
         document.getElementById('income').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                calculatePosition();
+                calculateIndividual();
             }
         });
 
         document.getElementById('age').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
-                calculatePosition();
+                calculateIndividual();
             }
         });
 
-        // Load from URL on page load
-        loadFromURL();
+        document.getElementById('household-income').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                calculateHousehold();
+            }
+        });
     </script>
 </body>
 </html>
