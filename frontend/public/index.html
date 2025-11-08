@@ -7,6 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-annotation"></script>
     <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/i18next@23.7.6/i18next.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -252,11 +253,57 @@
             line-height: 1.6;
             font-size: 0.95em;
         }
-        
+
+        .language-switcher {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 5px;
+            background: white;
+            border-radius: 10px;
+            padding: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .lang-btn {
+            padding: 8px 16px;
+            font-size: 0.9em;
+            font-weight: 600;
+            background: transparent;
+            color: #666;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover {
+            transform: none;
+            box-shadow: none;
+            background: #f0f0f0;
+        }
+
+        .lang-btn.active {
+            background: #d52b1e;
+            color: white;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             body {
                 padding: 10px;
+            }
+
+            .language-switcher {
+                top: 10px;
+                right: 10px;
+                padding: 4px;
+            }
+
+            .lang-btn {
+                padding: 6px 12px;
+                font-size: 0.8em;
             }
             
             .container {
@@ -399,35 +446,42 @@
     </style>
 </head>
 <body>
+    <div class="language-switcher">
+        <button class="lang-btn active" data-lang="en">English</button>
+        <button class="lang-btn" data-lang="fr">Français</button>
+    </div>
+
     <div class="container">
-        <h1>🇨🇦 Compare Your Salary In Canada </h1>
-        <p class="subtitle">Compare your income against Canadian income distribution.</p>
+        <h1 data-i18n="title">🇨🇦 Compare Your Salary In Canada </h1>
+        <p class="subtitle" data-i18n="subtitle">Compare your income against Canadian income distribution.</p>
         
         <div class="input-section">
             <div class="input-group">
                 <div class="input-wrapper">
                     <div class="input-field">
-                        <label for="income">Your Annual Wage ($)</label>
-                        <input 
-                            type="number" 
-                            id="income" 
+                        <label for="income" data-i18n="income_label">Your Annual Wage ($)</label>
+                        <input
+                            type="number"
+                            id="income"
+                            data-i18n="[placeholder]income_placeholder"
                             placeholder="65000"
                             min="0"
                             step="1000"
                         >
                     </div>
                     <div class="input-field">
-                        <label for="age">Your Age</label>
-                        <input 
-                            type="number" 
-                            id="age" 
+                        <label for="age" data-i18n="age_label">Your Age</label>
+                        <input
+                            type="number"
+                            id="age"
+                            data-i18n="[placeholder]age_placeholder"
                             placeholder="30"
                             min="15"
                             max="100"
                             step="1"
                         >
                     </div>
-                    <button onclick="calculatePosition()">Compare</button>
+                    <button onclick="calculatePosition()" data-i18n="compare_button">Compare</button>
                 </div>
             </div>
         </div>
@@ -440,52 +494,52 @@
             </div>
             
             <div class="legend">
-                <div class="legend-title">📊 Income Distribution Percentiles</div>
+                <div class="legend-title" data-i18n="legend_title">📊 Income Distribution Percentiles</div>
                 <div class="legend-grid" id="legendGrid"></div>
             </div>
-            
+
             <div class="explanation-box">
-                <div class="explanation-title">💡 Understanding Percentiles</div>
-                <p><strong>What is a percentile?</strong> A percentile tells you what percentage of people earn less than a given amount.</p>
-                <p id="percentileExample"><strong>Example:</strong> The <strong>25th percentile (P25)</strong> tells you the income level where 25% of people earn less and 75% earn more.</p>
-                <p id="medianExample"><strong>The median (P50)</strong> is the middle point where exactly 50% of people earn less and 50% earn more. It's the most common way to describe "typical" income.</p>
+                <div class="explanation-title" data-i18n="explanation_title">💡 Understanding Percentiles</div>
+                <p data-i18n="[html]percentile_definition"><strong>What is a percentile?</strong> A percentile tells you what percentage of people earn less than a given amount.</p>
+                <p id="percentileExample" data-i18n-base="percentile_example"><strong>Example:</strong> The <strong>25th percentile (P25)</strong> tells you the income level where 25% of people earn less and 75% earn more.</p>
+                <p id="medianExample" data-i18n-base="median_example"><strong>The median (P50)</strong> is the middle point where exactly 50% of people earn less and 50% earn more. It's the most common way to describe "typical" income.</p>
             </div>
         </div>
         
         <div class="faq-section">
-            <h2 class="faq-title">❓ Frequently Asked Questions</h2>
+            <h2 class="faq-title" data-i18n="faq_title">❓ Frequently Asked Questions</h2>
 
             <div class="faq-item">
-                <div class="faq-question">What's the purpose of their website?</div>
-                <div class="faq-answer">
+                <div class="faq-question" data-i18n="faq1_question">What's the purpose of their website?</div>
+                <div class="faq-answer" data-i18n="[html]faq1_answer">
                     We often heard talking about the "average salary" in Canada, but averages can be misleading due to high earners skewing the data. This website aims to provide a clearer picture of income distribution using percentiles, allowing individuals to see how their earnings compare to others in Canada based on reliable census data.
                 </div>
             </div>
-            
+
             <div class="faq-item">
-                <div class="faq-question">Where does this data come from?</div>
-                <div class="faq-answer">
+                <div class="faq-question" data-i18n="faq2_question">Where does this data come from?</div>
+                <div class="faq-answer" data-i18n="[html]faq2_answer">
                     This data comes from <strong><a href="https://www12.statcan.gc.ca/census-recensement/index-eng.cfm" title="Census wesbite">Statistics Canada's Census of Population 2021</a></strong>, which is the most comprehensive and reliable source for income distribution in Canada. The census surveys millions of Canadians and provides official government statistics on employment income.
                 </div>
             </div>
 
             <div class="faq-item">
-                <div class="faq-question">How current is this data?</div>
-                <div class="faq-answer">
+                <div class="faq-question" data-i18n="faq3_question">How current is this data?</div>
+                <div class="faq-answer" data-i18n="[html]faq3_answer">
                     The income data reflects the <strong>2020 calendar year</strong> (collected during the 2021 Census). While this is the most recent comprehensive census data available, please note that income levels and distributions may have changed since 2020 due to inflation, economic growth, and other factors. The website will be updated when the next census data will be available in 2026-2027.
                 </div>
             </div>
 
             <div class="faq-item">
-                <div class="faq-question">Why not use the annual household income survey instead?</div>
-                <div class="faq-answer">
+                <div class="faq-question" data-i18n="faq4_question">Why not use the annual household income survey instead?</div>
+                <div class="faq-answer" data-i18n="[html]faq4_answer">
                     While Statistics Canada does publish annual household income data (such as Table 36-10-0587), these surveys measure <strong>household-level income</strong> rather than individual earnings. They also use broader economic concepts like "compensation" that include employer benefits and contributions, which don't match what people think of as their "salary." The Census provides <strong>individual wage and salaries</strong> data with detailed percentiles, making it much better for personal comparisons. The trade-off is that Census data is only updated every 5 years, while household surveys are annual. In a future version of this website we will offer to compare the household income data as well.
                 </div>
             </div>
-            
+
             <div class="faq-item">
-                <div class="faq-question">What does "wage" include?</div>
-                <div class="faq-answer">
+                <div class="faq-question" data-i18n="faq5_question">What does "wage" include?</div>
+                <div class="faq-answer" data-i18n="[html]faq5_answer">
                     Gross wages and salaries before deductions for such items as income taxes, pension plan contributions and employment insurance premiums during the reference period. <a href="https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-eng.cfm?ID=pop128" title="Statistics Canada definition">Source</a>
                 </div>
             </div>
@@ -493,8 +547,193 @@
     </div>
 
     <script>
+        // i18next initialization
+        const translations = {
+            en: {
+                translation: {
+                    title: "🇨🇦 Compare Your Salary In Canada",
+                    subtitle: "Compare your income against Canadian income distribution.",
+                    income_label: "Your annual wage ($)",
+                    income_placeholder: "65000",
+                    age_label: "Your age",
+                    age_placeholder: "30",
+                    compare_button: "Compare",
+                    legend_title: "📊 Income Distribution Percentiles",
+                    explanation_title: "💡 Understanding Percentiles",
+                    percentile_definition: "<strong>What is a percentile?</strong> A percentile tells you what percentage of people earn less than a given amount.",
+                    percentile_example: "<strong>Example:</strong> The <strong>25th percentile (P25) is ${{p25}}</strong>. This means 25% of Canadians in this age group earn less than ${{p25}}, and 75% earn more.",
+                    median_example: "<strong>The median (P50) is ${{p50}}</strong>. This is the middle point where exactly 50% of people earn less and 50% earn more. It's the most common way to describe \"typical\" income.",
+                    faq_title: "❓ Frequently Asked Questions",
+                    faq1_question: "What's the purpose of this website?",
+                    faq1_answer: "We often hear about the \"average salary\" in Canada, but averages can be misleading due to high earners skewing the data. This website aims to provide a clearer picture of income distribution using percentiles, allowing individuals to see how their earnings compare to others in Canada based on reliable census data.",
+                    faq2_question: "Where does this data come from?",
+                    faq2_answer: "This data comes from <strong><a href=\"https://www12.statcan.gc.ca/census-recensement/index-eng.cfm\" title=\"Census website\">Statistics Canada's Census of Population 2021</a></strong>, which is the most comprehensive and reliable source for income distribution in Canada. The census surveys millions of Canadians and provides official government statistics on employment income.",
+                    faq3_question: "How current is this data?",
+                    faq3_answer: "The income data reflects the <strong>2020 calendar year</strong> (collected during the 2021 Census). While this is the most recent comprehensive census data available, please note that income levels and distributions may have changed since 2020 due to inflation, economic growth, and other factors. The website will be updated when the next census data will be available in 2026-2027.",
+                    faq4_question: "Why not use the annual household income survey instead?",
+                    faq4_answer: "While Statistics Canada does publish annual household income data (such as Table 36-10-0587), these surveys measure <strong>household-level income</strong> rather than individual earnings. They also use broader economic concepts like \"compensation\" that include employer benefits and contributions, which don't match what people think of as their \"salary.\" The Census provides <strong>individual wage and salaries</strong> data with detailed percentiles, making it much better for personal comparisons. The trade-off is that Census data is only updated every 5 years, while household surveys are annual. In a future version of this website we will offer to compare the household income data as well.",
+                    faq5_question: "What does \"wage\" include?",
+                    faq5_answer: "Gross wages and salaries before deductions for such items as income taxes, pension plan contributions and employment insurance premiums during the reference period. <a href=\"https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-eng.cfm?ID=pop128\" title=\"Statistics Canada definition\">Source</a>",
+                    percentile_p10: "10th Percentile (P10)",
+                    percentile_p25: "25th Percentile (P25)",
+                    percentile_p50: "50th Percentile (Median)",
+                    percentile_p75: "75th Percentile (P75)",
+                    percentile_p90: "90th Percentile (P90)",
+                    percentile_p95: "95th Percentile (P95)",
+                    percentile_p99: "99th Percentile (P99)",
+                    chart_you_label: "YOU",
+                    chart_x_axis: "Income Ranges",
+                    chart_y_axis: "Percentage of Population (%)",
+                    chart_tooltip_canadians: "of Canadians",
+                    chart_tooltip_percentile: "Percentile range",
+                    result_message_main: "At age {{age}}, you earn more than {{percentile}}% of Canadians with employment income in your age group ({{ageGroup}}).",
+                    result_message_more: "You earn ${{diff}} ({{percentDiff}}%) <strong>more</strong> than the median income for your age group (${{median}}).",
+                    result_message_less: "You earn ${{diff}} ({{percentDiff}}%) <strong>less</strong> than the median income for your age group (${{median}}).",
+                    result_message_exact: "You earn exactly the median income for your age group (${{median}}).",
+                    result_message_bracket: "Income bracket: <strong>{{bracket}}</strong>",
+                    error_invalid_income: "Please enter a valid income amount",
+                    error_invalid_age: "Please enter a valid age (15-100)",
+                    error_api_connection: "Error connecting to the backend API. Please make sure the server is running."
+                }
+            },
+            fr: {
+                translation: {
+                    title: "🇨🇦 Comparez Votre Salaire au Canada",
+                    subtitle: "Comparez votre salaire avec la distribution des revenus canadiens.",
+                    income_label: "Votre salaire annuel ($)",
+                    income_placeholder: "65000",
+                    age_label: "Votre âge",
+                    age_placeholder: "30",
+                    compare_button: "Comparer",
+                    legend_title: "📊 Percentiles de Distribution des Revenus",
+                    explanation_title: "💡 Comprendre les Percentiles",
+                    percentile_definition: "<strong>Qu'est-ce qu'un percentile?</strong> Un percentile indique le pourcentage de personnes gagnant moins qu'un montant donné.",
+                    percentile_example: "<strong>Exemple:</strong> Le <strong>25e percentile (P25) est de {{p25}} $</strong>. Cela signifie que 25 % des Canadiens de ce groupe d'âge gagnent moins de {{p25}} $ et 75 % gagnent plus.",
+                    median_example: "<strong>La médiane (P50) est de {{p50}} $</strong>. C'est le point médian où exactement 50 % des personnes gagnent moins et 50 % gagnent plus. C'est la façon la plus courante de décrire le revenu \"typique\".",
+                    faq_title: "❓ Questions Fréquemment Posées",
+                    faq1_question: "Quel est le but de ce site web?",
+                    faq1_answer: "On entend souvent parler du \"salaire moyen\" au Canada, mais les moyennes peuvent être trompeuses en raison des hauts salaires qui faussent les données. Ce site vise à fournir une image plus claire de la distribution des revenus en utilisant les percentiles, permettant aux individus de voir comment leurs gains se comparent aux autres au Canada selon des données de recensement fiables.",
+                    faq2_question: "D'où proviennent ces données?",
+                    faq2_answer: "Ces données proviennent du <strong><a href=\"https://www12.statcan.gc.ca/census-recensement/index-fra.cfm\" title=\"Site du recensement\">Recensement de la population 2021 de Statistique Canada</a></strong>, qui est la source la plus complète et fiable pour la distribution des revenus au Canada. Le recensement interroge des millions de Canadiens et fournit des statistiques gouvernementales officielles sur les revenus d'emploi.",
+                    faq3_question: "À quel point ces données sont-elles récentes?",
+                    faq3_answer: "Les données de revenus reflètent l'<strong>année civile 2020</strong> (collectées lors du recensement de 2021). Bien qu'il s'agisse des données de recensement complètes les plus récentes disponibles, veuillez noter que les niveaux de revenus et les distributions peuvent avoir changé depuis 2020 en raison de l'inflation, de la croissance économique et d'autres facteurs. Le site sera mis à jour lorsque les prochaines données de recensement seront disponibles en 2026-2027.",
+                    faq4_question: "Pourquoi ne pas utiliser l'enquête annuelle sur le revenu des ménages?",
+                    faq4_answer: "Bien que Statistique Canada publie des données annuelles sur le revenu des ménages (comme le tableau 36-10-0587), ces enquêtes mesurent le <strong>revenu au niveau des ménages</strong> plutôt que les gains individuels. Elles utilisent également des concepts économiques plus larges comme la \"rémunération\" qui incluent les avantages sociaux et les contributions de l'employeur, qui ne correspondent pas à ce que les gens considèrent comme leur \"salaire\". Le recensement fournit des données sur les <strong>salaires individuels</strong> avec des percentiles détaillés, ce qui le rend bien meilleur pour les comparaisons personnelles. Le compromis est que les données du recensement ne sont mises à jour que tous les 5 ans, tandis que les enquêtes sur les ménages sont annuelles. Dans une future version de ce site, nous offrirons également de comparer les données de revenu des ménages.",
+                    faq5_question: "Que comprend le \"salaire\"?",
+                    faq5_answer: "Les salaires et traitements bruts avant les retenues pour les impôts sur le revenu et les cotisations à un régime de pension et au programme d'assurance‑emploi au cours de la période de référence. <a href=\"https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-fra.cfm?ID=pop128\" title=\"Définition de Statistique Canada\">Source</a>",
+                    percentile_p10: "10e Percentile (P10)",
+                    percentile_p25: "25e Percentile (P25)",
+                    percentile_p50: "50e Percentile (Médiane)",
+                    percentile_p75: "75e Percentile (P75)",
+                    percentile_p90: "90e Percentile (P90)",
+                    percentile_p95: "95e Percentile (P95)",
+                    percentile_p99: "99e Percentile (P99)",
+                    chart_you_label: "VOUS",
+                    chart_x_axis: "Tranches de Revenu",
+                    chart_y_axis: "Pourcentages de la Population (%)",
+                    chart_tooltip_canadians: "des Canadiens",
+                    chart_tooltip_percentile: "Plage de percentile",
+                    result_message_main: "À {{age}} ans, vous gagnez plus que {{percentile}} % des Canadiens ayant un revenu d'emploi dans votre groupe d'âge ({{ageGroup}}).",
+                    result_message_more: "Vous gagnez {{diff}} $ ({{percentDiff}} %) de <strong>plus</strong> que le revenu médian pour votre groupe d'âge ({{median}} $).",
+                    result_message_less: "Vous gagnez {{diff}} $ ({{percentDiff}} %) de <strong>moins</strong> que le revenu médian pour votre groupe d'âge ({{median}} $).",
+                    result_message_exact: "Vous gagnez exactement le revenu médian pour votre groupe d'âge ({{median}} $).",
+                    result_message_bracket: "Tranche de revenu : <strong>{{bracket}}</strong>",
+                    error_invalid_income: "Veuillez entrer un montant de revenu valide",
+                    error_invalid_age: "Veuillez entrer un âge valide (15-100)",
+                    error_api_connection: "Erreur de connexion à l'API backend. Veuillez vous assurer que le serveur fonctionne."
+                }
+            }
+        };
+
+        // Initialize i18next
+        i18next.init({
+            lng: 'en',
+            fallbackLng: 'en',
+            resources: translations,
+            interpolation: {
+                escapeValue: false
+            }
+        });
+
         let chart = null;
-        
+        let currentLanguage = 'en';
+
+        // Translation helper function
+        function updatePageTranslations() {
+            // Update all elements with data-i18n attribute
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+
+                // Handle different attribute types
+                if (key.startsWith('[html]')) {
+                    const actualKey = key.replace('[html]', '');
+                    element.innerHTML = i18next.t(actualKey);
+                } else if (key.startsWith('[placeholder]')) {
+                    const actualKey = key.replace('[placeholder]', '');
+                    element.placeholder = i18next.t(actualKey);
+                } else {
+                    element.textContent = i18next.t(key);
+                }
+            });
+
+            // Update document title and HTML lang attribute
+            document.documentElement.lang = currentLanguage;
+            document.title = currentLanguage === 'fr'
+                ? 'Comparaison de Revenu - Canada'
+                : 'Income Comparison - Canada';
+        }
+
+        // Language switcher function
+        function switchLanguage(lang) {
+            currentLanguage = lang;
+            i18next.changeLanguage(lang).then(() => {
+                updatePageTranslations();
+
+                // Update active button state
+                document.querySelectorAll('.lang-btn').forEach(btn => {
+                    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+                });
+
+                // Update URL parameter
+                const url = new URL(window.location.href);
+                url.searchParams.set('lang', lang);
+                window.history.pushState({}, '', url);
+
+                // Re-render chart and results if they're visible
+                if (document.getElementById('results').classList.contains('show')) {
+                    const income = parseFloat(document.getElementById('income').value);
+                    const age = parseInt(document.getElementById('age').value);
+                    if (!isNaN(income) && !isNaN(age)) {
+                        calculatePosition();
+                    }
+                }
+            });
+        }
+
+        // Initialize language switcher buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.lang-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    switchLanguage(this.getAttribute('data-lang'));
+                });
+            });
+
+            // Check for language parameter in URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const langParam = urlParams.get('lang');
+            if (langParam && (langParam === 'en' || langParam === 'fr')) {
+                switchLanguage(langParam);
+            } else {
+                // Detect browser language
+                const browserLang = navigator.language || navigator.userLanguage;
+                if (browserLang.startsWith('fr')) {
+                    switchLanguage('fr');
+                } else {
+                    updatePageTranslations();
+                }
+            }
+        });
+
         function generateDistributionData(percentiles) {
             // Create income brackets with the number of people in each bracket
             // Based on percentile data, we can calculate approximate distributions
@@ -605,7 +844,7 @@
                 borderWidth: 4,
                 label: {
                     display: true,
-                    content: `YOU: $${userIncome.toLocaleString()}`,
+                    content: `${i18next.t('chart_you_label')}: $${userIncome.toLocaleString()}`,
                     position: 'start',
                     backgroundColor: 'rgba(213, 43, 30, 0.9)',
                     color: 'white',
@@ -654,8 +893,8 @@
                                 label: function(context) {
                                     const bracket = brackets[context.dataIndex];
                                     return [
-                                        `${context.parsed.y}% of Canadians`,
-                                        `Percentile range: ${bracket.percentileLabel}`
+                                        `${context.parsed.y}% ${i18next.t('chart_tooltip_canadians')}`,
+                                        `${i18next.t('chart_tooltip_percentile')}: ${bracket.percentileLabel}`
                                     ];
                                 }
                             }
@@ -681,7 +920,7 @@
                         x: {
                             title: {
                                 display: true,
-                                text: 'Income Range',
+                                text: i18next.t('chart_x_axis'),
                                 font: {
                                     size: 14,
                                     weight: 'bold'
@@ -696,7 +935,7 @@
                         y: {
                             title: {
                                 display: true,
-                                text: 'Percentage of Population (%)',
+                                text: i18next.t('chart_y_axis'),
                                 font: {
                                     size: 14,
                                     weight: 'bold'
@@ -719,32 +958,32 @@
         function updateLegend(percentiles) {
             const legendGrid = document.getElementById('legendGrid');
             const percentileLabels = [
-                { label: '10th Percentile (P10)', value: percentiles.p10 },
-                { label: '25th Percentile (P25)', value: percentiles.p25 },
-                { label: '50th Percentile (Median)', value: percentiles.p50 },
-                { label: '75th Percentile (P75)', value: percentiles.p75 },
-                { label: '90th Percentile (P90)', value: percentiles.p90 },
-                { label: '95th Percentile (P95)', value: percentiles.p95 },
-                { label: '99th Percentile (P99)', value: percentiles.p99 }
+                { key: 'percentile_p10', value: percentiles.p10 },
+                { key: 'percentile_p25', value: percentiles.p25 },
+                { key: 'percentile_p50', value: percentiles.p50 },
+                { key: 'percentile_p75', value: percentiles.p75 },
+                { key: 'percentile_p90', value: percentiles.p90 },
+                { key: 'percentile_p95', value: percentiles.p95 },
+                { key: 'percentile_p99', value: percentiles.p99 }
             ];
 
             legendGrid.innerHTML = percentileLabels.map(item => `
                 <div class="legend-item">
-                    <div class="legend-percentile">${item.label}</div>
+                    <div class="legend-percentile">${i18next.t(item.key)}</div>
                     <div class="legend-income">$${item.value.toLocaleString()}</div>
                 </div>
             `).join('');
         }
 
         function updatePercentileExamples(percentiles) {
-            const p25 = percentiles.p25;
-            const p50 = percentiles.p50;
+            const p25 = percentiles.p25.toLocaleString();
+            const p50 = percentiles.p50.toLocaleString();
 
             document.getElementById('percentileExample').innerHTML =
-                `<strong>Example:</strong> The <strong>25th percentile (P25) is $${p25.toLocaleString()}</strong>. This means 25% of Canadians in this age group earn less than $${p25.toLocaleString()}, and 75% earn more.`;
+                i18next.t('percentile_example', { p25: p25 });
 
             document.getElementById('medianExample').innerHTML =
-                `<strong>The median (P50) is $${p50.toLocaleString()}</strong>. This is the middle point where exactly 50% of people earn less and 50% earn more. It's the most common way to describe "typical" income.`;
+                i18next.t('median_example', { p50: p50 });
         }
         
         async function calculatePosition() {
@@ -752,12 +991,12 @@
             const age = parseInt(document.getElementById('age').value);
 
             if (isNaN(income) || income < 0) {
-                alert('Please enter a valid income amount');
+                alert(i18next.t('error_invalid_income'));
                 return;
             }
 
             if (isNaN(age) || age < 15 || age > 100) {
-                alert('Please enter a valid age (15-100)');
+                alert(i18next.t('error_invalid_age'));
                 return;
             }
 
@@ -771,21 +1010,35 @@
 
                 const data = await response.json();
 
-                // Generate message using API data
-                let message = `<p><strong>At age ${age}, you earn more than ${data.percentile.toFixed(1)}% of Canadians with employment income in your age group (${data.ageGroup}).</strong></p>`;
+                // Generate message using API data with translations
+                let message = `<p><strong>${i18next.t('result_message_main', {
+                    age: age,
+                    percentile: data.percentile.toFixed(1),
+                    ageGroup: data.ageGroup
+                })}</strong></p>`;
 
                 const diff = data.median.difference;
                 const percentDiff = Math.abs(data.median.percentDifference);
 
                 if (diff > 0) {
-                    message += `<p>You earn $${Math.abs(diff).toLocaleString()} (${percentDiff.toFixed(1)}%) <strong>more</strong> than the median income for your age group ($${data.median.value.toLocaleString()}).</p>`;
+                    message += `<p>${i18next.t('result_message_more', {
+                        diff: Math.abs(diff).toLocaleString(),
+                        percentDiff: percentDiff.toFixed(1),
+                        median: data.median.value.toLocaleString()
+                    })}</p>`;
                 } else if (diff < 0) {
-                    message += `<p>You earn $${Math.abs(diff).toLocaleString()} (${percentDiff.toFixed(1)}%) <strong>less</strong> than the median income for your age group ($${data.median.value.toLocaleString()}).</p>`;
+                    message += `<p>${i18next.t('result_message_less', {
+                        diff: Math.abs(diff).toLocaleString(),
+                        percentDiff: percentDiff.toFixed(1),
+                        median: data.median.value.toLocaleString()
+                    })}</p>`;
                 } else {
-                    message += `<p>You earn exactly the median income for your age group ($${data.median.value.toLocaleString()}).</p>`;
+                    message += `<p>${i18next.t('result_message_exact', {
+                        median: data.median.value.toLocaleString()
+                    })}</p>`;
                 }
 
-                message += `<p>Income bracket: <strong>${data.bracket}</strong></p>`;
+                message += `<p>${i18next.t('result_message_bracket', { bracket: data.bracket })}</p>`;
 
                 document.getElementById('message').innerHTML = message;
 
@@ -810,7 +1063,7 @@
                 document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             } catch (error) {
                 console.error('Error:', error);
-                alert('Error connecting to the backend API. Please make sure the server is running on port 3001.');
+                alert(i18next.t('error_api_connection'));
             }
         }
         
