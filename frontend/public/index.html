@@ -447,8 +447,8 @@
             <div class="explanation-box">
                 <div class="explanation-title">💡 Understanding Percentiles</div>
                 <p><strong>What is a percentile?</strong> A percentile tells you what percentage of people earn less than a given amount.</p>
-                <p><strong>Example:</strong> The <strong>25th percentile (P25) is $16,900</strong>. This means 25% of Canadians earn less than $16,900, and 75% earn more.</p>
-                <p><strong>The median (P50) is $37,358</strong>. This is the middle point where exactly 50% of people earn less and 50% earn more. It's the most common way to describe "typical" income.</p>
+                <p id="percentileExample"><strong>Example:</strong> The <strong>25th percentile (P25)</strong> tells you the income level where 25% of people earn less and 75% earn more.</p>
+                <p id="medianExample"><strong>The median (P50)</strong> is the middle point where exactly 50% of people earn less and 50% earn more. It's the most common way to describe "typical" income.</p>
             </div>
         </div>
         
@@ -735,6 +735,17 @@
                 </div>
             `).join('');
         }
+
+        function updatePercentileExamples(percentiles) {
+            const p25 = percentiles.p25;
+            const p50 = percentiles.p50;
+
+            document.getElementById('percentileExample').innerHTML =
+                `<strong>Example:</strong> The <strong>25th percentile (P25) is $${p25.toLocaleString()}</strong>. This means 25% of Canadians in this age group earn less than $${p25.toLocaleString()}, and 75% earn more.`;
+
+            document.getElementById('medianExample').innerHTML =
+                `<strong>The median (P50) is $${p50.toLocaleString()}</strong>. This is the middle point where exactly 50% of people earn less and 50% earn more. It's the most common way to describe "typical" income.`;
+        }
         
         async function calculatePosition() {
             const income = parseFloat(document.getElementById('income').value);
@@ -792,6 +803,7 @@
                 document.getElementById('message').style.display = 'block';
                 document.getElementById('results').classList.add('show');
                 updateLegend(distData.percentiles);
+                updatePercentileExamples(distData.percentiles);
                 createChart(income, distData.percentiles);
 
                 // Scroll to results
