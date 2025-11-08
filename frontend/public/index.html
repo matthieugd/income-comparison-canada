@@ -772,6 +772,7 @@
                     age_placeholder: "30",
                     compare_button: "Compare",
                     legend_title: "📊 Income Distribution Percentiles",
+                    household_legend_title: "📊 Household Income Quintiles",
                     explanation_title: "💡 Understanding Percentiles",
                     percentile_definition: "<strong>What is a percentile?</strong> A percentile tells you what percentage of people earn less than a given amount.",
                     percentile_example: "<strong>Example:</strong> The <strong>25th percentile (P25) is ${{p25}}</strong>. This means 25% of Canadians in this age group earn less than ${{p25}}, and 75% earn more.",
@@ -813,10 +814,11 @@
                     household_income_placeholder: "95000",
                     household_note: "💡 <strong>Household income</strong> is the combined annual income of all household members before taxes. This includes wages, salaries, and self-employment income for everyone living in your home.",
                     household_result_message_main: "Your household earns more than {{percentile}}% of Canadian households.",
-                    household_result_message_more: "Your household earns ${{diff}} ({{percentDiff}}%) <strong>more</strong> than the median household income (${{median}}).",
-                    household_result_message_less: "Your household earns ${{diff}} ({{percentDiff}}%) <strong>less</strong> than the median household income (${{median}}).",
-                    household_result_message_exact: "Your household earns exactly the median household income (${{median}}).",
                     household_result_message_bracket: "Income bracket: <strong>{{bracket}}</strong>",
+                    household_explanation_title: "💡 Understanding Quintiles",
+                    household_quintile_definition: "<strong>What is a quintile?</strong> A quintile divides households into 5 equal groups of 20% each, based on income.",
+                    household_quintile_example: "<strong>Example:</strong> The <strong>First Quintile (Q1) ranges from {{q1_min}} to {{q1_max}}</strong>. This represents the bottom 20% of Canadian households by income.",
+                    household_quintile_middle: "<strong>The Third Quintile (Q3) ranges from {{q3_min}} to {{q3_max}}</strong>. This represents the middle 20% of households and is often considered \"middle class\" income.",
                     quintile_q1: "First Quintile (Q1) - Bottom 20%",
                     quintile_q2: "Second Quintile (Q2)",
                     quintile_q3: "Third Quintile (Q3) - Middle 20%",
@@ -842,6 +844,7 @@
                     age_placeholder: "30",
                     compare_button: "Comparer",
                     legend_title: "📊 Percentiles de Distribution des Revenus",
+                    household_legend_title: "📊 Quintiles de Revenu des Ménages",
                     explanation_title: "💡 Comprendre les Percentiles",
                     percentile_definition: "<strong>Qu'est-ce qu'un percentile?</strong> Un percentile indique le pourcentage de personnes gagnant moins qu'un montant donné.",
                     percentile_example: "<strong>Exemple:</strong> Le <strong>25e percentile (P25) est de {{p25}} $</strong>. Cela signifie que 25 % des Canadiens de ce groupe d'âge gagnent moins de {{p25}} $ et 75 % gagnent plus.",
@@ -883,10 +886,11 @@
                     household_income_placeholder: "95000",
                     household_note: "💡 Le <strong>revenu du ménage</strong> est le revenu annuel combiné de tous les membres du ménage avant impôts. Cela comprend les salaires, traitements et revenus d'un travail autonome de toutes les personnes vivant dans votre foyer.",
                     household_result_message_main: "Votre ménage gagne plus que {{percentile}} % des ménages canadiens.",
-                    household_result_message_more: "Votre ménage gagne {{diff}} $ ({{percentDiff}} %) de <strong>plus</strong> que le revenu médian des ménages ({{median}} $).",
-                    household_result_message_less: "Votre ménage gagne {{diff}} $ ({{percentDiff}} %) de <strong>moins</strong> que le revenu médian des ménages ({{median}} $).",
-                    household_result_message_exact: "Votre ménage gagne exactement le revenu médian des ménages ({{median}} $).",
                     household_result_message_bracket: "Tranche de revenu : <strong>{{bracket}}</strong>",
+                    household_explanation_title: "💡 Comprendre les Quintiles",
+                    household_quintile_definition: "<strong>Qu'est-ce qu'un quintile?</strong> Un quintile divise les ménages en 5 groupes égaux de 20 % chacun, selon leur revenu.",
+                    household_quintile_example: "<strong>Exemple:</strong> Le <strong>Premier Quintile (Q1) va de {{q1_min}} à {{q1_max}}</strong>. Cela représente les 20 % des ménages canadiens ayant les revenus les plus faibles.",
+                    household_quintile_middle: "<strong>Le Troisième Quintile (Q3) va de {{q3_min}} à {{q3_max}}</strong>. Cela représente les 20 % des ménages au milieu et est souvent considéré comme le revenu de la \"classe moyenne\".",
                     quintile_q1: "Premier Quintile (Q1) - 20 % Inférieur",
                     quintile_q2: "Deuxième Quintile (Q2)",
                     quintile_q3: "Troisième Quintile (Q3) - 20 % Moyen",
@@ -1268,6 +1272,11 @@
         
         function updateLegend(percentiles) {
             const legendGrid = document.getElementById('legendGrid');
+
+            // Restore legend title for individual mode
+            document.querySelector('.legend-title').innerHTML =
+                i18next.t('legend_title');
+
             const percentileLabels = [
                 { key: 'percentile_p10', value: percentiles.p10 },
                 { key: 'percentile_p25', value: percentiles.p25 },
@@ -1290,11 +1299,46 @@
             const p25 = percentiles.p25.toLocaleString();
             const p50 = percentiles.p50.toLocaleString();
 
+            // Restore explanation title for individual mode
+            document.querySelector('.explanation-title').innerHTML =
+                i18next.t('explanation_title');
+
+            // Restore definition for individual mode
+            document.querySelector('.explanation-box p:nth-child(2)').innerHTML =
+                i18next.t('percentile_definition');
+
+            // Update examples with percentile values
             document.getElementById('percentileExample').innerHTML =
                 i18next.t('percentile_example', { p25: p25 });
 
             document.getElementById('medianExample').innerHTML =
                 i18next.t('median_example', { p50: p50 });
+        }
+
+        function updateQuintileExamples(quintiles) {
+            const q1_min = '$' + quintiles.q1.min.toLocaleString();
+            const q1_max = '$' + quintiles.q1.max.toLocaleString();
+            const q3_min = '$' + quintiles.q3.min.toLocaleString();
+            const q3_max = '$' + quintiles.q3.max.toLocaleString();
+
+            // Update legend title
+            document.querySelector('.legend-title').innerHTML =
+                i18next.t('household_legend_title');
+
+            // Update explanation title
+            document.querySelector('.explanation-title').innerHTML =
+                i18next.t('household_explanation_title');
+
+            // Update definition
+            document.querySelector('.explanation-box p:nth-child(2)').innerHTML =
+                i18next.t('household_quintile_definition');
+
+            // Update examples
+            document.getElementById('percentileExample').innerHTML =
+                i18next.t('household_quintile_example', { q1_min: q1_min, q1_max: q1_max });
+
+            document.getElementById('medianExample').innerHTML =
+                i18next.t('household_quintile_middle', { q3_min: q3_min, q3_max: q3_max });
         }
         
         async function calculateIndividual() {
@@ -1378,12 +1422,19 @@
             }
         }
 
+        // Helper function to format currency in thousands
+        function formatCurrencyK(value) {
+            if (value === 0) return '$0';
+            const k = Math.round(value / 1000);
+            return '$' + k + 'k';
+        }
+
         // Generate distribution data for household income (quintile-based)
         function generateHouseholdDistributionData(quintiles) {
-            // Create 5 brackets based on quintiles
+            // Create 5 brackets based on quintiles using actual data
             const brackets = [
                 {
-                    label: '$0 - $35k',
+                    label: formatCurrencyK(quintiles.q1.min) + ' - ' + formatCurrencyK(quintiles.q1.max),
                     min: quintiles.q1.min,
                     max: quintiles.q1.max,
                     percentage: 20,
@@ -1391,7 +1442,7 @@
                     quintile: 1
                 },
                 {
-                    label: '$35k - $62k',
+                    label: formatCurrencyK(quintiles.q2.min) + ' - ' + formatCurrencyK(quintiles.q2.max),
                     min: quintiles.q2.min,
                     max: quintiles.q2.max,
                     percentage: 20,
@@ -1399,7 +1450,7 @@
                     quintile: 2
                 },
                 {
-                    label: '$62k - $95k',
+                    label: formatCurrencyK(quintiles.q3.min) + ' - ' + formatCurrencyK(quintiles.q3.max),
                     min: quintiles.q3.min,
                     max: quintiles.q3.max,
                     percentage: 20,
@@ -1407,7 +1458,7 @@
                     quintile: 3
                 },
                 {
-                    label: '$95k - $142k',
+                    label: formatCurrencyK(quintiles.q4.min) + ' - ' + formatCurrencyK(quintiles.q4.max),
                     min: quintiles.q4.min,
                     max: quintiles.q4.max,
                     percentage: 20,
@@ -1415,7 +1466,7 @@
                     quintile: 4
                 },
                 {
-                    label: '$142k+',
+                    label: formatCurrencyK(quintiles.q5.min) + '+',
                     min: quintiles.q5.min,
                     max: quintiles.q5.max,
                     percentage: 20,
@@ -1450,27 +1501,6 @@
                     percentile: data.percentile.toFixed(1)
                 })}</strong></p>`;
 
-                const diff = data.median.difference;
-                const percentDiff = Math.abs(data.median.percentDifference);
-
-                if (diff > 0) {
-                    message += `<p>${i18next.t('household_result_message_more', {
-                        diff: Math.abs(diff).toLocaleString(),
-                        percentDiff: percentDiff.toFixed(1),
-                        median: data.median.value.toLocaleString()
-                    })}</p>`;
-                } else if (diff < 0) {
-                    message += `<p>${i18next.t('household_result_message_less', {
-                        diff: Math.abs(diff).toLocaleString(),
-                        percentDiff: percentDiff.toFixed(1),
-                        median: data.median.value.toLocaleString()
-                    })}</p>`;
-                } else {
-                    message += `<p>${i18next.t('household_result_message_exact', {
-                        median: data.median.value.toLocaleString()
-                    })}</p>`;
-                }
-
                 message += `<p>${i18next.t('household_result_message_bracket', { bracket: data.bracket })}</p>`;
 
                 document.getElementById('message').innerHTML = message;
@@ -1492,6 +1522,9 @@
 
                 // Update legend with quintile data
                 updateHouseholdLegend(distData);
+
+                // Update explanation box with quintile examples
+                updateQuintileExamples(distData.quintiles);
 
                 // Create chart with quintile data
                 createHouseholdChart(income, distData.quintiles);

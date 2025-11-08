@@ -217,16 +217,6 @@ router.get('/household-percentile', (req, res) => {
     const aboveYou = 100 - belowYou;
     const bracket = getHouseholdBracket(quintileInfo.quintile);
 
-    // Calculate comparison to median
-    const median = householdData.median;
-    const diffFromMedian = income - median;
-    const percentDiffFromMedian = median !== 0 ? ((diffFromMedian / median) * 100).toFixed(1) : 0;
-
-    // Calculate comparison to average
-    const average = householdData.average;
-    const diffFromAverage = income - average;
-    const percentDiffFromAverage = average !== 0 ? ((diffFromAverage / average) * 100).toFixed(1) : 0;
-
     // Estimate number of households below
     const estimatedHouseholdsBelowYou = Math.floor((belowYou / 100) * householdData.totalHouseholds);
 
@@ -240,16 +230,6 @@ router.get('/household-percentile', (req, res) => {
       belowYou,
       aboveYou,
       bracket,
-      median: {
-        value: median,
-        difference: Math.round(diffFromMedian),
-        percentDifference: parseFloat(percentDiffFromMedian)
-      },
-      average: {
-        value: average,
-        difference: Math.round(diffFromAverage),
-        percentDifference: parseFloat(percentDiffFromAverage)
-      },
       estimatedHouseholdsBelowYou,
       totalHouseholds: householdData.totalHouseholds
     });
