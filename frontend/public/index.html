@@ -886,7 +886,7 @@
                     faq6_answer: "<strong>Individual Salary</strong> compares your personal employment income (wages and salaries) to other individuals in your age group using detailed census percentile data (P10, P25, P50, P75, P90, P95, P99). This is best for understanding where your personal earnings stand.<br><br><strong>Household Income</strong> compares the combined income of all people in your household to other Canadian households using quintile data (5 groups of 20% each). This gives a broader picture of your household's economic situation, regardless of how many earners contribute. Note that household data is not age-specific and uses broader income ranges.",
                     changelog_title: "Change Log",
                     changelog_version_1: "Version 1.0",
-                    changelog_date_1: "November 2024",
+                    changelog_date_1: "November 2025",
                     changelog_1_item_1: "Initial release with individual salary comparison by age group",
                     changelog_1_item_2: "Added household income comparison by quintiles",
                     changelog_1_item_3: "Bilingual support (English and French)",
@@ -966,7 +966,7 @@
                     faq6_answer: "<strong>Salaire Individuel</strong> compare votre revenu d'emploi personnel (salaires et traitements) à d'autres individus de votre groupe d'âge en utilisant des données de percentiles détaillées du recensement (P10, P25, P50, P75, P90, P95, P99). C'est idéal pour comprendre où se situent vos gains personnels. <strong>Revenu du Ménage</strong> compare le revenu combiné de toutes les personnes de votre ménage à d'autres ménages canadiens en utilisant des données de quintiles (5 groupes de 20 % chacun). Cela donne une image plus large de la situation économique de votre ménage, peu importe le nombre de personnes qui contribuent. Notez que les données des ménages ne sont pas spécifiques à l'âge et utilisent des fourchettes de revenus plus larges.",
                     changelog_title: "Journal des Modifications",
                     changelog_version_1: "Version 1.0",
-                    changelog_date_1: "Novembre 2024",
+                    changelog_date_1: "Novembre 2025",
                     changelog_1_item_1: "Version initiale avec comparaison de salaire individuel par groupe d'âge",
                     changelog_1_item_2: "Ajout de la comparaison du revenu du ménage par quintiles",
                     changelog_1_item_3: "Support bilingue (français et anglais)",
@@ -991,6 +991,283 @@
 
         let chart = null;
         let currentLanguage = 'en';
+
+        // ============================================
+        // DATA CACHE & STATIC FILE MANAGEMENT
+        // ============================================
+
+        class DataCache {
+            constructor() {
+                this.memoryCache = {};
+                this.manifest = null;
+                this.manifestLoaded = false;
+            }
+
+            async getManifest() {
+                if (this.manifestLoaded) {
+                    return this.manifest;
+                }
+
+                try {
+                    const response = await fetch('data/manifest.json');
+                    this.manifest = await response.json();
+                    this.manifestLoaded = true;
+
+                    // Check localStorage version
+                    const storedVersion = localStorage.getItem('data_version');
+                    if (storedVersion !== this.manifest.version) {
+                        // Version mismatch, clear old cache
+                        this.clearLocalStorage();
+                        localStorage.setItem('data_version', this.manifest.version);
+                    }
+
+                    return this.manifest;
+                } catch (error) {
+                    console.error('Failed to load manifest:', error);
+                    return null;
+                }
+            }
+
+            async getData(filename) {
+                // Check memory cache first
+                if (this.memoryCache[filename]) {
+                    return this.memoryCache[filename];
+                }
+
+                // Check localStorage
+                try {
+                    const cached = localStorage.getItem(`data_${filename}`);
+                    if (cached) {
+                        const data = JSON.parse(cached);
+                        this.memoryCache[filename] = data;
+                        return data;
+                    }
+                } catch (error) {
+                    console.warn('localStorage read failed:', error);
+                }
+
+                // Fetch from server
+                try {
+                    const response = await fetch(`data/census-2021/${filename}.json`);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const data = await response.json();
+
+                    // Store in memory cache
+                    this.memoryCache[filename] = data;
+
+                    // Store in localStorage
+                    try {
+                        localStorage.setItem(`data_${filename}`, JSON.stringify(data));
+                    } catch (error) {
+                        console.warn('localStorage write failed:', error);
+                    }
+
+                    return data;
+                } catch (error) {
+                    console.error(`Failed to load ${filename}:`, error);
+                    throw error;
+                }
+            }
+
+            clearLocalStorage() {
+                const keysToRemove = [];
+                for (let i = 0; i < localStorage.length; i++) {
+                    const key = localStorage.key(i);
+                    if (key.startsWith('data_')) {
+                        keysToRemove.push(key);
+                    }
+                }
+                keysToRemove.forEach(key => localStorage.removeItem(key));
+            }
+        }
+
+        // Initialize cache
+        const dataCache = new DataCache();
+
+        // ============================================
+        // HELPER FUNCTIONS
+        // ============================================
+
+        function getAgeDemographic(age) {
+            if (age >= 15 && age <= 19) return 'age-15-19';
+            if (age >= 20 && age <= 24) return 'age-20-24';
+            if (age >= 25 && age <= 29) return 'age-25-29';
+            if (age >= 30 && age <= 34) return 'age-30-34';
+            if (age >= 35 && age <= 39) return 'age-35-39';
+            if (age >= 40 && age <= 44) return 'age-40-44';
+            if (age >= 45 && age <= 49) return 'age-45-49';
+            if (age >= 50 && age <= 54) return 'age-50-54';
+            if (age >= 55 && age <= 59) return 'age-55-59';
+            if (age >= 60 && age <= 64) return 'age-60-64';
+            if (age >= 65) return 'age-65plus';
+            return 'all';
+        }
+
+        function getAgeGroupLabel(age) {
+            if (age >= 15 && age <= 19) return '15-19';
+            if (age >= 20 && age <= 24) return '20-24';
+            if (age >= 25 && age <= 29) return '25-29';
+            if (age >= 30 && age <= 34) return '30-34';
+            if (age >= 35 && age <= 39) return '35-39';
+            if (age >= 40 && age <= 44) return '40-44';
+            if (age >= 45 && age <= 49) return '45-49';
+            if (age >= 50 && age <= 54) return '50-54';
+            if (age >= 55 && age <= 59) return '55-59';
+            if (age >= 60 && age <= 64) return '60-64';
+            if (age >= 65) return '65+';
+            return null;
+        }
+
+        function getDataFilename(age) {
+            return `income-canada-${getAgeDemographic(age)}`;
+        }
+
+        // ============================================
+        // CALCULATION FUNCTIONS (Ported from backend)
+        // ============================================
+
+        function calculatePercentile(income, distribution) {
+            if (!distribution || !distribution.percentiles) {
+                throw new Error('Invalid distribution data');
+            }
+
+            const percentiles = [
+                [0, 0],
+                [10, distribution.percentiles.p10],
+                [25, distribution.percentiles.p25],
+                [50, distribution.percentiles.p50],
+                [75, distribution.percentiles.p75],
+                [90, distribution.percentiles.p90],
+                [95, distribution.percentiles.p95],
+                [99, distribution.percentiles.p99],
+                [100, 300000] // Approximate upper bound
+            ];
+
+            // Handle edge case: income at or below 10th percentile
+            if (income <= percentiles[1][1]) {
+                return Math.max(0, (income / percentiles[1][1]) * 10);
+            }
+
+            // Handle edge case: income above 99th percentile
+            if (income >= percentiles[percentiles.length - 2][1]) {
+                return Math.min(99.9, 99 + (income - percentiles[percentiles.length - 2][1]) / percentiles[percentiles.length - 2][1]);
+            }
+
+            // Find bracketing percentiles and interpolate
+            for (let i = 1; i < percentiles.length - 1; i++) {
+                const [pLow, incomeLow] = percentiles[i];
+                const [pHigh, incomeHigh] = percentiles[i + 1];
+
+                if (income >= incomeLow && income <= incomeHigh) {
+                    const ratio = (income - incomeLow) / (incomeHigh - incomeLow);
+                    return pLow + ratio * (pHigh - pLow);
+                }
+            }
+
+            return 50; // Default to median if calculation fails
+        }
+
+        function getIncomeBracket(percentile) {
+            if (percentile >= 99) return 'Top 1%';
+            if (percentile >= 95) return 'Top 5%';
+            if (percentile >= 90) return 'Top 10%';
+            if (percentile >= 75) return 'Top 25%';
+            if (percentile >= 50) return 'Above Median';
+            if (percentile >= 25) return 'Below Median';
+            return 'Bottom 25%';
+        }
+
+        function calculateHouseholdQuintile(income, quintiles) {
+            const averages = [
+                quintiles.q1.average,
+                quintiles.q2.average,
+                quintiles.q3.average,
+                quintiles.q4.average,
+                quintiles.q5.average
+            ];
+
+            // Calculate midpoints between quintile averages
+            const midpoints = [];
+            for (let i = 0; i < averages.length - 1; i++) {
+                midpoints.push((averages[i] + averages[i + 1]) / 2);
+            }
+
+            // Determine which quintile based on midpoints
+            let quintileIndex = 0;
+            for (let i = 0; i < midpoints.length; i++) {
+                if (income < midpoints[i]) {
+                    quintileIndex = i;
+                    break;
+                }
+                quintileIndex = i + 1;
+            }
+
+            const quintileKeys = ['q1', 'q2', 'q3', 'q4', 'q5'];
+            const key = quintileKeys[quintileIndex];
+
+            return {
+                quintile: quintileIndex + 1,
+                label: quintiles[key].label,
+                average: quintiles[key].average
+            };
+        }
+
+        function calculateHouseholdPercentile(income, quintiles) {
+            const quintileInfo = calculateHouseholdQuintile(income, quintiles);
+            const quintileIndex = quintileInfo.quintile - 1;
+
+            const averages = [
+                quintiles.q1.average,
+                quintiles.q2.average,
+                quintiles.q3.average,
+                quintiles.q4.average,
+                quintiles.q5.average
+            ];
+
+            // Base percentile (middle of the quintile)
+            const basePercentile = quintileIndex * 20 + 10;
+
+            // For more accuracy, interpolate position within the quintile
+            let percentile = basePercentile;
+
+            if (quintileIndex === 0) {
+                // First quintile: interpolate between 0 and Q1-Q2 midpoint
+                const midpoint = (averages[0] + averages[1]) / 2;
+                const position = income / midpoint;
+                percentile = Math.min(20, position * 20);
+            } else if (quintileIndex === 4) {
+                // Last quintile: interpolate from Q4-Q5 midpoint onwards
+                const midpoint = (averages[3] + averages[4]) / 2;
+                if (income >= averages[4]) {
+                    percentile = 90 + Math.min(9.9, (income / averages[4] - 1) * 10);
+                } else {
+                    const position = (income - midpoint) / (averages[4] - midpoint);
+                    percentile = 80 + position * 20;
+                }
+            } else {
+                // Middle quintiles: interpolate between midpoints
+                const lowerMidpoint = (averages[quintileIndex - 1] + averages[quintileIndex]) / 2;
+                const upperMidpoint = (averages[quintileIndex] + averages[quintileIndex + 1]) / 2;
+                const range = upperMidpoint - lowerMidpoint;
+                const position = (income - lowerMidpoint) / range;
+                percentile = (quintileIndex * 20) + (position * 20);
+            }
+
+            return Math.min(99.9, Math.max(0, percentile));
+        }
+
+        function getHouseholdBracket(quintile) {
+            const brackets = {
+                1: 'First Quintile (Q1) - Bottom 20%',
+                2: 'Second Quintile (Q2)',
+                3: 'Third Quintile (Q3) - Middle 20%',
+                4: 'Fourth Quintile (Q4)',
+                5: 'Fifth Quintile (Q5) - Top 20%'
+            };
+            return brackets[quintile] || 'Unknown';
+        }
 
         // Translation helper function
         function updatePageTranslations() {
@@ -1440,16 +1717,58 @@
             }
 
             try {
-                // Call the backend API
-                const response = await fetch(`http://localhost:3001/api/income/percentile?income=${income}&age=${age}`);
+                // Load manifest to ensure cache is up to date
+                await dataCache.getManifest();
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data from API');
+                // Fetch distribution data from local JSON
+                const filename = getDataFilename(age);
+                const distribution = await dataCache.getData(filename);
+
+                if (!distribution) {
+                    throw new Error(`No data found for age group: ${age}`);
                 }
 
-                const data = await response.json();
+                // Calculate percentile using client-side function
+                const percentile = calculatePercentile(income, distribution);
+                const belowYou = Math.floor(percentile);
+                const aboveYou = 100 - belowYou;
+                const bracket = getIncomeBracket(percentile);
 
-                // Generate message using API data with translations
+                // Calculate comparison to median
+                const median = distribution.median;
+                const diffFromMedian = income - median;
+                const percentDiffFromMedian = ((diffFromMedian / median) * 100).toFixed(1);
+
+                // Calculate comparison to average
+                const average = distribution.average;
+                const diffFromAverage = income - average;
+                const percentDiffFromAverage = ((diffFromAverage / average) * 100).toFixed(1);
+
+                // Create data object matching the API response format
+                const data = {
+                    income,
+                    age,
+                    ageGroup: getAgeGroupLabel(age),
+                    geography: distribution.geography,
+                    demographic: distribution.demographicLabel,
+                    year: distribution.year,
+                    percentile: Math.round(percentile * 10) / 10,
+                    belowYou,
+                    aboveYou,
+                    bracket,
+                    median: {
+                        value: median,
+                        difference: Math.round(diffFromMedian),
+                        percentDifference: parseFloat(percentDiffFromMedian)
+                    },
+                    average: {
+                        value: average,
+                        difference: Math.round(diffFromAverage),
+                        percentDifference: parseFloat(percentDiffFromAverage)
+                    }
+                };
+
+                // Generate message using data with translations
                 let message = `<p><strong>${i18next.t('result_message_main', {
                     age: age,
                     percentile: data.percentile.toFixed(1),
@@ -1487,16 +1806,12 @@
                 url.searchParams.set('age', age);
                 window.history.pushState({}, '', url);
 
-                // Fetch distribution data for the chart
-                const distResponse = await fetch(`http://localhost:3001/api/income/distribution?age=${age}`);
-                const distData = await distResponse.json();
-
                 // Show results and message box
                 document.getElementById('message').style.display = 'block';
                 document.getElementById('results').classList.add('show');
-                updateLegend(distData.percentiles);
-                updatePercentileExamples(distData.percentiles);
-                createChart(income, distData.percentiles);
+                updateLegend(distribution.percentiles);
+                updatePercentileExamples(distribution.percentiles);
+                createChart(income, distribution.percentiles);
 
                 // Scroll to results
                 document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -1591,16 +1906,37 @@
             }
 
             try {
-                // Call the backend API for household percentile
-                const response = await fetch(`http://localhost:3001/api/income/household-percentile?income=${income}`);
+                // Load manifest to ensure cache is up to date
+                await dataCache.getManifest();
 
-                if (!response.ok) {
-                    throw new Error('Failed to fetch data from API');
+                // Fetch household distribution data from local JSON
+                const householdData = await dataCache.getData('household-income-canada');
+
+                if (!householdData || !householdData.quintiles) {
+                    throw new Error('Household income data not available');
                 }
 
-                const data = await response.json();
+                // Calculate quintile and percentile using client-side functions
+                const quintileInfo = calculateHouseholdQuintile(income, householdData.quintiles);
+                const percentile = calculateHouseholdPercentile(income, householdData.quintiles);
+                const belowYou = Math.floor(percentile);
+                const aboveYou = 100 - belowYou;
+                const bracket = getHouseholdBracket(quintileInfo.quintile);
 
-                // Generate message using API data with translations
+                // Create data object matching the API response format
+                const data = {
+                    income,
+                    geography: householdData.geography,
+                    year: householdData.year,
+                    quintile: quintileInfo.quintile,
+                    quintileLabel: quintileInfo.label,
+                    percentile: Math.round(percentile * 10) / 10,
+                    belowYou,
+                    aboveYou,
+                    bracket
+                };
+
+                // Generate message using data with translations
                 let message = `<p><strong>${i18next.t('household_result_message_main', {
                     percentile: data.percentile.toFixed(1)
                 })}</strong></p>`;
@@ -1616,22 +1952,18 @@
                 url.searchParams.delete('age');
                 window.history.pushState({}, '', url);
 
-                // Fetch household distribution data for the chart
-                const distResponse = await fetch(`http://localhost:3001/api/income/household-distribution`);
-                const distData = await distResponse.json();
-
                 // Show results and message box
                 document.getElementById('message').style.display = 'block';
                 document.getElementById('results').classList.add('show');
 
                 // Update legend with quintile data
-                updateHouseholdLegend(distData);
+                updateHouseholdLegend(householdData);
 
                 // Update explanation box with quintile examples
-                updateQuintileExamples(distData.quintiles);
+                updateQuintileExamples(householdData.quintiles);
 
                 // Create chart with quintile data
-                createHouseholdChart(income, distData.quintiles);
+                createHouseholdChart(income, householdData.quintiles);
 
                 // Scroll to results
                 document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });

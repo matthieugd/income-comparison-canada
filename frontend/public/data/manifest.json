@@ -1,0 +1,18 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-11-08",
+  "files": {
+    "income-canada-age-15-19": "1.0.0",
+    "income-canada-age-20-24": "1.0.0",
+    "income-canada-age-25-29": "1.0.0",
+    "income-canada-age-30-34": "1.0.0",
+    "income-canada-age-35-39": "1.0.0",
+    "income-canada-age-40-44": "1.0.0",
+    "income-canada-age-45-49": "1.0.0",
+    "income-canada-age-50-54": "1.0.0",
+    "income-canada-age-55-59": "1.0.0",
+    "income-canada-age-60-64": "1.0.0",
+    "income-canada-age-65plus": "1.0.0",
+    "household-income-canada": "1.0.0"
+  }
+}

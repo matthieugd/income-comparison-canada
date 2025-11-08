@@ -4,149 +4,182 @@ This document provides context for Claude (or other AI assistants) when working 
 
 ## Project Overview
 
-**Income Comparison Canada** is a web application that allows Canadians to compare their employment income against others in their age group using Statistics Canada Census 2021 data.
+**Income Comparison Canada** is a 100% static web application that allows Canadians to compare their employment income and household income against others using Statistics Canada Census 2021 data.
+
+**Key Architecture**: This application has **NO backend server** - all data loading and calculations happen client-side in the browser.
 
 ## Tech Stack
 
-- **Backend**: Node.js + Express.js
+- **Architecture**: 100% static (no backend server required)
 - **Frontend**: Vanilla HTML/CSS/JavaScript with Chart.js
-- **Data**: JSON files (no database)
-- **API**: RESTful endpoints
+- **Data Storage**: Static JSON files with smart caching
+- **Caching**: localStorage + in-memory cache with version control
+- **i18n**: i18next for bilingual support (EN/FR)
+- **Deployment**: Any static hosting (GitHub Pages, Netlify, Vercel, Cloudflare Pages)
 
 ## Project Structure
 
 ```
 income-comparison-canada/
-├── backend/
-│   ├── src/
-│   │   ├── data/census-2021/           # Age-specific income JSON files
-│   │   │   ├── income-canada.json      # All ages
-│   │   │   ├── income-canada-age-15-24.json
-│   │   │   ├── income-canada-age-25-34.json
-│   │   │   ├── income-canada-age-35-44.json
-│   │   │   ├── income-canada-age-45-54.json
-│   │   │   ├── income-canada-age-55-64.json
-│   │   │   └── income-canada-age-65plus.json
-│   │   ├── routes/
-│   │   │   └── incomeRoutes.js         # API endpoints
-│   │   ├── services/
-│   │   │   └── dataService.js          # Data loading & calculations
-│   │   └── server.js                   # Express server
-│   └── package.json
-├── frontend/
-│   └── public/
-│       └── index.html                  # Complete standalone app
-├── data/census-2021/                   # Documentation about data
-└── README.md
+└── frontend/public/
+    ├── index.html                      # Complete standalone application (~100KB)
+    └── data/
+        ├── manifest.json               # Version control for cache invalidation
+        └── census-2021/
+            ├── income-canada-age-15-19.json
+            ├── income-canada-age-20-24.json
+            ├── income-canada-age-25-29.json
+            ├── income-canada-age-30-34.json
+            ├── income-canada-age-35-39.json
+            ├── income-canada-age-40-44.json
+            ├── income-canada-age-45-49.json
+            ├── income-canada-age-50-54.json
+            ├── income-canada-age-55-59.json
+            ├── income-canada-age-60-64.json
+            ├── income-canada-age-65plus.json
+            └── household-income-canada.json
 ```
 
 ## Key Concepts
 
-### Age Groups
-The application divides income data into 6 age groups matching Statistics Canada Census categories:
-- 15-24 years
-- 25-34 years
-- 35-44 years
-- 45-54 years
-- 55-64 years
-- 65+ years
+### Two Comparison Modes
 
-### Data Structure
-Each age group JSON file contains:
+1. **Individual Salary Comparison** (11 age groups):
+   - 15-19, 20-24, 25-29, 30-34, 35-39, 40-44, 45-49, 50-54, 55-59, 60-64, 65+
+   - Uses detailed percentile data (P10, P25, P50, P75, P90, P95, P99)
+   - Age-specific calculations
+
+2. **Household Income Comparison** (quintiles):
+   - 5 income groups (Q1-Q5, 20% each)
+   - Uses quintile average incomes
+   - Not age-specific
+
+### Individual Salary Data Structure
+Each age group JSON file (e.g., `income-canada-age-30-34.json`) contains:
+```json
+{
+  "geography": "Canada",
+  "geographyCode": "CA",
+  "geographyType": "country",
+  "year": 2020,
+  "demographic": "age-30-34",
+  "demographicLabel": "Age 30-34",
+  "demographicType": "age",
+  "percentiles": {
+    "p10": 7700,
+    "p25": 22600,
+    "p50": 46400,
+    "p75": 72500,
+    "p90": 99000,
+    "p95": 119000,
+    "p96": 127000,
+    "p97": 137000,
+    "p98": 153000,
+    "p99": 186000
+  },
+  "median": 46400,
+  "average": 52550
+}
+```
+
+### Household Income Data Structure
+The `household-income-canada.json` file contains:
 ```json
 {
   "geography": "Canada",
   "geographyCode": "CA",
   "year": 2020,
-  "demographic": "age-25-34",
-  "demographicLabel": "Age 25-34",
-  "percentiles": {
-    "p10": 8200,
-    "p25": 22400,
-    "p50": 43500,
-    "p75": 65200,
-    "p90": 89500,
-    "p95": 108300,
-    "p96": 115100,
-    "p97": 123800,
-    "p98": 138400,
-    "p99": 174200
-  },
-  "median": 43500,
-  "average": 52100,
-  "totalRecipients": 4900000
-}
-```
-
-### API Endpoints
-
-#### POST /api/income/percentile
-Calculate income percentile for a user.
-
-**Required Parameters:**
-- `income` (number): Annual employment income
-- `age` (number): User's age (15-100)
-
-**Response:**
-```json
-{
-  "income": 75000,
-  "age": 45,
-  "ageGroup": "45-54",
-  "geography": "Canada",
-  "demographic": "Age 45-54",
-  "percentile": 72.8,
-  "belowYou": 72,
-  "aboveYou": 28,
-  "bracket": "Top 25%",
-  "median": {
-    "value": 51400,
-    "difference": 23600,
-    "percentDifference": 45.9
-  },
-  "average": {
-    "value": 67200,
-    "difference": 7800,
-    "percentDifference": 11.6
+  "type": "household",
+  "quintiles": {
+    "q1": {
+      "label": "First Quintile (Q1)",
+      "average": 39927,
+      "percentage": 20
+    },
+    "q2": {
+      "label": "Second Quintile (Q2)",
+      "average": 80795,
+      "percentage": 20
+    }
+    // ... q3, q4, q5
   }
 }
 ```
 
-#### GET /api/income/distribution
-Get full distribution data for an age group.
-
-**Required Parameters:**
-- `age` (number): User's age (15-100)
+### Version Manifest Structure
+The `manifest.json` file controls cache invalidation:
+```json
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-11-08",
+  "files": {
+    "income-canada-age-15-19": "1.0.0",
+    "income-canada-age-20-24": "1.0.0",
+    // ... other files
+    "household-income-canada": "1.0.0"
+  }
+}
+```
 
 ## Code Conventions
 
-### Backend
-- Use ES modules (`import`/`export`)
-- File-based data storage (no database)
-- All data loaded into memory on startup via `dataService.loadAllData()`
-- Percentile calculation uses linear interpolation
-- Age is mapped to demographic codes (e.g., 45 → "age-45-54")
+### Application Architecture
+- **100% client-side**: All logic runs in the browser
+- **No backend**: No server, no API endpoints
+- **No build step**: Single HTML file with inline JavaScript
+- **Smart caching**: localStorage + in-memory with version control
+- **Bilingual**: i18next for EN/FR translations
 
-### Frontend
-- Standalone HTML file (no build step required)
-- Uses Chart.js with chartjs-plugin-datalabels
-- Responsive design with media queries
-- Direct API calls with `fetch()`
-- Fallback to client-side calculation if API unavailable
+### Data Loading Flow
+1. User opens page → `dataCache.getManifest()` checks version
+2. User enters income/age → `dataCache.getData(filename)` loads JSON
+3. Check memory cache → Check localStorage → Fetch from server
+4. Store in both caches for future use
+5. Calculate percentile client-side → Display results
+
+### Key Functions (in index.html)
+
+**Data Management:**
+- `DataCache` class: Handles caching with version control
+- `dataCache.getManifest()`: Loads version manifest
+- `dataCache.getData(filename)`: Gets JSON with caching
+
+**Helper Functions:**
+- `getAgeDemographic(age)`: Maps age to demographic code (e.g., 30 → "age-30-34")
+- `getAgeGroupLabel(age)`: Gets display label (e.g., 30 → "30-34")
+- `getDataFilename(age)`: Constructs filename (e.g., "income-canada-age-30-34")
+
+**Calculation Functions:**
+- `calculatePercentile(income, distribution)`: Linear interpolation between percentiles
+- `getIncomeBracket(percentile)`: Returns bracket label (Top 1%, Top 5%, etc.)
+- `calculateHouseholdQuintile(income, quintiles)`: Determines quintile using midpoints
+- `calculateHouseholdPercentile(income, quintiles)`: Interpolates percentile within quintile
+- `getHouseholdBracket(quintile)`: Returns quintile label
+
+**Main Calculation Functions:**
+- `calculateIndividual()`: Handles individual salary comparison
+- `calculateHousehold()`: Handles household income comparison
 
 ## Important Design Decisions
 
-### Age is Mandatory
-The application requires age input because:
+### Static Architecture
+The application was converted from backend+frontend to 100% static because:
+1. **No server costs**: Deploy to free static hosting (GitHub Pages, Netlify, etc.)
+2. **Infinite scalability**: CDN handles all traffic automatically
+3. **Lightning fast**: Client-side caching makes subsequent loads instant
+4. **Simpler deployment**: Just push files, no server configuration
+5. **Offline-ready**: Can be extended with Service Workers for offline support
+
+### Age is Mandatory (Individual Mode)
+The application requires age input for individual salary comparison because:
 1. Income varies significantly by age
 2. Comparing a 25-year-old to a 55-year-old isn't meaningful
 3. Age-specific comparisons are more actionable
+4. Statistics Canada provides age-segmented data
 
-### No Backward Compatibility
-The API was simplified to focus on the core use case:
-- Age parameter is required (not optional)
-- Removed geography/demographic parameters
-- Canada-wide data only
+### Quintiles vs Percentiles
+- **Individual mode**: Uses percentiles (P10, P25, P50, etc.) for precision
+- **Household mode**: Uses quintiles (5 groups of 20%) because StatCan household data comes in quintiles
 
 ### Histogram vs Density Curve
 The visualization uses a histogram because:
@@ -154,131 +187,211 @@ The visualization uses a histogram because:
 - Clear representation of population distribution
 - Avoids mathematical complexity of density curves
 
+### Client-Side Caching Strategy
+Three-tier caching system:
+1. **Memory cache**: Instant access (same session)
+2. **localStorage**: Persistent across sessions (~50KB limit, well within)
+3. **Network**: Fetch from server only if not cached
+
+Cache invalidation triggers:
+- Version mismatch in manifest.json
+- User clears localStorage
+- 15-day TTL (could be added)
+
 ## When Making Changes
 
 ### Adding New Age Groups
-1. Create new JSON file in `backend/src/data/census-2021/`
-2. Update `getAgeDemographic()` function in `incomeRoutes.js`
-3. Update `getAgeGroupLabel()` function in `incomeRoutes.js`
+1. Create new JSON file in `frontend/public/data/census-2021/`
+2. Update `getAgeDemographic()` function in `index.html`
+3. Update `getAgeGroupLabel()` function in `index.html`
 4. Update frontend age validation
+5. Add filename to `manifest.json`
 
-### Adding Geographic Filters (Provinces/Cities)
-1. Add new JSON files with `geographyCode` field
-2. Re-add `geography` parameter to API endpoints
-3. Update `dataService.js` to handle geography lookups
-4. Update frontend to include geography selector
+### Updating Income Data
+1. Edit JSON files in `frontend/public/data/census-2021/`
+2. Increment version in `frontend/public/data/manifest.json`:
+   ```json
+   {
+     "version": "1.0.1",  // Increment this
+     "lastUpdated": "2025-11-15"
+   }
+   ```
+3. Deploy - users automatically get new version
 
 ### Modifying Percentile Calculation
-The calculation is in `backend/src/services/dataService.js`:
-- `calculatePercentile()` function uses linear interpolation
+The calculation is in `index.html` (search for `function calculatePercentile`):
+- Uses linear interpolation between known percentiles
 - Handles edge cases (below P10, above P99)
 - Returns values between 0 and 99.9
 
-## Data Source
+### Adding Geographic Filters (Provinces/Cities)
+1. Create new JSON files with `geographyCode` field
+2. Add geography selector to UI
+3. Update `getData()` calls to include geography parameter
+4. Modify `getDataFilename()` to include geography
 
-All income data comes from:
+## Data Sources
+
+### Individual Salary Data
 - **Source**: Statistics Canada, Census of Population 2021
 - **Reference Year**: 2020 (calendar year)
 - **Variable**: Employment income
 - **Definition**: "All income received as wages, salaries and commissions from paid employment and net self-employment income"
 - **Population**: Persons aged 15+ with employment income
+- **Age Groups**: 11 groups (15-19, 20-24, 25-29, 30-34, 35-39, 40-44, 45-49, 50-54, 55-59, 60-64, 65+)
+
+### Household Income Data
+- **Source**: Statistics Canada, Household Income Survey (Table 36-10-0587-01)
+- **Reference Year**: 2024
+- **Variable**: Household income (approximated from disposable income + current transfers paid)
+- **Distribution**: Quintiles (5 groups of 20% each)
 
 ## Common Tasks
 
-### Testing the API
+### Running Locally for Development
 ```bash
-# Test each age group
-curl "http://localhost:3001/api/income/percentile?income=50000&age=25"
-curl "http://localhost:3001/api/income/percentile?income=50000&age=45"
-curl "http://localhost:3001/api/income/percentile?income=50000&age=65"
+# Serve the static files with any HTTP server
+cd frontend/public
+python3 -m http.server 8000
+# Open http://localhost:8000
 
-# Test edge cases
-curl "http://localhost:3001/api/income/percentile?income=0&age=25"
-curl "http://localhost:3001/api/income/percentile?income=300000&age=45"
+# Or use npx
+npx serve frontend/public
 
-# Test validation
-curl "http://localhost:3001/api/income/percentile?income=50000"  # Missing age
-curl "http://localhost:3001/api/income/percentile?income=50000&age=10"  # Invalid age
+# Or use http-server
+npx http-server frontend/public
 ```
 
-### Running the Application
+### Testing the Application
+Open browser console and test:
+```javascript
+// Check cache
+console.log(localStorage.getItem('data_version'));
+console.log(localStorage.getItem('data_income-canada-age-30-34'));
+
+// Clear cache manually
+localStorage.clear();
+
+// Test calculations manually
+const testIncome = 50000;
+const testAge = 30;
+calculateIndividual(); // After entering values in form
+```
+
+### Deploying to Production
 ```bash
-# Backend (required)
-cd backend
-npm install
-npm start  # Runs on http://localhost:3001
+# GitHub Pages
+git add .
+git commit -m "Deploy static app"
+git push origin main
+# Enable GitHub Pages in repo settings → Pages → Source: main → /frontend/public
 
-# Frontend (choose one)
-# Option 1: Open directly in browser
-open frontend/public/index.html
+# Netlify
+# Drag and drop frontend/public folder to netlify.com
 
-# Option 2: Serve with local server
-cd frontend
-npx serve public  # Runs on http://localhost:3000
+# Vercel
+cd frontend/public
+vercel --prod
+
+# Cloudflare Pages
+# Connect repo, set output directory to frontend/public
 ```
 
 ## Known Limitations
 
-1. **Data is from 2020**: Most recent complete Census data available
-2. **Canada-wide only**: No provincial or city-level data currently
-3. **Employment income only**: Excludes investment income, pensions, transfers
-4. **No authentication**: Public API with no rate limiting
-5. **In-memory data**: Backend stores all data in RAM (acceptable for current dataset size)
+1. **Individual data from 2020**: Most recent complete Census data available (Census 2021 reports 2020 income)
+2. **Household data from 2024**: Annual household survey data
+3. **Canada-wide only**: No provincial or city-level data currently
+4. **Employment income only (individual)**: Excludes investment income, pensions, transfers
+5. **Browser storage limits**: localStorage has ~5-10MB limit (we use ~50KB)
+6. **Requires JavaScript**: No fallback for JavaScript-disabled browsers
 
 ## Future Enhancements
 
 Potential features to add:
-- Provincial/city geographic filters
-- After-tax income calculator
-- Occupation-based comparisons
-- Historical trends (2015 vs 2020)
-- Cost of living adjustments by region
-- API rate limiting
-- Data caching
-- Progressive Web App (PWA) features
+- **Provincial/city filters**: Add geographic segmentation
+- **After-tax calculator**: Show post-tax income comparisons
+- **Occupation filters**: Compare by job type
+- **Historical trends**: Compare 2015 vs 2020 vs 2025 census data
+- **Cost of living adjustments**: Regional purchasing power parity
+- **PWA support**: Service Worker for offline functionality
+- **Export features**: PDF/image export of results
+- **Sharing**: Social media share buttons
+- **Analytics**: Anonymous usage tracking (privacy-respecting)
 
 ## Debugging Tips
 
-### API Not Returning Data
-1. Check if data files exist in `backend/src/data/census-2021/`
-2. Verify `dataService.loadAllData()` ran successfully on startup
-3. Check console for "✓ Loaded: ..." messages
-4. Verify age maps to correct demographic code
+### Data Not Loading
+1. **Check browser console** for errors
+2. **Verify JSON files exist** in `frontend/public/data/census-2021/`
+3. **Check manifest.json** is valid JSON
+4. **Test with cleared cache**: `localStorage.clear()` in console
+5. **Verify CORS**: Must serve via HTTP server, not `file://` protocol
 
-### Frontend Not Displaying Chart
-1. Check browser console for errors
-2. Verify Chart.js and plugins loaded correctly
-3. Ensure API is running and accessible
-4. Check CORS settings if running on different ports
+### Chart Not Displaying
+1. **Check browser console** for Chart.js errors
+2. **Verify Chart.js loaded**: Look for `<script src="https://cdn.jsdelivr.net/npm/chart.js..."`
+3. **Check data structure**: Console log `distribution.percentiles`
+4. **Test with simple data**: Manually call `createChart()` with test data
 
 ### Percentile Seems Wrong
-1. Verify correct age group is being used
-2. Check percentile interpolation logic
-3. Compare against raw percentile values in JSON
-4. Remember: same income = different percentiles by age
+1. **Verify correct age group**: Check `getAgeDemographic(age)` returns expected code
+2. **Check raw data**: Console log the loaded JSON file
+3. **Test interpolation**: Manually call `calculatePercentile()` with known values
+4. **Remember age matters**: Same income = different percentiles by age
+
+### Cache Issues
+1. **Clear localStorage**: `localStorage.clear()` in console
+2. **Check version**: `localStorage.getItem('data_version')`
+3. **Force refresh**: Increment version in manifest.json
+4. **Disable cache**: Browser DevTools → Network tab → Disable cache
 
 ## Getting Help
 
 When asking Claude for help:
 1. Mention this file: "Review CLAUDE.md for context"
 2. Be specific about the issue
-3. Include relevant code snippets
-4. Specify which component (backend/frontend/API)
-5. Provide error messages if any
+3. Include relevant code snippets or browser console errors
+4. Specify which mode (individual/household) is affected
+5. Mention what you've already tried
 
 ## Questions Claude Can Help With
 
+### Data & Content
 - "Add a new age group for ages 0-14"
+- "Update the income data for 2025 Census"
+- "Add provincial/city filtering"
+- "Change the income quintile boundaries"
+
+### UI & Visualization
 - "Change the histogram colors"
-- "Add provincial filtering"
-- "Optimize the percentile calculation"
-- "Make the visualization more mobile-friendly"
-- "Add an occupation field"
-- "Export results as PDF"
-- "Add unit tests"
-- "Implement API rate limiting"
+- "Make the chart more mobile-friendly"
+- "Add a dark mode toggle"
+- "Improve accessibility (ARIA labels, keyboard nav)"
+- "Add animations to the chart"
+
+### Features
+- "Add export to PDF functionality"
+- "Add social sharing buttons"
+- "Create a comparison history feature"
+- "Add an after-tax calculator"
+- "Implement Service Worker for offline mode"
+
+### Technical
+- "Optimize the caching strategy"
+- "Add compression to JSON files"
+- "Implement lazy loading for chart library"
+- "Add error boundaries for better error handling"
+- "Optimize bundle size"
+
+### Deployment
+- "Help me deploy to GitHub Pages"
+- "Configure custom domain on Netlify"
+- "Add CI/CD pipeline for auto-deployment"
+- "Set up analytics (privacy-focused)"
 
 ---
 
-**Last Updated**: November 2, 2025  
-**Project Version**: 2.0
+**Last Updated**: November 8, 2025
+**Project Version**: 3.0 (Static Architecture)
+**Architecture**: 100% Static (No Backend)
