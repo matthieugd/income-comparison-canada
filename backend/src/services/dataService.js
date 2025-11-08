@@ -9,7 +9,8 @@ const __dirname = path.dirname(__filename);
 const dataStore = {
   distributions: new Map(),
   geographies: [],
-  demographics: []
+  demographics: [],
+  householdData: null
 };
 
 /**
@@ -41,7 +42,14 @@ export function loadAllData() {
       const fileContent = fs.readFileSync(filePath, 'utf-8');
       const data = JSON.parse(fileContent);
 
-      // Store data by geography code and demographic
+      // Check if this is household data
+      if (data.type === 'household') {
+        dataStore.householdData = data;
+        console.log(`✓ Loaded: Household Income Data - ${data.geography}`);
+        return;
+      }
+
+      // Store individual income data by geography code and demographic
       const key = `${data.geographyCode}-${data.demographic || 'all'}`;
       dataStore.distributions.set(key, data);
 
@@ -158,11 +166,101 @@ export function getIncomeBracket(percentile) {
   return 'Bottom 25%';
 }
 
+/**
+ * Get household income data
+ */
+export function getHouseholdData() {
+  return dataStore.householdData;
+}
+
+/**
+ * Calculate which quintile a household income falls into
+ */
+export function calculateHouseholdQuintile(income) {
+  if (!dataStore.householdData || !dataStore.householdData.quintiles) {
+    throw new Error('Household data not loaded');
+  }
+
+  const quintiles = dataStore.householdData.quintiles;
+
+  // Check each quintile
+  const quintileKeys = ['q1', 'q2', 'q3', 'q4', 'q5'];
+  for (let i = 0; i < quintileKeys.length; i++) {
+    const key = quintileKeys[i];
+    const quintile = quintiles[key];
+
+    if (income >= quintile.min && income < quintile.max) {
+      return {
+        quintile: i + 1,
+        label: quintile.label,
+        min: quintile.min,
+        max: quintile.max
+      };
+    }
+  }
+
+  // If income is above Q5 max, return Q5
+  return {
+    quintile: 5,
+    label: quintiles.q5.label,
+    min: quintiles.q5.min,
+    max: quintiles.q5.max
+  };
+}
+
+/**
+ * Calculate percentile for household income based on quintiles
+ * Returns approximate percentile (quintiles divide into 20% chunks)
+ */
+export function calculateHouseholdPercentile(income) {
+  const quintileInfo = calculateHouseholdQuintile(income);
+  const quintile = quintileInfo.quintile;
+
+  // Calculate position within quintile
+  const quintileMin = quintileInfo.min;
+  const quintileMax = quintileInfo.max;
+  const range = quintileMax - quintileMin;
+
+  // Avoid division by zero for the last quintile
+  let positionInQuintile = 0.5;
+  if (range > 0) {
+    positionInQuintile = (income - quintileMin) / range;
+  }
+
+  // Each quintile represents 20% of households
+  // Base percentile is the start of the quintile
+  const basePercentile = (quintile - 1) * 20;
+
+  // Add position within quintile (0-20 percentage points)
+  const percentile = basePercentile + (positionInQuintile * 20);
+
+  return Math.min(99.9, Math.max(0, percentile));
+}
+
+/**
+ * Get household income bracket label based on quintile
+ */
+export function getHouseholdBracket(quintile) {
+  const brackets = {
+    1: 'First Quintile (Q1) - Bottom 20%',
+    2: 'Second Quintile (Q2)',
+    3: 'Third Quintile (Q3) - Middle 20%',
+    4: 'Fourth Quintile (Q4)',
+    5: 'Fifth Quintile (Q5) - Top 20%'
+  };
+
+  return brackets[quintile] || 'Unknown';
+}
+
 export default {
   loadAllData,
   getDistribution,
   getGeographies,
   getDemographics,
   calculatePercentile,
-  getIncomeBracket
+  getIncomeBracket,
+  getHouseholdData,
+  calculateHouseholdQuintile,
+  calculateHouseholdPercentile,
+  getHouseholdBracket
 };

@@ -289,6 +289,56 @@
             color: white;
         }
 
+        /* Tab Navigation */
+        .comparison-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab-btn {
+            padding: 12px 24px;
+            font-size: 1em;
+            font-weight: 600;
+            background: transparent;
+            color: #666;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn:hover {
+            transform: none;
+            box-shadow: none;
+            color: #d52b1e;
+            background: #f8f9fa;
+        }
+
+        .tab-btn.active {
+            color: #d52b1e;
+            border-bottom-color: #d52b1e;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .info-note {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 12px 16px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 0.9em;
+            color: #1565c0;
+        }
+
         /* Responsive Design */
         @media (max-width: 768px) {
             body {
@@ -305,7 +355,16 @@
                 padding: 6px 12px;
                 font-size: 0.8em;
             }
-            
+
+            .comparison-tabs {
+                gap: 5px;
+            }
+
+            .tab-btn {
+                padding: 10px 16px;
+                font-size: 0.9em;
+            }
+
             .container {
                 padding: 20px;
             }
@@ -454,34 +513,68 @@
     <div class="container">
         <h1 data-i18n="title">🇨🇦 Compare Your Salary In Canada </h1>
         <p class="subtitle" data-i18n="subtitle">Compare your income against Canadian income distribution.</p>
-        
-        <div class="input-section">
-            <div class="input-group">
-                <div class="input-wrapper">
-                    <div class="input-field">
-                        <label for="income" data-i18n="income_label">Your Annual Wage ($)</label>
-                        <input
-                            type="number"
-                            id="income"
-                            data-i18n="[placeholder]income_placeholder"
-                            placeholder="65000"
-                            min="0"
-                            step="1000"
-                        >
+
+        <!-- Comparison Mode Tabs -->
+        <div class="comparison-tabs">
+            <button class="tab-btn active" data-tab="individual" data-i18n="tab_individual">💼 Individual Salary</button>
+            <button class="tab-btn" data-tab="household" data-i18n="tab_household">🏠 Household Income</button>
+        </div>
+
+        <!-- Individual Salary Tab Content -->
+        <div class="tab-content active" id="individual-tab">
+            <div class="input-section">
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <div class="input-field">
+                            <label for="income" data-i18n="income_label">Your annual wage ($)</label>
+                            <input
+                                type="number"
+                                id="income"
+                                data-i18n="[placeholder]income_placeholder"
+                                placeholder="65000"
+                                min="0"
+                                step="1000"
+                            >
+                        </div>
+                        <div class="input-field">
+                            <label for="age" data-i18n="age_label">Your age</label>
+                            <input
+                                type="number"
+                                id="age"
+                                data-i18n="[placeholder]age_placeholder"
+                                placeholder="30"
+                                min="15"
+                                max="100"
+                                step="1"
+                            >
+                        </div>
+                        <button onclick="calculateIndividual()" data-i18n="compare_button">Compare</button>
                     </div>
-                    <div class="input-field">
-                        <label for="age" data-i18n="age_label">Your Age</label>
-                        <input
-                            type="number"
-                            id="age"
-                            data-i18n="[placeholder]age_placeholder"
-                            placeholder="30"
-                            min="15"
-                            max="100"
-                            step="1"
-                        >
+                </div>
+            </div>
+        </div>
+
+        <!-- Household Income Tab Content -->
+        <div class="tab-content" id="household-tab">
+            <div class="input-section">
+                <div class="info-note" data-i18n="[html]household_note">
+                    Combined annual income of all household members before taxes
+                </div>
+                <div class="input-group">
+                    <div class="input-wrapper">
+                        <div class="input-field">
+                            <label for="household-income" data-i18n="household_income_label">Household annual income ($)</label>
+                            <input
+                                type="number"
+                                id="household-income"
+                                data-i18n="[placeholder]household_income_placeholder"
+                                placeholder="95000"
+                                min="0"
+                                step="1000"
+                            >
+                        </div>
+                        <button onclick="calculateHousehold()" data-i18n="compare_button">Compare</button>
                     </div>
-                    <button onclick="calculatePosition()" data-i18n="compare_button">Compare</button>
                 </div>
             </div>
         </div>
@@ -543,6 +636,13 @@
                     Gross wages and salaries before deductions for such items as income taxes, pension plan contributions and employment insurance premiums during the reference period. <a href="https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-eng.cfm?ID=pop128" title="Statistics Canada definition">Source</a>
                 </div>
             </div>
+
+            <div class="faq-item">
+                <div class="faq-question" data-i18n="faq6_question">What's the difference between Individual Salary and Household Income comparisons?</div>
+                <div class="faq-answer" data-i18n="[html]faq6_answer">
+                    <strong>Individual Salary</strong> compares your personal employment income to other individuals in your age group using detailed census percentile data. <strong>Household Income</strong> compares the combined income of all people in your household to other Canadian households using quintile data.
+                </div>
+            </div>
         </div>
     </div>
 
@@ -593,7 +693,24 @@
                     result_message_bracket: "Income bracket: <strong>{{bracket}}</strong>",
                     error_invalid_income: "Please enter a valid income amount",
                     error_invalid_age: "Please enter a valid age (15-100)",
-                    error_api_connection: "Error connecting to the backend API. Please make sure the server is running."
+                    error_api_connection: "Error connecting to the backend API. Please make sure the server is running.",
+                    tab_individual: "💼 Individual Salary",
+                    tab_household: "🏠 Household Income",
+                    household_income_label: "Household annual income ($)",
+                    household_income_placeholder: "95000",
+                    household_note: "💡 <strong>Household income</strong> is the combined annual income of all household members before taxes. This includes wages, salaries, and self-employment income for everyone living in your home.",
+                    household_result_message_main: "Your household earns more than {{percentile}}% of Canadian households.",
+                    household_result_message_more: "Your household earns ${{diff}} ({{percentDiff}}%) <strong>more</strong> than the median household income (${{median}}).",
+                    household_result_message_less: "Your household earns ${{diff}} ({{percentDiff}}%) <strong>less</strong> than the median household income (${{median}}).",
+                    household_result_message_exact: "Your household earns exactly the median household income (${{median}}).",
+                    household_result_message_bracket: "Income bracket: <strong>{{bracket}}</strong>",
+                    quintile_q1: "First Quintile (Q1) - Bottom 20%",
+                    quintile_q2: "Second Quintile (Q2)",
+                    quintile_q3: "Third Quintile (Q3) - Middle 20%",
+                    quintile_q4: "Fourth Quintile (Q4)",
+                    quintile_q5: "Fifth Quintile (Q5) - Top 20%",
+                    faq6_question: "What's the difference between Individual Salary and Household Income comparisons?",
+                    faq6_answer: "<strong>Individual Salary</strong> compares your personal employment income (wages and salaries) to other individuals in your age group using detailed census percentile data (P10, P25, P50, P75, P90, P95, P99). This is best for understanding where your personal earnings stand.<br><br><strong>Household Income</strong> compares the combined income of all people in your household to other Canadian households using quintile data (5 groups of 20% each). This gives a broader picture of your household's economic situation, regardless of how many earners contribute. Note that household data is not age-specific and uses broader income ranges."
                 }
             },
             fr: {
@@ -640,7 +757,24 @@
                     result_message_bracket: "Tranche de revenu : <strong>{{bracket}}</strong>",
                     error_invalid_income: "Veuillez entrer un montant de revenu valide",
                     error_invalid_age: "Veuillez entrer un âge valide (15-100)",
-                    error_api_connection: "Erreur de connexion à l'API backend. Veuillez vous assurer que le serveur fonctionne."
+                    error_api_connection: "Erreur de connexion à l'API backend. Veuillez vous assurer que le serveur fonctionne.",
+                    tab_individual: "💼 Salaire Individuel",
+                    tab_household: "🏠 Revenu du Ménage",
+                    household_income_label: "Revenu annuel du ménage ($)",
+                    household_income_placeholder: "95000",
+                    household_note: "💡 Le <strong>revenu du ménage</strong> est le revenu annuel combiné de tous les membres du ménage avant impôts. Cela comprend les salaires, traitements et revenus d'un travail autonome de toutes les personnes vivant dans votre foyer.",
+                    household_result_message_main: "Votre ménage gagne plus que {{percentile}} % des ménages canadiens.",
+                    household_result_message_more: "Votre ménage gagne {{diff}} $ ({{percentDiff}} %) de <strong>plus</strong> que le revenu médian des ménages ({{median}} $).",
+                    household_result_message_less: "Votre ménage gagne {{diff}} $ ({{percentDiff}} %) de <strong>moins</strong> que le revenu médian des ménages ({{median}} $).",
+                    household_result_message_exact: "Votre ménage gagne exactement le revenu médian des ménages ({{median}} $).",
+                    household_result_message_bracket: "Tranche de revenu : <strong>{{bracket}}</strong>",
+                    quintile_q1: "Premier Quintile (Q1) - 20 % Inférieur",
+                    quintile_q2: "Deuxième Quintile (Q2)",
+                    quintile_q3: "Troisième Quintile (Q3) - 20 % Moyen",
+                    quintile_q4: "Quatrième Quintile (Q4)",
+                    quintile_q5: "Cinquième Quintile (Q5) - 20 % Supérieur",
+                    faq6_question: "Quelle est la différence entre les comparaisons de Salaire Individuel et de Revenu du Ménage?",
+                    faq6_answer: "<strong>Salaire Individuel</strong> compare votre revenu d'emploi personnel (salaires et traitements) à d'autres individus de votre groupe d'âge en utilisant des données de percentiles détaillées du recensement (P10, P25, P50, P75, P90, P95, P99). C'est idéal pour comprendre où se situent vos gains personnels.<br><br><strong>Revenu du Ménage</strong> compare le revenu combiné de toutes les personnes de votre ménage à d'autres ménages canadiens en utilisant des données de quintiles (5 groupes de 20 % chacun). Cela donne une image plus large de la situation économique de votre ménage, peu importe le nombre de personnes qui contribuent. Notez que les données des ménages ne sont pas spécifiques à l'âge et utilisent des fourchettes de revenus plus larges."
                 }
             }
         };
@@ -701,25 +835,75 @@
 
                 // Re-render chart and results if they're visible
                 if (document.getElementById('results').classList.contains('show')) {
-                    const income = parseFloat(document.getElementById('income').value);
-                    const age = parseInt(document.getElementById('age').value);
-                    if (!isNaN(income) && !isNaN(age)) {
-                        calculatePosition();
+                    if (currentMode === 'individual') {
+                        const income = parseFloat(document.getElementById('income').value);
+                        const age = parseInt(document.getElementById('age').value);
+                        if (!isNaN(income) && !isNaN(age)) {
+                            calculateIndividual();
+                        }
+                    } else if (currentMode === 'household') {
+                        const income = parseFloat(document.getElementById('household-income').value);
+                        if (!isNaN(income)) {
+                            calculateHousehold();
+                        }
                     }
                 }
             });
         }
 
-        // Initialize language switcher buttons
+        // Tab switching functionality
+        let currentMode = 'individual'; // 'individual' or 'household'
+
+        function switchTab(mode) {
+            currentMode = mode;
+
+            // Update tab buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.toggle('active', btn.getAttribute('data-tab') === mode);
+            });
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(`${mode}-tab`).classList.add('active');
+
+            // Update URL parameter
+            const url = new URL(window.location.href);
+            url.searchParams.set('mode', mode);
+            window.history.pushState({}, '', url);
+
+            // Hide results when switching tabs
+            document.getElementById('results').classList.remove('show');
+            document.getElementById('message').style.display = 'none';
+        }
+
+        // Initialize language switcher buttons and tab switching
         document.addEventListener('DOMContentLoaded', function() {
+            // Language switcher
             document.querySelectorAll('.lang-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     switchLanguage(this.getAttribute('data-lang'));
                 });
             });
 
-            // Check for language parameter in URL
+            // Tab switcher
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    switchTab(this.getAttribute('data-tab'));
+                });
+            });
+
+            // Check for URL parameters
             const urlParams = new URLSearchParams(window.location.search);
+
+            // Check for mode parameter
+            const modeParam = urlParams.get('mode');
+            if (modeParam && (modeParam === 'individual' || modeParam === 'household')) {
+                switchTab(modeParam);
+            }
+
+            // Check for language parameter
             const langParam = urlParams.get('lang');
             if (langParam && (langParam === 'en' || langParam === 'fr')) {
                 switchLanguage(langParam);
@@ -986,7 +1170,7 @@
                 i18next.t('median_example', { p50: p50 });
         }
         
-        async function calculatePosition() {
+        async function calculateIndividual() {
             const income = parseFloat(document.getElementById('income').value);
             const age = parseInt(document.getElementById('age').value);
 
@@ -1066,7 +1250,287 @@
                 alert(i18next.t('error_api_connection'));
             }
         }
-        
+
+        // Generate distribution data for household income (quintile-based)
+        function generateHouseholdDistributionData(quintiles) {
+            // Create 5 brackets based on quintiles
+            const brackets = [
+                {
+                    label: '$0 - $35k',
+                    min: quintiles.q1.min,
+                    max: quintiles.q1.max,
+                    percentage: 20,
+                    percentileLabel: 'Q1 (0-20th)',
+                    quintile: 1
+                },
+                {
+                    label: '$35k - $62k',
+                    min: quintiles.q2.min,
+                    max: quintiles.q2.max,
+                    percentage: 20,
+                    percentileLabel: 'Q2 (20-40th)',
+                    quintile: 2
+                },
+                {
+                    label: '$62k - $95k',
+                    min: quintiles.q3.min,
+                    max: quintiles.q3.max,
+                    percentage: 20,
+                    percentileLabel: 'Q3 (40-60th)',
+                    quintile: 3
+                },
+                {
+                    label: '$95k - $142k',
+                    min: quintiles.q4.min,
+                    max: quintiles.q4.max,
+                    percentage: 20,
+                    percentileLabel: 'Q4 (60-80th)',
+                    quintile: 4
+                },
+                {
+                    label: '$142k+',
+                    min: quintiles.q5.min,
+                    max: quintiles.q5.max,
+                    percentage: 20,
+                    percentileLabel: 'Q5 (80-100th)',
+                    quintile: 5
+                }
+            ];
+
+            return brackets;
+        }
+
+        async function calculateHousehold() {
+            const income = parseFloat(document.getElementById('household-income').value);
+
+            if (isNaN(income) || income < 0) {
+                alert(i18next.t('error_invalid_income'));
+                return;
+            }
+
+            try {
+                // Call the backend API for household percentile
+                const response = await fetch(`http://localhost:3001/api/income/household-percentile?income=${income}`);
+
+                if (!response.ok) {
+                    throw new Error('Failed to fetch data from API');
+                }
+
+                const data = await response.json();
+
+                // Generate message using API data with translations
+                let message = `<p><strong>${i18next.t('household_result_message_main', {
+                    percentile: data.percentile.toFixed(1)
+                })}</strong></p>`;
+
+                const diff = data.median.difference;
+                const percentDiff = Math.abs(data.median.percentDifference);
+
+                if (diff > 0) {
+                    message += `<p>${i18next.t('household_result_message_more', {
+                        diff: Math.abs(diff).toLocaleString(),
+                        percentDiff: percentDiff.toFixed(1),
+                        median: data.median.value.toLocaleString()
+                    })}</p>`;
+                } else if (diff < 0) {
+                    message += `<p>${i18next.t('household_result_message_less', {
+                        diff: Math.abs(diff).toLocaleString(),
+                        percentDiff: percentDiff.toFixed(1),
+                        median: data.median.value.toLocaleString()
+                    })}</p>`;
+                } else {
+                    message += `<p>${i18next.t('household_result_message_exact', {
+                        median: data.median.value.toLocaleString()
+                    })}</p>`;
+                }
+
+                message += `<p>${i18next.t('household_result_message_bracket', { bracket: data.bracket })}</p>`;
+
+                document.getElementById('message').innerHTML = message;
+
+                // Update URL with parameters for sharing
+                const url = new URL(window.location.href);
+                url.searchParams.set('household-income', income);
+                url.searchParams.delete('income');
+                url.searchParams.delete('age');
+                window.history.pushState({}, '', url);
+
+                // Fetch household distribution data for the chart
+                const distResponse = await fetch(`http://localhost:3001/api/income/household-distribution`);
+                const distData = await distResponse.json();
+
+                // Show results and message box
+                document.getElementById('message').style.display = 'block';
+                document.getElementById('results').classList.add('show');
+
+                // Update legend with quintile data
+                updateHouseholdLegend(distData);
+
+                // Create chart with quintile data
+                createHouseholdChart(income, distData.quintiles);
+
+                // Scroll to results
+                document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+            } catch (error) {
+                console.error('Error:', error);
+                alert(i18next.t('error_api_connection'));
+            }
+        }
+
+        function updateHouseholdLegend(householdData) {
+            const legendGrid = document.getElementById('legendGrid');
+
+            const quintileLabels = [
+                { key: 'quintile_q1', min: householdData.quintiles.q1.min, max: householdData.quintiles.q1.max },
+                { key: 'quintile_q2', min: householdData.quintiles.q2.min, max: householdData.quintiles.q2.max },
+                { key: 'quintile_q3', min: householdData.quintiles.q3.min, max: householdData.quintiles.q3.max },
+                { key: 'quintile_q4', min: householdData.quintiles.q4.min, max: householdData.quintiles.q4.max },
+                { key: 'quintile_q5', min: householdData.quintiles.q5.min, max: householdData.quintiles.q5.max }
+            ];
+
+            legendGrid.innerHTML = quintileLabels.map(item => `
+                <div class="legend-item">
+                    <div class="legend-percentile">${i18next.t(item.key)}</div>
+                    <div class="legend-income">$${item.min.toLocaleString()} - $${item.max.toLocaleString()}</div>
+                </div>
+            `).join('');
+        }
+
+        function createHouseholdChart(userIncome, quintiles) {
+            const ctx = document.getElementById('distributionChart').getContext('2d');
+
+            if (chart) {
+                chart.destroy();
+            }
+
+            const brackets = generateHouseholdDistributionData(quintiles);
+
+            // Canadian flag colors - Red for all quintiles (simpler approach for household)
+            const backgroundColors = brackets.map(() => 'rgba(213, 43, 30, 0.6)');
+            const borderColors = brackets.map(() => 'rgba(213, 43, 30, 1)');
+
+            const percentileAnnotations = {};
+
+            // Add user income line
+            function getXPositionForIncome(income) {
+                let bracketIndex = -1;
+                for (let i = 0; i < brackets.length; i++) {
+                    if (income >= brackets[i].min && income <= brackets[i].max) {
+                        bracketIndex = i;
+                        break;
+                    }
+                }
+                if (bracketIndex === -1 && income >= brackets[brackets.length - 1].max) {
+                    bracketIndex = brackets.length - 1;
+                }
+
+                if (bracketIndex === -1) return 0;
+
+                const bracket = brackets[bracketIndex];
+                const range = bracket.max - bracket.min;
+                const positionInBracket = range > 0 ? (income - bracket.min) / range : 0.5;
+
+                const barWidth = 0.8;
+                const offset = (positionInBracket - 0.5) * barWidth;
+
+                return bracketIndex + offset;
+            }
+
+            const userXPosition = getXPositionForIncome(userIncome);
+            percentileAnnotations.userIncomeLine = {
+                type: 'line',
+                xMin: userXPosition,
+                xMax: userXPosition,
+                borderColor: 'rgba(213, 43, 30, 0.9)',
+                borderWidth: 4,
+                label: {
+                    display: true,
+                    content: `${i18next.t('chart_you_label')}: $${userIncome.toLocaleString()}`,
+                    position: 'start',
+                    backgroundColor: 'rgba(213, 43, 30, 0.9)',
+                    color: 'white',
+                    font: {
+                        size: 11,
+                        weight: 'bold'
+                    },
+                    padding: 6,
+                    yAdjust: 10
+                }
+            };
+
+            chart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: brackets.map(b => b.label),
+                    datasets: [{
+                        label: 'Percentage of Households',
+                        data: brackets.map(b => b.percentage),
+                        backgroundColor: backgroundColors,
+                        borderColor: borderColors,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const bracket = brackets[context.dataIndex];
+                                    return [
+                                        `${context.parsed.y}% of households`,
+                                        `Range: ${bracket.percentileLabel}`
+                                    ];
+                                }
+                            }
+                        },
+                        annotation: {
+                            annotations: percentileAnnotations
+                        },
+                        datalabels: {
+                            anchor: 'end',
+                            align: 'top',
+                            formatter: function(value, context) {
+                                const bracket = brackets[context.dataIndex];
+                                return `Q${bracket.quintile}`;
+                            },
+                            font: {
+                                weight: 'bold',
+                                size: 11
+                            },
+                            color: '#333'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 25,
+                            title: {
+                                display: true,
+                                text: i18next.t('chart_y_axis')
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: i18next.t('chart_x_axis')
+                            }
+                        }
+                    }
+                },
+                plugins: [ChartDataLabels]
+            });
+        }
+
         // Load values from URL parameters on page load
         function loadFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
