@@ -465,16 +465,6 @@
             border-radius: 0 0 8px 8px;
         }
 
-        .info-note {
-            background: #e3f2fd;
-            border-left: 4px solid #2196f3;
-            padding: 12px 16px;
-            border-radius: 8px;
-            margin-bottom: 15px;
-            font-size: 0.9em;
-            color: #1565c0;
-        }
-
         /* Responsive Design */
         @media (max-width: 768px) {
             body {
@@ -727,8 +717,8 @@
             <div class="explanation-box">
                 <div class="explanation-title" data-i18n="explanation_title">💡 Understanding Percentiles</div>
                 <p data-i18n="[html]percentile_definition"><strong>What is a percentile?</strong> A percentile tells you what percentage of people earn less than a given amount.</p>
-                <p id="percentileExample" data-i18n-base="percentile_example"><strong>Example:</strong> The <strong>25th percentile (P25)</strong> tells you the income level where 25% of people earn less and 75% earn more.</p>
-                <p id="medianExample" data-i18n-base="median_example"><strong>The median (P50)</strong> is the middle point where exactly 50% of people earn less and 50% earn more. It's the most common way to describe "typical" income.</p>
+                <p id="percentileExample"><strong>Example:</strong> The <strong>25th percentile (P25)</strong> tells you the income level where 25% of people earn less and 75% earn more.</p>
+                <p id="medianExample"><strong>The median (P50)</strong> is the middle point where exactly 50% of people earn less and 50% earn more. It's the most common way to describe "typical" income.</p>
             </div>
         </div>
         
@@ -870,7 +860,6 @@
                     tab_household: "🏠 Household Income (2024)",
                     household_income_label: "Household annual income ($)",
                     household_income_placeholder: "95000",
-                    household_note: "💡 <strong>Household income</strong> is the combined annual income of all household members before taxes. This includes wages, salaries, and self-employment income for everyone living in your home.",
                     household_result_message_main: "Your household earns more than {{percentile}}% of Canadian households.",
                     household_result_message_bracket: "Income bracket: <strong>{{bracket}}</strong>",
                     household_explanation_title: "💡 Understanding Quintiles",
@@ -950,7 +939,6 @@
                     tab_household: "🏠 Revenu du Ménage (2024)",
                     household_income_label: "Revenu annuel du ménage ($)",
                     household_income_placeholder: "95000",
-                    household_note: "💡 Le <strong>revenu du ménage</strong> est le revenu annuel combiné de tous les membres du ménage avant impôts. Cela comprend les salaires, traitements et revenus d'un travail autonome de toutes les personnes vivant dans votre foyer.",
                     household_result_message_main: "Votre ménage gagne plus que {{percentile}} % des ménages canadiens.",
                     household_result_message_bracket: "Tranche de revenu : <strong>{{bracket}}</strong>",
                     household_explanation_title: "💡 Comprendre les Quintiles",
@@ -1433,7 +1421,35 @@
 
             return brackets;
         }
-        
+
+        function getXPositionForIncome(income, brackets) {
+            // Find which bracket the income falls into
+            let bracketIndex = -1;
+            for (let i = 0; i < brackets.length; i++) {
+                if (income >= brackets[i].min && income <= brackets[i].max) {
+                    bracketIndex = i;
+                    break;
+                }
+            }
+            if (bracketIndex === -1 && income >= brackets[brackets.length - 1].max) {
+                bracketIndex = brackets.length - 1;
+            }
+
+            if (bracketIndex === -1) return 0;
+
+            // Calculate position within the bracket (0 to 1)
+            const bracket = brackets[bracketIndex];
+            const range = bracket.max - bracket.min;
+            const positionInBracket = range > 0 ? (income - bracket.min) / range : 0.5;
+
+            // For bar charts, bars are centered at integer positions (0, 1, 2, etc.)
+            // Each bar has width of ~0.8, so we offset by -0.4 to +0.4 from center
+            const barWidth = 0.8;
+            const offset = (positionInBracket - 0.5) * barWidth;
+
+            return bracketIndex + offset;
+        }
+
         function createChart(userIncome, percentiles) {
             const ctx = document.getElementById('distributionChart').getContext('2d');
 
@@ -1478,39 +1494,9 @@
             
             // Create percentile markers
             const percentileAnnotations = {};
-            
-            // For bar charts, x positions are categorical (0, 1, 2, 3, etc. for each bar)
-            // We need to calculate which bar and position within that bar
-            function getXPositionForIncome(income) {
-                // Find which bracket the income falls into
-                let bracketIndex = -1;
-                for (let i = 0; i < brackets.length; i++) {
-                    if (income >= brackets[i].min && income <= brackets[i].max) {
-                        bracketIndex = i;
-                        break;
-                    }
-                }
-                if (bracketIndex === -1 && income >= brackets[brackets.length - 1].max) {
-                    bracketIndex = brackets.length - 1;
-                }
-                
-                if (bracketIndex === -1) return 0;
-                
-                // Calculate position within the bracket (0 to 1)
-                const bracket = brackets[bracketIndex];
-                const range = bracket.max - bracket.min;
-                const positionInBracket = range > 0 ? (income - bracket.min) / range : 0.5;
-                
-                // For bar charts, bars are centered at integer positions (0, 1, 2, etc.)
-                // Each bar has width of ~0.8, so we offset by -0.4 to +0.4 from center
-                const barWidth = 0.8;
-                const offset = (positionInBracket - 0.5) * barWidth;
-                
-                return bracketIndex + offset;
-            }
-            
+
             // Add user income line
-            const userXPosition = getXPositionForIncome(userIncome);
+            const userXPosition = getXPositionForIncome(userIncome, brackets);
             percentileAnnotations.userIncomeLine = {
                 type: 'line',
                 xMin: userXPosition,
@@ -1531,19 +1517,7 @@
                     yAdjust: 10
                 }
             };
-            
-            const percentileLabels = [
-                { key: 'p10', label: 'P10', value: percentiles.p10 },
-                { key: 'p25', label: 'P25', value: percentiles.p25 },
-                { key: 'p50', label: 'Median', value: percentiles.p50 },
-                { key: 'p75', label: 'P75', value: percentiles.p75 },
-                { key: 'p90', label: 'P90', value: percentiles.p90 },
-                { key: 'p95', label: 'P95', value: percentiles.p95 },
-                { key: 'p99', label: 'P99', value: percentiles.p99 }
-            ];
-            
-            // No longer adding percentile border lines - they're now shown as labels on bars
-            
+
             chart = new Chart(ctx, {
                 type: 'bar',
                 data: {
@@ -1731,7 +1705,6 @@
                 // Calculate percentile using client-side function
                 const percentile = calculatePercentile(income, distribution);
                 const belowYou = Math.floor(percentile);
-                const aboveYou = 100 - belowYou;
                 const bracket = getIncomeBracket(percentile);
 
                 // Calculate comparison to median
@@ -1754,7 +1727,6 @@
                     year: distribution.year,
                     percentile: Math.round(percentile * 10) / 10,
                     belowYou,
-                    aboveYou,
                     bracket,
                     median: {
                         value: median,
@@ -1920,7 +1892,6 @@
                 const quintileInfo = calculateHouseholdQuintile(income, householdData.quintiles);
                 const percentile = calculateHouseholdPercentile(income, householdData.quintiles);
                 const belowYou = Math.floor(percentile);
-                const aboveYou = 100 - belowYou;
                 const bracket = getHouseholdBracket(quintileInfo.quintile);
 
                 // Create data object matching the API response format
@@ -1932,7 +1903,6 @@
                     quintileLabel: quintileInfo.label,
                     percentile: Math.round(percentile * 10) / 10,
                     belowYou,
-                    aboveYou,
                     bracket
                 };
 
@@ -2037,31 +2007,7 @@
             const percentileAnnotations = {};
 
             // Add user income line
-            function getXPositionForIncome(income) {
-                let bracketIndex = -1;
-                for (let i = 0; i < brackets.length; i++) {
-                    if (income >= brackets[i].min && income <= brackets[i].max) {
-                        bracketIndex = i;
-                        break;
-                    }
-                }
-                if (bracketIndex === -1 && income >= brackets[brackets.length - 1].max) {
-                    bracketIndex = brackets.length - 1;
-                }
-
-                if (bracketIndex === -1) return 0;
-
-                const bracket = brackets[bracketIndex];
-                const range = bracket.max - bracket.min;
-                const positionInBracket = range > 0 ? (income - bracket.min) / range : 0.5;
-
-                const barWidth = 0.8;
-                const offset = (positionInBracket - 0.5) * barWidth;
-
-                return bracketIndex + offset;
-            }
-
-            const userXPosition = getXPositionForIncome(userIncome);
+            const userXPosition = getXPositionForIncome(userIncome, brackets);
             percentileAnnotations.userIncomeLine = {
                 type: 'line',
                 xMin: userXPosition,
