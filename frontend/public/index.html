@@ -271,7 +271,64 @@
         .explanation-box p:last-child {
             margin-bottom: 0;
         }
-        
+
+        .toc-section {
+            margin-top: 40px;
+            padding: 25px;
+            background-color: #f0f4f8;
+            border-radius: 10px;
+            border-left: 5px solid #d52b1e;
+        }
+
+        .toc-title {
+            font-size: 1.4em;
+            color: #333;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .toc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 15px;
+        }
+
+        .toc-category {
+            margin-bottom: 15px;
+        }
+
+        .toc-category-title {
+            font-weight: 600;
+            color: #d52b1e;
+            margin-bottom: 10px;
+            font-size: 1.05em;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding-left: 0;
+            margin: 0;
+        }
+
+        .toc-list li {
+            margin-bottom: 8px;
+        }
+
+        .toc-list a {
+            color: #333;
+            text-decoration: none;
+            display: block;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: all 0.2s;
+        }
+
+        .toc-list a:hover {
+            background-color: #fff;
+            color: #d52b1e;
+            padding-left: 15px;
+        }
+
         .faq-section {
             margin-top: 40px;
             padding-top: 40px;
@@ -308,10 +365,14 @@
 
         .changelog {
             margin-top: 40px;
-            padding: 20px;
+            padding-top: 40px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 20px;
             background-color: #f9f9f9;
             border-radius: 8px;
             border: 1px solid #e0e0e0;
+            border-top: 2px solid #e0e0e0;
         }
 
         .changelog h2 {
@@ -349,10 +410,14 @@
 
         .contribute-section {
             margin-top: 40px;
-            padding: 20px;
+            padding-top: 40px;
+            padding-left: 20px;
+            padding-right: 20px;
+            padding-bottom: 20px;
             background-color: #f9f9f9;
             border-radius: 8px;
             border: 1px solid #e0e0e0;
+            border-top: 2px solid #e0e0e0;
         }
 
         .contribute-section h2 {
@@ -378,8 +443,8 @@
 
         .footer {
             margin-top: 40px;
-            padding-top: 30px;
-            border-top: 1px solid #e0e0e0;
+            padding-top: 40px;
+            border-top: 2px solid #e0e0e0;
             text-align: center;
             font-size: 0.85em;
             color: #666;
@@ -751,53 +816,79 @@
                 <p id="medianExample"><strong>The median (P50)</strong> is the middle point where exactly 50% of people earn less and 50% earn more. It's the most common way to describe "typical" income.</p>
             </div>
         </div>
-        
-        <div class="faq-section">
+
+        <div class="toc-section">
+            <h2 class="toc-title" data-i18n="toc_title">📑 Table of Contents</h2>
+            <div class="toc-grid">
+                <div class="toc-category">
+                    <div class="toc-category-title" data-i18n="toc_faq_title">Frequently Asked Questions</div>
+                    <ul class="toc-list">
+                        <li><a href="#faq1" data-i18n="faq1_question">What's the purpose of this website?</a></li>
+                        <li><a href="#faq6" data-i18n="faq6_question">What's the difference between Individual Salary and Household Income comparisons?</a></li>
+                        <li><a href="#faq2" data-i18n="faq2_question">Where does this data come from?</a></li>
+                        <li><a href="#faq3" data-i18n="faq3_question">How current is this data?</a></li>
+                        <li><a href="#faq4" data-i18n="faq4_question">What does "wage" include?</a></li>
+                        <li><a href="#faq5" data-i18n="faq5_question">What does "household income" include?</a></li>
+                        <li><a href="#faq7" data-i18n="faq7_question">What are the current limitations and potential improvements?</a></li>
+                    </ul>
+                </div>
+                <div class="toc-category">
+                    <div class="toc-category-title" data-i18n="toc_other_title">Other Sections</div>
+                    <ul class="toc-list">
+                        <li><a href="#changelog" data-i18n="toc_changelog">Change Log</a></li>
+                        <li><a href="#contribute" data-i18n="toc_contribute">Contribute</a></li>
+                        <li><a href="#about" data-i18n="toc_about">About</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="faq-section" id="faq">
             <h2 class="faq-title" data-i18n="faq_title">❓ Frequently Asked Questions</h2>
 
-            <div class="faq-item">
+            <div class="faq-item" id="faq1">
                 <div class="faq-question" data-i18n="faq1_question">What's the purpose of this website?</div>
                 <div class="faq-answer" data-i18n="[html]faq1_answer">
                     We often hear about the "average salary" in Canada, but averages can be misleading due to high earners skewing the data. This website aims to provide a clearer picture of income distribution using percentiles, allowing individuals to see how their earnings compare to others in Canada based on reliable census data and annual surveys.
                 </div>
             </div>
 
-            <div class="faq-item">
+            <div class="faq-item" id="faq6">
                 <div class="faq-question" data-i18n="faq6_question">What's the difference between Individual Salary and Household Income comparisons?</div>
                 <div class="faq-answer" data-i18n="[html]faq6_answer">
                     <strong>Individual Salary</strong> compares your personal employment income (wages and salaries) to other individuals in your age group using detailed census percentile data (P10, P25, P50, P75, P90, P95, P99). This is best for understanding where your personal earnings stand. <strong>Household Income</strong> compares the combined income of all people in your household to other Canadian households using quintile data (5 groups of 20% each). This gives a broader picture of your household's economic situation, regardless of how many earners contribute. Note that household data is not age-specific and uses broader income ranges.
                 </div>
             </div>
 
-            <div class="faq-item">
+            <div class="faq-item" id="faq2">
                 <div class="faq-question" data-i18n="faq2_question">Where does this data come from?</div>
                 <div class="faq-answer" data-i18n="[html]faq2_answer">
                     The individual salary data comes from <strong><a href="https://www12.statcan.gc.ca/census-recensement/index-eng.cfm" title="Census website">Statistics Canada's Census of Population 2021</a></strong>, which is the most comprehensive and reliable source for income distribution in Canad (see also their own <a href="https://www12.statcan.gc.ca/census-recensement/2021/dp-pd/dv-vd/income-revenu/index-en.html">income explorer</a>). The census surveys millions of Canadians and provides official government statistics on employment income. The household income data comes from Statistics Canada's annual <strong><a href="https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610058701" title="Household income survey">Household Income Survey (table 36-10-0587-01)</a></strong>.
                 </div>
             </div>
 
-            <div class="faq-item">
+            <div class="faq-item" id="faq3">
                 <div class="faq-question" data-i18n="faq3_question">How current is this data?</div>
                 <div class="faq-answer" data-i18n="[html]faq3_answer">
                     The individual salary data reflects the <strong>2020 calendar year</strong> (collected during the 2021 Census). While this is the most recent comprehensive census data available, please note that income levels and distributions may have changed since 2020 due to inflation, economic growth, and other factors. The website will be updated when the next census data becomes available in 2026-2027. The household income data reflects the <strong>2024 calendar year</strong> (collected during the 2025 survey). This is the most recent annual household income data available from Statistics Canada.
                 </div>
             </div>
 
-            <div class="faq-item">
+            <div class="faq-item" id="faq4">
                 <div class="faq-question" data-i18n="faq4_question">What does "wage" include?</div>
                 <div class="faq-answer" data-i18n="[html]faq4_answer">
                     Gross wages and salaries before deductions for such items as income taxes, pension plan contributions, and employment insurance premiums during the reference period. <a href="https://www12.statcan.gc.ca/census-recensement/2021/ref/dict/az/definition-eng.cfm?ID=pop128" title="Statistics Canada definition">Source</a>
                 </div>
             </div>
 
-            <div class="faq-item">
+            <div class="faq-item" id="faq5">
                 <div class="faq-question" data-i18n="faq5_question">What does "household income" include?</div>
                 <div class="faq-answer" data-i18n="[html]faq5_answer">
                     It's based on the Household Income Survey (table 36-10-0587-01), which doesn't have the same level of detail as the census income data. To get an approximation of the income as we commonly think of it (i.e., the amount we see in our employment contract before taxes), we added back the "current transfers paid" to the disposable income.
                 </div>
             </div>
 
-            <div class="faq-item">
+            <div class="faq-item" id="faq7">
                 <div class="faq-question" data-i18n="faq7_question">What are the current limitations and potential improvements ?</div>
                 <div class="faq-answer" data-i18n="[html]faq7_answer">
                     The individual salary comparison is based on <strong>employment income (wages and salaries)</strong>, which means it's most relevant for people who are currently employed. If you are a retiree or primarily receive income from sources other than employment (such as pensions, investments, or government transfers), these statistics may not be relevant to your situation. A future version of this tool may address this limitation by including additional income categories.<br><br>Additionally, the individual salary data is from the <strong>2020 calendar year</strong>. A future version may include an option to <strong>inflation-adjust the data</strong> to current dollars, which would provide a more accurate comparison by accounting for changes in purchasing power since 2020.<br><br>If you have suggestions for other improvements, please feel free to <a href="https://matthieugd.com/a-propos/" target="_blank" rel="noopener noreferrer">contact me</a>.
@@ -807,7 +898,7 @@
 
         </div>
 
-        <div class="changelog">
+        <div class="changelog" id="changelog">
             <h2 data-i18n="changelog_title">Change Log</h2>
             <div class="changelog-entry">
                 <div class="changelog-version">
@@ -824,12 +915,12 @@
             </div>
         </div>
 
-        <div class="contribute-section">
+        <div class="contribute-section" id="contribute">
             <h2 data-i18n="contribute_title">🤝 Contribute</h2>
             <p data-i18n="[html]contribute_message">This is a personal project born of my personal interest in the economy. If you have suggestions to improve this website, please feel free to submit a change request on <a href="https://github.com/matthieugd/income-comparison-canada" target="_blank" rel="noopener noreferrer">GitHub</a>.</p>
         </div>
 
-        <div class="footer">
+        <div class="footer" id="about">
             <p data-i18n="[html]footer_author">Created by <a href="https://matthieugd.com" target="_blank" rel="noopener noreferrer">Matthieu Guyonnet-Duluc</a>.</p>
             <p data-i18n="[html]footer_thanks">Special thanks to <a href="https://x.com/PhilSmith26" target="_blank" rel="noopener noreferrer">Philip Smith</a> for his invaluable help. Any errors are my own.</p>
             <p data-i18n="[html]footer_contact">Questions or feedback? <a href="https://matthieugd.com/a-propos/" target="_blank" rel="noopener noreferrer">Contact me</a>.</p>
@@ -917,6 +1008,12 @@
                     faq6_answer: "<strong>Individual Salary</strong> compares your personal employment income (wages and salaries) to other individuals in your age group using detailed census percentile data (P10, P25, P50, P75, P90, P95, P99). This is best for understanding where your personal earnings stand.<br><br><strong>Household Income</strong> compares the combined income of all people in your household to other Canadian households using quintile data (5 groups of 20% each). This gives a broader picture of your household's economic situation, regardless of how many earners contribute. Note that household data is not age-specific and uses broader income ranges.",
                     faq7_question: "What are the current limitations and potential improvements?",
                     faq7_answer: "The individual salary comparison is based on <strong>employment income (wages and salaries)</strong>, which means it's most relevant for people who are currently employed. If you are a retiree or primarily receive income from sources other than employment (such as pensions, investments, or government transfers), these statistics may not be relevant to your situation. A future version of this tool may address this limitation by including additional income categories.<br><br>Additionally, the individual salary data is from the <strong>2020 calendar year</strong>. A future version may include an option to <strong>inflation-adjust the data</strong> to current dollars, which would provide a more accurate comparison by accounting for changes in purchasing power since 2020.<br><br>If you have suggestions for other improvements, please feel free to <a href=\"https://matthieugd.com/a-propos/\" target=\"_blank\" rel=\"noopener noreferrer\">contact me</a>.",
+                    toc_title: "📑 Table of Contents",
+                    toc_faq_title: "Frequently Asked Questions",
+                    toc_other_title: "Other Sections",
+                    toc_changelog: "Change Log",
+                    toc_contribute: "Contribute",
+                    toc_about: "About",
                     changelog_title: "📋 Change Log",
                     changelog_version_1: "Version 1.0",
                     changelog_date_1: "November, 10th 2025",
@@ -1000,6 +1097,12 @@
                     faq6_answer: "<strong>Salaire Individuel</strong> compare votre revenu d'emploi personnel (salaires et traitements) à d'autres individus de votre groupe d'âge en utilisant des données de percentiles détaillées du recensement (P10, P25, P50, P75, P90, P95, P99). C'est idéal pour comprendre où se situent vos gains personnels. <strong>Revenu du Ménage</strong> compare le revenu combiné de toutes les personnes de votre ménage à d'autres ménages canadiens en utilisant des données de quintiles (5 groupes de 20 % chacun). Cela donne une image plus large de la situation économique de votre ménage, peu importe le nombre de personnes qui contribuent. Notez que les données des ménages ne sont pas spécifiques à l'âge et utilisent des fourchettes de revenus plus larges.",
                     faq7_question: "Quelles sont les limitations actuelles et améliorations futures?",
                     faq7_answer: "La comparaison de salaire individuel est basée sur le <strong>revenu d'emploi (salaires et traitements)</strong>, ce qui signifie qu'elle est plus pertinente pour les personnes actuellement employées. Si vous êtes retraité ou recevez principalement des revenus de sources autres que l'emploi (comme des pensions, des investissements ou des transferts gouvernementaux), ces statistiques peuvent ne pas être pertinentes pour votre situation. Une future version de cet outil pourrait remédier à cette limitation en incluant des catégories de revenus supplémentaires.<br><br>De plus, les données de salaire individuel proviennent de l'<strong>année civile 2020</strong>. Une future version pourrait inclure une option pour <strong>ajuster les données en fonction de l'inflation</strong> pour les convertir en dollars actuels, ce qui permettrait une comparaison plus précise en tenant compte des changements du pouvoir d'achat depuis 2020.<br><br>Si vous avez des suggestions pour d'autres améliorations, n'hésitez pas à me <a href=\"https://matthieugd.com/a-propos/\" target=\"_blank\" rel=\"noopener noreferrer\">contacter</a>.",
+                    toc_title: "📑 Table des Matières",
+                    toc_faq_title: "Questions Fréquemment Posées",
+                    toc_other_title: "Autres Sections",
+                    toc_changelog: "Journal des Modifications",
+                    toc_contribute: "Contribuer",
+                    toc_about: "À Propos",
                     changelog_title: "📋 Journal des Modifications",
                     changelog_version_1: "Version 1.0",
                     changelog_date_1: "10 Novembre 2025",
