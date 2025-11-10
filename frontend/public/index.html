@@ -1513,6 +1513,15 @@
             }
 
             window.history.pushState({}, '', url);
+
+            // Track tab switch in GoatCounter (if enabled)
+            if (window.goatcounter && window.goatcounter.count) {
+                window.goatcounter.count({
+                    path: url.pathname + url.search + url.hash,
+                    title: mode === 'individual' ? 'Individual Salary' : 'Household Income',
+                    event: true  // Mark as an event rather than a pageview
+                });
+            }
         }
 
         // Initialize language switcher buttons and tab switching
@@ -2305,6 +2314,52 @@
                 calculateHousehold();
             }
         });
+    </script>
+
+    <!-- GoatCounter Analytics - Privacy-friendly web analytics -->
+    <!-- Only load in production (not on localhost or file://) -->
+    <!-- SPA-compatible implementation: tracks initial load + hash navigation (TOC links) -->
+    <script>
+        // Check if we're NOT in a local development environment
+        const isProduction = window.location.hostname !== 'localhost'
+                          && window.location.hostname !== '127.0.0.1'
+                          && window.location.protocol !== 'file:';
+
+        if (isProduction) {
+            // Configure GoatCounter for SPA
+            // Disable automatic page load tracking - we'll track manually
+            window.goatcounter = {
+                no_onload: true
+            };
+
+            // Load GoatCounter script
+            const script = document.createElement('script');
+            script.setAttribute('data-goatcounter', 'https://matthieugd.goatcounter.com/count');
+            script.async = true;
+            script.src = '//gc.zgo.at/count.js';
+
+            // Track initial page load after script loads
+            script.onload = function() {
+                if (window.goatcounter && window.goatcounter.count) {
+                    window.goatcounter.count({
+                        path: location.pathname + location.search + location.hash,
+                    });
+                }
+            };
+
+            document.body.appendChild(script);
+
+            // Track hash changes (e.g., clicking TOC links like #faq1, #changelog)
+            window.addEventListener('hashchange', function(e) {
+                if (window.goatcounter && window.goatcounter.count) {
+                    window.goatcounter.count({
+                        path: location.pathname + location.search + location.hash,
+                    });
+                }
+            });
+        } else {
+            console.log('GoatCounter analytics disabled in local development environment');
+        }
     </script>
 </body>
 </html>
