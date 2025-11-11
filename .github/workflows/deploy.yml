@@ -63,6 +63,18 @@ jobs:
             cp frontend/public/CNAME build/
           fi
 
+      - name: Copy .nojekyll file (if exists)
+        run: |
+          if [ -f frontend/public/.nojekyll ]; then
+            cp frontend/public/.nojekyll build/
+          fi
+
+      - name: Copy cover image (if exists)
+        run: |
+          if [ -f frontend/public/cover-image.png ]; then
+            cp frontend/public/cover-image.png build/
+          fi
+
       - name: Display build size comparison
         run: |
           echo "Original size:"
