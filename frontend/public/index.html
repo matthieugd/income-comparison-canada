@@ -1448,12 +1448,13 @@
         }
 
         function getHouseholdBracket(quintile) {
+            // Return translation key instead of hardcoded English string
             const brackets = {
-                1: 'First Quintile (Q1) - Bottom 20%',
-                2: 'Second Quintile (Q2)',
-                3: 'Third Quintile (Q3) - Middle 20%',
-                4: 'Fourth Quintile (Q4)',
-                5: 'Fifth Quintile (Q5) - Top 20%'
+                1: 'quintile_q1',
+                2: 'quintile_q2',
+                3: 'quintile_q3',
+                4: 'quintile_q4',
+                5: 'quintile_q5'
             };
             return brackets[quintile] || 'Unknown';
         }
@@ -2139,10 +2140,10 @@
 
                 // Generate message using data with translations
                 let message = `<p><strong>${i18next.t('household_result_message_main', {
-                    percentile: data.percentile.toPrecision(2)
+                    percentile: data.percentile.toFixed(1)
                 })}</strong></p>`;
 
-                message += `<p>${i18next.t('household_result_message_bracket', { bracket: data.bracket })}</p>`;
+                message += `<p>${i18next.t('household_result_message_bracket', { bracket: i18next.t(data.bracket) })}</p>`;
 
                 document.getElementById('message').innerHTML = message;
 
