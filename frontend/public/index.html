@@ -978,6 +978,7 @@
                     percentile_p95: "95th Percentile (P95)",
                     percentile_p99: "99th Percentile (P99)",
                     chart_you_label: "YOU",
+                    legend_avg_label: "Avg",
                     chart_x_axis: "Income Ranges",
                     chart_y_axis: "Percentage of Population (%)",
                     chart_tooltip_canadians: "of Canadians",
@@ -1067,6 +1068,7 @@
                     percentile_p95: "95e Percentile (P95)",
                     percentile_p99: "99e Percentile (P99)",
                     chart_you_label: "VOUS",
+                    legend_avg_label: "Moy",
                     chart_x_axis: "Tranches de Revenu",
                     chart_y_axis: "Pourcentages de la Population (%)",
                     chart_tooltip_canadians: "des Canadiens",
@@ -2189,7 +2191,7 @@
             legendGrid.innerHTML = quintileLabels.map(item => `
                 <div class="legend-item">
                     <div class="legend-percentile">${i18next.t(item.key)}</div>
-                    <div class="legend-income">Avg: $${item.average.toLocaleString()}</div>
+                    <div class="legend-income">${i18next.t('legend_avg_label')}: $${item.average.toLocaleString()}</div>
                 </div>
             `).join('');
         }
