@@ -994,7 +994,7 @@
                     tab_household: "🏠 Household Income (2024)",
                     household_income_label: "Household annual income ($)",
                     household_income_placeholder: "95000",
-                    household_result_message_main: "Your household earns more than {{percentile}}% of Canadian households.",
+                    household_result_message_main: "Your household earns more than around {{percentile}}% of Canadian households.",
                     household_result_message_bracket: "Income bracket: <strong>{{bracket}}</strong>",
                     household_explanation_title: "💡 Understanding Quintiles",
                     household_quintile_definition: "<strong>What is a quintile?</strong> A quintile divides households into 5 equal groups of 20% each, based on income.",
@@ -1083,7 +1083,7 @@
                     tab_household: "🏠 Revenu du Ménage (2024)",
                     household_income_label: "Revenu annuel du ménage ($)",
                     household_income_placeholder: "95000",
-                    household_result_message_main: "Votre ménage gagne plus que {{percentile}} % des ménages canadiens.",
+                    household_result_message_main: "Votre ménage gagne plus qu'environ {{percentile}} % des ménages canadiens.",
                     household_result_message_bracket: "Tranche de revenu : <strong>{{bracket}}</strong>",
                     household_explanation_title: "💡 Comprendre les Quintiles",
                     household_quintile_definition: "<strong>Qu'est-ce qu'un quintile?</strong> Un quintile divise les ménages en 5 groupes égaux de 20 % chacun, selon leur revenu.",
@@ -1322,34 +1322,30 @@
         }
 
         function calculateHouseholdQuintile(income, quintiles) {
-            const averages = [
-                quintiles.q1.average,
-                quintiles.q2.average,
-                quintiles.q3.average,
-                quintiles.q4.average,
-                quintiles.q5.average
-            ];
+            // Use the same interpolation-based approach as calculateHouseholdPercentile
+            // to ensure consistency between percentile and quintile assignment
+            const percentile = calculateHouseholdPercentile(income, quintiles);
 
-            const quintileKeys = ['q1', 'q2', 'q3', 'q4', 'q5'];
-
-            // Determine quintile based on which averages bracket the income
-            let quintileIndex = 0;
-
-            if (income <= averages[0]) {
+            // Map percentile to quintile using standard boundaries
+            // 0 <= percentile <= 20: Q1 (bottom 20%)
+            // 20 < percentile <= 40: Q2 (20-40%)
+            // 40 < percentile <= 60: Q3 (40-60%)
+            // 60 < percentile <= 80: Q4 (60-80%)
+            // 80 < percentile <= 100: Q5 (top 20%)
+            let quintileIndex;
+            if (percentile <= 20) {
                 quintileIndex = 0; // Q1
-            } else if (income >= averages[4]) {
-                quintileIndex = 4; // Q5
+            } else if (percentile <= 40) {
+                quintileIndex = 1; // Q2
+            } else if (percentile <= 60) {
+                quintileIndex = 2; // Q3
+            } else if (percentile <= 80) {
+                quintileIndex = 3; // Q4
             } else {
-                // Find which pair of averages bracket the income
-                for (let i = 0; i < averages.length - 1; i++) {
-                    if (income > averages[i] && income <= averages[i + 1]) {
-                        // Income between averages[i] and averages[i+1] means quintile i+2
-                        quintileIndex = i + 1;
-                        break;
-                    }
-                }
+                quintileIndex = 4; // Q5
             }
 
+            const quintileKeys = ['q1', 'q2', 'q3', 'q4', 'q5'];
             const key = quintileKeys[quintileIndex];
 
             return {
@@ -1368,42 +1364,87 @@
                 quintiles.q5.average
             ];
 
-            // Define percentile boundaries for each quintile
-            const percentileBounds = [0, 20, 40, 60, 80, 100];
-
-            // Handle edge case: below Q1 average
-            if (income <= averages[0]) {
-                // Estimate within bottom quintile
-                // Assume linear from 0 to Q1 average = 0 to 20th percentile
-                return (income / averages[0]) * 20;
-            }
-
-            // Handle edge case: above Q5 average
-            if (income >= averages[4]) {
-                // Estimate within top quintile
-                // Assume some growth beyond Q5 average
-                const ratio = income / averages[4];
-                return Math.min(99.9, 80 + (ratio - 1) * 30); // Cap at 99.9
-            }
-
-            // Find which two quintile averages bracket the income
+            // Quintile averages represent the MIDDLE of each quintile (10th, 30th, 50th, 70th, 90th percentiles)
+            // Calculate boundaries as midpoints between consecutive averages
+            const boundaries = [];
             for (let i = 0; i < averages.length - 1; i++) {
-                const lowerAvg = averages[i];
-                const upperAvg = averages[i + 1];
+                boundaries.push((averages[i] + averages[i + 1]) / 2);
+            }
+            // boundaries[0] = Q1/Q2 boundary (20th percentile)
+            // boundaries[1] = Q2/Q3 boundary (40th percentile)
+            // boundaries[2] = Q3/Q4 boundary (60th percentile)
+            // boundaries[3] = Q4/Q5 boundary (80th percentile)
 
-                if (income >= lowerAvg && income <= upperAvg) {
-                    // Linear interpolation between percentile boundaries
-                    const lowerPercentile = percentileBounds[i + 1]; // +1 because bounds start at 0
-                    const upperPercentile = percentileBounds[i + 2];
+            // Define reference points for interpolation:
+            // - Start of Q1: income=0 at 0th percentile
+            // - Q1 average: at 10th percentile
+            // - Q1/Q2 boundary: at 20th percentile
+            // - Q2 average: at 30th percentile
+            // - Q2/Q3 boundary: at 40th percentile
+            // - ... and so on
 
-                    const ratio = (income - lowerAvg) / (upperAvg - lowerAvg);
-                    const percentile = lowerPercentile + ratio * (upperPercentile - lowerPercentile);
-
-                    return percentile;
+            // Handle Q1 (0-20th percentile)
+            if (income <= boundaries[0]) {
+                if (income <= averages[0]) {
+                    // Between $0 and Q1 average: 0 to 10th percentile
+                    return (income / averages[0]) * 10;
+                } else {
+                    // Between Q1 average and Q1/Q2 boundary: 10th to 20th percentile
+                    const ratio = (income - averages[0]) / (boundaries[0] - averages[0]);
+                    return 10 + ratio * 10;
                 }
             }
 
-            return 50; // Default fallback
+            // Handle Q2 (20-40th percentile)
+            if (income <= boundaries[1]) {
+                if (income <= averages[1]) {
+                    // Between Q1/Q2 boundary and Q2 average: 20th to 30th percentile
+                    const ratio = (income - boundaries[0]) / (averages[1] - boundaries[0]);
+                    return 20 + ratio * 10;
+                } else {
+                    // Between Q2 average and Q2/Q3 boundary: 30th to 40th percentile
+                    const ratio = (income - averages[1]) / (boundaries[1] - averages[1]);
+                    return 30 + ratio * 10;
+                }
+            }
+
+            // Handle Q3 (40-60th percentile)
+            if (income <= boundaries[2]) {
+                if (income <= averages[2]) {
+                    // Between Q2/Q3 boundary and Q3 average: 40th to 50th percentile
+                    const ratio = (income - boundaries[1]) / (averages[2] - boundaries[1]);
+                    return 40 + ratio * 10;
+                } else {
+                    // Between Q3 average and Q3/Q4 boundary: 50th to 60th percentile
+                    const ratio = (income - averages[2]) / (boundaries[2] - averages[2]);
+                    return 50 + ratio * 10;
+                }
+            }
+
+            // Handle Q4 (60-80th percentile)
+            if (income <= boundaries[3]) {
+                if (income <= averages[3]) {
+                    // Between Q3/Q4 boundary and Q4 average: 60th to 70th percentile
+                    const ratio = (income - boundaries[2]) / (averages[3] - boundaries[2]);
+                    return 60 + ratio * 10;
+                } else {
+                    // Between Q4 average and Q4/Q5 boundary: 70th to 80th percentile
+                    const ratio = (income - averages[3]) / (boundaries[3] - averages[3]);
+                    return 70 + ratio * 10;
+                }
+            }
+
+            // Handle Q5 (80-100th percentile)
+            if (income <= averages[4]) {
+                // Between Q4/Q5 boundary and Q5 average: 80th to 90th percentile
+                const ratio = (income - boundaries[3]) / (averages[4] - boundaries[3]);
+                return 80 + ratio * 10;
+            } else {
+                // Above Q5 average: 90th to 99.9th percentile
+                // Extrapolate with diminishing returns
+                const ratio = income / averages[4];
+                return Math.min(99.9, 90 + (ratio - 1) * 15);
+            }
         }
 
         function getHouseholdBracket(quintile) {
@@ -1591,7 +1632,7 @@
             return brackets;
         }
 
-        function getXPositionForIncome(income, brackets) {
+        function getXPositionForIncome(income, brackets, quintiles = null) {
             // Find which bracket the income falls into
             let bracketIndex = -1;
             for (let i = 0; i < brackets.length; i++) {
@@ -1606,10 +1647,24 @@
 
             if (bracketIndex === -1) return 0;
 
-            // Calculate position within the bracket (0 to 1)
-            const bracket = brackets[bracketIndex];
-            const range = bracket.max - bracket.min;
-            const positionInBracket = range > 0 ? (income - bracket.min) / range : 0.5;
+            let positionInBracket;
+
+            if (quintiles) {
+                // For HOUSEHOLD income: use percentile-based positioning
+                // This ensures consistent positioning regardless of income range width
+                // Each quintile spans 20 percentile points (Q1: 0-20, Q2: 20-40, etc.)
+                const percentile = calculateHouseholdPercentile(income, quintiles);
+                const quintileStartPercentile = bracketIndex * 20;
+
+                // Position within quintile (0 = left edge, 0.5 = middle, 1 = right edge)
+                positionInBracket = (percentile - quintileStartPercentile) / 20;
+            } else {
+                // For INDIVIDUAL income: use dollar-based positioning
+                // (Individual chart brackets are already evenly distributed by percentile)
+                const bracket = brackets[bracketIndex];
+                const range = bracket.max - bracket.min;
+                positionInBracket = range > 0 ? (income - bracket.min) / range : 0.5;
+            }
 
             // For bar charts with default settings (barPercentage=0.9, categoryPercentage=0.8)
             // Actual bar width = 0.9 × 0.8 = 0.72
@@ -1896,7 +1951,7 @@
                     geography: distribution.geography,
                     demographic: distribution.demographicLabel,
                     year: distribution.year,
-                    percentile: Math.round(percentile * 10) / 10,
+                    percentile: percentile,
                     belowYou,
                     bracket,
                     median: {
@@ -1973,7 +2028,7 @@
 
         // Generate distribution data for household income (quintile-based)
         function generateHouseholdDistributionData(quintiles) {
-            // Extract averages
+            // Extract averages - these are at the MIDDLE of each quintile (10th, 30th, 50th, 70th, 90th percentiles)
             const averages = [
                 quintiles.q1.average,
                 quintiles.q2.average,
@@ -1982,53 +2037,58 @@
                 quintiles.q5.average
             ];
 
-            // Calculate midpoints between averages to create boundaries
-            const midpoints = [];
+            // Calculate midpoints between averages to create quintile boundaries (20th, 40th, 60th, 80th percentiles)
+            const boundaries = [];
             for (let i = 0; i < averages.length - 1; i++) {
-                midpoints.push((averages[i] + averages[i + 1]) / 2);
+                boundaries.push((averages[i] + averages[i + 1]) / 2);
             }
 
-            // Create 5 brackets based on quintiles using calculated boundaries
+            // Create 5 brackets based on quintile boundaries
+            // Q1: $0 to Q1/Q2 boundary (0-20th percentile, average at ~10th)
+            // Q2: Q1/Q2 boundary to Q2/Q3 boundary (20-40th percentile, average at ~30th)
+            // Q3: Q2/Q3 boundary to Q3/Q4 boundary (40-60th percentile, average at ~50th)
+            // Q4: Q3/Q4 boundary to Q4/Q5 boundary (60-80th percentile, average at ~70th)
+            // Q5: Q4/Q5 boundary and above (80-100th percentile, average at ~90th)
             const brackets = [
                 {
-                    label: '$0 - ' + formatCurrencyK(midpoints[0]),
+                    label: '$0 - ' + formatCurrencyK(boundaries[0]),
                     min: 0,
-                    max: midpoints[0],
+                    max: boundaries[0],
                     average: averages[0],
                     percentage: 20,
                     percentileLabel: 'Q1 (0-20th)',
                     quintile: 1
                 },
                 {
-                    label: formatCurrencyK(midpoints[0]) + ' - ' + formatCurrencyK(midpoints[1]),
-                    min: midpoints[0],
-                    max: midpoints[1],
+                    label: formatCurrencyK(boundaries[0]) + ' - ' + formatCurrencyK(boundaries[1]),
+                    min: boundaries[0],
+                    max: boundaries[1],
                     average: averages[1],
                     percentage: 20,
                     percentileLabel: 'Q2 (20-40th)',
                     quintile: 2
                 },
                 {
-                    label: formatCurrencyK(midpoints[1]) + ' - ' + formatCurrencyK(midpoints[2]),
-                    min: midpoints[1],
-                    max: midpoints[2],
+                    label: formatCurrencyK(boundaries[1]) + ' - ' + formatCurrencyK(boundaries[2]),
+                    min: boundaries[1],
+                    max: boundaries[2],
                     average: averages[2],
                     percentage: 20,
                     percentileLabel: 'Q3 (40-60th)',
                     quintile: 3
                 },
                 {
-                    label: formatCurrencyK(midpoints[2]) + ' - ' + formatCurrencyK(midpoints[3]),
-                    min: midpoints[2],
-                    max: midpoints[3],
+                    label: formatCurrencyK(boundaries[2]) + ' - ' + formatCurrencyK(boundaries[3]),
+                    min: boundaries[2],
+                    max: boundaries[3],
                     average: averages[3],
                     percentage: 20,
                     percentileLabel: 'Q4 (60-80th)',
                     quintile: 4
                 },
                 {
-                    label: formatCurrencyK(midpoints[3]) + '+',
-                    min: midpoints[3],
+                    label: formatCurrencyK(boundaries[3]) + '+',
+                    min: boundaries[3],
                     max: averages[4] * 1.5, // Extend beyond Q5 average
                     average: averages[4],
                     percentage: 20,
@@ -2072,14 +2132,14 @@
                     year: householdData.year,
                     quintile: quintileInfo.quintile,
                     quintileLabel: quintileInfo.label,
-                    percentile: Math.round(percentile * 10) / 10,
+                    percentile: percentile,
                     belowYou,
                     bracket
                 };
 
                 // Generate message using data with translations
                 let message = `<p><strong>${i18next.t('household_result_message_main', {
-                    percentile: data.percentile.toFixed(1)
+                    percentile: data.percentile.toPrecision(2)
                 })}</strong></p>`;
 
                 message += `<p>${i18next.t('household_result_message_bracket', { bracket: data.bracket })}</p>`;
@@ -2178,7 +2238,7 @@
             const percentileAnnotations = {};
 
             // Add user income line
-            const userXPosition = getXPositionForIncome(userIncome, brackets);
+            const userXPosition = getXPositionForIncome(userIncome, brackets, quintiles);
             percentileAnnotations.userIncomeLine = {
                 type: 'line',
                 xMin: userXPosition,
