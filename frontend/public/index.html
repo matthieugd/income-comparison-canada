@@ -1605,12 +1605,14 @@
             const range = bracket.max - bracket.min;
             const positionInBracket = range > 0 ? (income - bracket.min) / range : 0.5;
 
-            // For bar charts, bars are centered at integer positions (0, 1, 2, etc.)
-            // Each bar has width of ~0.8, so we offset by -0.4 to +0.4 from center
-            const barWidth = 0.8;
-            const offset = (positionInBracket - 0.5) * barWidth;
+            // For bar charts with default settings (barPercentage=0.9, categoryPercentage=0.8)
+            // Actual bar width = 0.9 × 0.8 = 0.72
+            // Bars are centered at integer positions, so bar at index i spans from (i - 0.36) to (i + 0.36)
+            const barWidth = 0.72;
+            const halfBarWidth = barWidth / 2;
 
-            return bracketIndex + offset;
+            // Map position within bracket to position within the bar (not the gap)
+            return bracketIndex - halfBarWidth + (positionInBracket * barWidth);
         }
 
         function createChart(userIncome, percentiles) {
