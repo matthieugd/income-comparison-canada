@@ -174,11 +174,7 @@
         }
 
         .inflation-toggle {
-            margin-top: 15px;
-            padding: 15px;
             background: #fff;
-            border-radius: 10px;
-            border: 1px solid #e0e0e0;
         }
 
         .toggle-label {
@@ -811,9 +807,8 @@
                     <div class="inflation-toggle">
                         <label class="toggle-label">
                             <input type="checkbox" id="inflation-adjustment" class="toggle-checkbox">
-                            <span class="toggle-text" data-i18n="inflation_toggle_label">Adjust for wage inflation since 2020 (+19.98%)</span>
+                            <span class="toggle-text" data-i18n="inflation_toggle_label">Adjust for wage inflation since 2020</span>
                         </label>
-                        <p class="toggle-hint" data-i18n="inflation_toggle_hint">When enabled, all income values are adjusted to reflect average wage growth from 2020 to today</p>
                     </div>
                 </div>
             </div>
@@ -937,7 +932,7 @@
             <div class="faq-item" id="faq7">
                 <div class="faq-question" data-i18n="faq7_question">What are the current limitations and potential improvements ?</div>
                 <div class="faq-answer" data-i18n="[html]faq7_answer">
-                    The individual salary comparison is based on <strong>employment income (wages and salaries)</strong>, which means it's most relevant for people who are currently employed. If you are a retiree or primarily receive income from sources other than employment (such as pensions, investments, or government transfers), these statistics may not be relevant to your situation. A future version of this tool may address this limitation by including additional income categories.<br><br>Additionally, the individual salary data is from the <strong>2020 calendar year</strong>. A future version may include an option to <strong>inflation-adjust the data</strong> to current dollars, which would provide a more accurate comparison by accounting for changes in purchasing power since 2020.<br><br>If you have suggestions for other improvements, please feel free to <a href="https://matthieugd.com/a-propos/" target="_blank" rel="noopener noreferrer">contact me</a>.
+                    The individual salary comparison is based on <strong>employment income (wages and salaries)</strong>, which means it's most relevant for people who are currently employed. If you are a retiree or primarily receive income from sources other than employment (such as pensions, investments, or government transfers), these statistics may not be relevant to your situation. A future version of this tool may address this limitation by including additional income categories. <br><br>If you have suggestions for other improvements, please feel free to <a href="https://matthieugd.com/a-propos/" target="_blank" rel="noopener noreferrer">contact me</a>.
                 </div>
             </div>
 
@@ -959,7 +954,16 @@
 
         <div class="changelog" id="changelog">
             <h2 data-i18n="changelog_title">Change Log</h2>
-            <div class="changelog-entry">
+            <div class="changelog-entry">   
+                <div class="changelog-version">
+                    <span data-i18n="changelog_version_1_1">Version 1.1</span>
+                    <span class="changelog-date" data-i18n="changelog_date_1_1">November, 29th 2025</span>
+                </div>
+                <ul class="changelog-items">
+                    <li data-i18n="changelog_1_item_6">Added support to adjust census data with the average wage inflation since 2020</li>
+                </ul>
+            </div>
+            <div class="changelog-entry">                
                 <div class="changelog-version">
                     <span data-i18n="changelog_version_1">Version 1.0</span>
                     <span class="changelog-date" data-i18n="changelog_date_1">November, 10th 2025</span>
@@ -1011,8 +1015,7 @@
                     age_label: "Your age",
                     age_placeholder: "30",
                     compare_button: "Compare",
-                    inflation_toggle_label: "Adjust for wage inflation since 2020 (+19.98%)",
-                    inflation_toggle_hint: "When enabled, all income values are adjusted to reflect average wage growth from 2020 to today",
+                    inflation_toggle_label: "Adjust for wage inflation since 2020",
                     legend_title: "📊 Income Distribution Percentiles",
                     household_legend_title: "📊 Household Income Quintiles",
                     explanation_title: "💡 Understanding Percentiles",
@@ -1069,7 +1072,7 @@
                     faq6_question: "What's the difference between Individual Salary and Household Income comparisons?",
                     faq6_answer: "<strong>Individual Salary</strong> compares your personal employment income (wages and salaries) to other individuals in your age group using detailed census percentile data (P10, P25, P50, P75, P90, P95, P99). This is best for understanding where your personal earnings stand.<br><br><strong>Household Income</strong> compares the combined income of all people in your household to other Canadian households using quintile data (5 groups of 20% each). This gives a broader picture of your household's economic situation, regardless of how many earners contribute. Note that household data is not age-specific and uses broader income ranges.",
                     faq7_question: "What are the current limitations and potential improvements?",
-                    faq7_answer: "The individual salary comparison is based on <strong>employment income (wages and salaries)</strong>, which means it's most relevant for people who are currently employed. If you are a retiree or primarily receive income from sources other than employment (such as pensions, investments, or government transfers), these statistics may not be relevant to your situation. A future version of this tool may address this limitation by including additional income categories.<br><br>Additionally, the individual salary data is from the <strong>2020 calendar year</strong>. A future version may include an option to <strong>inflation-adjust the data</strong> to current dollars, which would provide a more accurate comparison by accounting for changes in purchasing power since 2020.<br><br>If you have suggestions for other improvements, please feel free to <a href=\"https://matthieugd.com/a-propos/\" target=\"_blank\" rel=\"noopener noreferrer\">contact me</a>.",
+                    faq7_answer: "The individual salary comparison is based on <strong>employment income (wages and salaries)</strong>, which means it's most relevant for people who are currently employed. If you are a retiree or primarily receive income from sources other than employment (such as pensions, investments, or government transfers), these statistics may not be relevant to your situation. A future version of this tool may address this limitation by including additional income categories. <br><br>If you have suggestions for other improvements, please feel free to <a href=\"https://matthieugd.com/a-propos/\" target=\"_blank\" rel=\"noopener noreferrer\">contact me</a>.",
                     faq8_question: "Why are household income quintile brackets and positions approximate?",
                     faq8_answer: "The household income data only provides quintile averages (5 groups of 20% each), unlike the individual salary data which has detailed percentiles. We use mathematical interpolation to estimate your position within a quintile, which means your exact percentile and bracket are approximations. Future versions may include more sophisticated income interpolations for improved accuracy.",
                     faq9_question: "What does the wage inflation adjustment option do?",
@@ -1088,6 +1091,9 @@
                     changelog_1_item_3: "Bilingual support (English and French)",
                     changelog_1_item_4: "Interactive charts with user position indicator",
                     changelog_1_item_5: "Based on Statistics Canada Census 2021 data and table 36-10-0587-01 Distributions of household economic accounts, income, consumption and saving, by characteristic, annual",
+                    changelog_date_1_1: "November, 29th 2025",
+                    changelog_version_1_1: "Version 1.1",
+                    changelog_1_item_6: "Added support to adjust census data with the average wage inflation since 2020",
                     contribute_title: "🤝 Contribute",
                     contribute_message: "This is a personal project born of my personal interest in the economy. If you have suggestions to improve this website, please feel free to submit a change request on <a href=\"https://github.com/matthieugd/income-comparison-canada\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>.",
                     footer_author: "Created by <a href=\"https://matthieugd.com\" target=\"_blank\" rel=\"noopener noreferrer\">Matthieu Guyonnet-Duluc</a>.",
@@ -1107,8 +1113,7 @@
                     age_label: "Votre âge",
                     age_placeholder: "30",
                     compare_button: "Comparer",
-                    inflation_toggle_label: "Ajuster pour l'inflation salariale depuis 2020 (+19,98 %)",
-                    inflation_toggle_hint: "Lorsque activé, toutes les valeurs de revenu sont ajustées pour refléter la croissance salariale moyenne de 2020 à aujourd'hui",
+                    inflation_toggle_label: "Ajuster pour l'inflation salariale depuis 2020",
                     legend_title: "📊 Percentiles de Distribution des Revenus",
                     household_legend_title: "📊 Quintiles de Revenu des Ménages",
                     explanation_title: "💡 Comprendre les Percentiles",
@@ -1165,7 +1170,7 @@
                     faq6_question: "Quelle est la différence entre les comparaisons de Salaire Individuel et de Revenu du Ménage?",
                     faq6_answer: "<strong>Salaire Individuel</strong> compare votre revenu d'emploi personnel (salaires et traitements) à d'autres individus de votre groupe d'âge en utilisant des données de percentiles détaillées du recensement (P10, P25, P50, P75, P90, P95, P99). C'est idéal pour comprendre où se situent vos gains personnels. <strong>Revenu du Ménage</strong> compare le revenu combiné de toutes les personnes de votre ménage à d'autres ménages canadiens en utilisant des données de quintiles (5 groupes de 20 % chacun). Cela donne une image plus large de la situation économique de votre ménage, peu importe le nombre de personnes qui contribuent. Notez que les données des ménages ne sont pas spécifiques à l'âge et utilisent des fourchettes de revenus plus larges.",
                     faq7_question: "Quelles sont les limitations actuelles et améliorations futures?",
-                    faq7_answer: "La comparaison de salaire individuel est basée sur le <strong>revenu d'emploi (salaires et traitements)</strong>, ce qui signifie qu'elle est plus pertinente pour les personnes actuellement employées. Si vous êtes retraité ou recevez principalement des revenus de sources autres que l'emploi (comme des pensions, des investissements ou des transferts gouvernementaux), ces statistiques peuvent ne pas être pertinentes pour votre situation. Une future version de cet outil pourrait remédier à cette limitation en incluant des catégories de revenus supplémentaires.<br><br>De plus, les données de salaire individuel proviennent de l'<strong>année civile 2020</strong>. Une future version pourrait inclure une option pour <strong>ajuster les données en fonction de l'inflation</strong> pour les convertir en dollars actuels, ce qui permettrait une comparaison plus précise en tenant compte des changements du pouvoir d'achat depuis 2020.<br><br>Si vous avez des suggestions pour d'autres améliorations, n'hésitez pas à me <a href=\"https://matthieugd.com/a-propos/\" target=\"_blank\" rel=\"noopener noreferrer\">contacter</a>.",
+                    faq7_answer: "La comparaison de salaire individuel est basée sur le <strong>revenu d'emploi (salaires et traitements)</strong>, ce qui signifie qu'elle est plus pertinente pour les personnes actuellement employées. Si vous êtes retraité ou recevez principalement des revenus de sources autres que l'emploi (comme des pensions, des investissements ou des transferts gouvernementaux), ces statistiques peuvent ne pas être pertinentes pour votre situation. Une future version de cet outil pourrait remédier à cette limitation en incluant des catégories de revenus supplémentaires. <br><br>Si vous avez des suggestions pour d'autres améliorations, n'hésitez pas à me <a href=\"https://matthieugd.com/a-propos/\" target=\"_blank\" rel=\"noopener noreferrer\">contacter</a>.",
                     faq8_question: "Pourquoi les tranches de quintiles de revenu des ménages et les positions sont-elles approximatives?",
                     faq8_answer: "Les données de revenu des ménages ne fournissent que des moyennes de quintiles (5 groupes de 20 % chacun), contrairement aux données de salaire individuel qui ont des percentiles détaillés. Nous utilisons une interpolation mathématique pour estimer votre position dans un quintile, ce qui signifie que votre percentile exact et votre tranche sont des approximations. Les futures versions pourraient inclure des interpolations de revenu plus sophistiquées pour améliorer la précision.",
                     faq9_question: "Que fait l'option d'ajustement pour l'inflation salariale?",
@@ -1184,6 +1189,9 @@
                     changelog_1_item_3: "Support bilingue (français et anglais)",
                     changelog_1_item_4: "Graphiques interactifs avec indicateur de position de l'utilisateur",
                     changelog_1_item_5: "Basé sur les données du Recensement de 2021 de Statistique Canada et le tableau 36-10-0587-01 Comptes économiques répartis pour le secteur des ménages, revenu, consommation et épargne, par caractéristique, annuel",
+                    changelog_date_1_1: "29 Novembre 2025",
+                    changelog_version_1_1: "Version 1.1",
+                    changelog_1_item_6: "Ajout du support pour ajuster les données du recensement avec l'inflation salariale moyenne depuis 2020",
                     contribute_title: "🤝 Contribuer",
                     contribute_message: "Ceci est un projet personnel né de mon intérêt personnel pour l'économie. Si vous avez des suggestions pour améliorer ce site web, n'hésitez pas à soumettre une demande de modification sur <a href=\"https://github.com/matthieugd/income-comparison-canada\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>.",
                     footer_author: "Créé par <a href=\"https://matthieugd.com\" target=\"_blank\" rel=\"noopener noreferrer\">Matthieu Guyonnet-Duluc</a>.",
