@@ -64,6 +64,7 @@ Each age group JSON file (e.g., `income-canada-age-30-34.json`) contains:
   "demographic": "age-30-34",
   "demographicLabel": "Age 30-34",
   "demographicType": "age",
+  "inflationAdjustment": 19.98,
   "percentiles": {
     "p10": 7700,
     "p25": 22600,
@@ -80,6 +81,8 @@ Each age group JSON file (e.g., `income-canada-age-30-34.json`) contains:
   "average": 52550
 }
 ```
+
+**Note**: The `inflationAdjustment` field (19.98) represents the average wage growth percentage from 2020 to 2025. When users enable the wage inflation toggle in the UI, all income values are multiplied by 1.1998 to provide a more current comparison.
 
 ### Household Income Data Structure
 The `household-income-canada.json` file contains:
@@ -120,6 +123,27 @@ The `manifest.json` file controls cache invalidation:
 }
 ```
 
+### Wage Inflation Adjustment Feature
+
+The application includes an optional wage inflation adjustment for individual salary comparisons only:
+
+**How it works:**
+1. Each individual age group JSON file contains an `inflationAdjustment` field (currently 19.98%)
+2. User sees a checkbox toggle in the Individual Salary comparison UI
+3. When enabled, the `applyInflationAdjustment()` function multiplies all income values by 1.1998
+4. Checking/unchecking automatically recalculates results without re-submitting the form
+5. Toggle state is saved in URL parameters for sharing
+
+**Important notes:**
+- Only applies to individual salary comparisons (not household income)
+- Uses a uniform percentage across all income levels
+- Actual wage growth varies by percentile - this is an approximation
+- FAQ9 explains the feature and its limitations to users
+
+**Key functions:**
+- `applyInflationAdjustment(distribution)`: Applies the adjustment to all percentiles, median, and average
+- Event listener on `#inflation-adjustment` checkbox triggers recalculation when changed
+
 ## Code Conventions
 
 ### Application Architecture
@@ -154,9 +178,10 @@ The `manifest.json` file controls cache invalidation:
 - `calculateHouseholdQuintile(income, quintiles)`: Determines quintile using midpoints
 - `calculateHouseholdPercentile(income, quintiles)`: Interpolates percentile within quintile
 - `getHouseholdBracket(quintile)`: Returns quintile label
+- `applyInflationAdjustment(distribution)`: Applies wage inflation adjustment to all income values
 
 **Main Calculation Functions:**
-- `calculateIndividual()`: Handles individual salary comparison
+- `calculateIndividual()`: Handles individual salary comparison (with optional inflation adjustment)
 - `calculateHousehold()`: Handles household income comparison
 
 ## Important Design Decisions
@@ -216,6 +241,25 @@ Cache invalidation triggers:
    }
    ```
 3. Deploy - users automatically get new version
+
+### Updating Inflation Adjustment Percentage
+When updating the wage inflation adjustment (e.g., to reflect 2026 wage growth):
+
+1. **Update all 11 individual age group JSON files**:
+   ```json
+   {
+     "inflationAdjustment": 22.50,  // Update this value
+     // ... rest of the file
+   }
+   ```
+2. **Update UI translations** in `index.html`:
+   - English: `inflation_toggle_label: "Adjust for wage inflation since 2020 (+22.50%)"`
+   - French: `inflation_toggle_label: "Ajuster pour l'inflation salariale depuis 2020 (+22,50 %)"`
+3. **Update FAQ9** if the percentage change is significant:
+   - English: `faq9_answer` (mentions the percentage)
+   - French: `faq9_answer` (mentions the percentage)
+4. **Increment versions** in `manifest.json` for all affected individual age group files
+5. **Deploy** - users automatically get the new adjustment percentage
 
 ### Modifying Percentile Calculation
 The calculation is in `index.html` (search for `function calculatePercentile`):
@@ -359,6 +403,8 @@ When asking Claude for help:
 ### Data & Content
 - "Add a new age group for ages 0-14"
 - "Update the income data for 2025 Census"
+- "Update the wage inflation adjustment to reflect 2026 wage growth"
+- "Change the inflation adjustment percentage from 19.98% to 22.5%"
 - "Add provincial/city filtering"
 - "Change the income quintile boundaries"
 
@@ -391,6 +437,6 @@ When asking Claude for help:
 
 ---
 
-**Last Updated**: November 8, 2025
-**Project Version**: 3.0 (Static Architecture)
+**Last Updated**: November 29, 2025
+**Project Version**: 3.1 (Static Architecture + Inflation Adjustment)
 **Architecture**: 100% Static (No Backend)

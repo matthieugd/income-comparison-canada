@@ -8,6 +8,7 @@ Compare your employment income against other Canadians in your age group using S
 
 - 📊 **Individual Salary Comparison**: Compare by 11 age groups (15-19, 20-24, 25-29, etc.)
 - 🏠 **Household Income Comparison**: Compare household income by quintiles
+- 💰 **Wage Inflation Adjustment**: Optional adjustment to reflect average wage growth since 2020 (+19.98%)
 - 📈 Real-time percentile calculation using client-side processing
 - 📉 Interactive histogram visualization with position indicator
 - 🌐 Bilingual support (English & French)
@@ -86,6 +87,18 @@ This application requires **no backend server**. All calculations happen in the 
 - **Variable**: Household income (approximated from disposable income + transfers)
 - **Distribution**: Quintiles (5 groups of 20% each)
 
+### Wage Inflation Adjustment
+
+The application includes an optional wage inflation adjustment feature for individual salary comparisons:
+
+- **Toggle**: Users can enable/disable via checkbox in the UI
+- **Adjustment**: +19.98% applied to all income values (2020 → 2025)
+- **Purpose**: Makes comparisons more current by accounting for average wage growth
+- **Limitation**: Uses a uniform percentage across all income levels; actual wage growth varies by percentile
+- **Real-time**: Checking/unchecking the toggle automatically updates results without re-submitting
+
+Each individual age group JSON file includes an `inflationAdjustment` field (set to 19.98) that stores the percentage. When enabled, all percentiles, median, and average values are multiplied by 1.1998.
+
 ## Project Structure
 
 ```
@@ -114,6 +127,26 @@ When you need to update the income data:
    }
    ```
 3. **Deploy** - Users will automatically get new data on next visit
+
+### Updating Inflation Adjustment
+
+To update the wage inflation adjustment percentage:
+
+1. **Update the `inflationAdjustment` field** in all 11 individual age group JSON files:
+   ```json
+   {
+     "geography": "Canada",
+     "year": 2020,
+     "demographic": "age-30-34",
+     "inflationAdjustment": 19.98,  // Change this value
+     "percentiles": { ... }
+   }
+   ```
+2. **Update translations** in `index.html`:
+   - `inflation_toggle_label` (English and French)
+   - `faq9_answer` (English and French) - if percentage changes significantly
+3. **Increment version** in `manifest.json` for all affected files
+4. **Deploy** - Users will see the new adjustment percentage
 
 ## Technical Details
 
