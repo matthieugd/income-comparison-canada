@@ -172,7 +172,43 @@
         button:active {
             transform: translateY(0);
         }
-        
+
+        .inflation-toggle {
+            margin-top: 15px;
+            padding: 15px;
+            background: #fff;
+            border-radius: 10px;
+            border: 1px solid #e0e0e0;
+        }
+
+        .toggle-label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            font-size: 1em;
+            font-weight: 500;
+        }
+
+        .toggle-checkbox {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #d52b1e;
+        }
+
+        .toggle-text {
+            color: #333;
+        }
+
+        .toggle-hint {
+            margin-top: 8px;
+            margin-left: 30px;
+            font-size: 0.85em;
+            color: #666;
+            font-style: italic;
+        }
+
         .results {
             display: none;
         }
@@ -772,6 +808,13 @@
                         </div>
                         <button onclick="calculateIndividual()" data-i18n="compare_button">Compare</button>
                     </div>
+                    <div class="inflation-toggle">
+                        <label class="toggle-label">
+                            <input type="checkbox" id="inflation-adjustment" class="toggle-checkbox">
+                            <span class="toggle-text" data-i18n="inflation_toggle_label">Adjust for wage inflation since 2020 (+19.98%)</span>
+                        </label>
+                        <p class="toggle-hint" data-i18n="inflation_toggle_hint">When enabled, all income values are adjusted to reflect average wage growth from 2020 to today</p>
+                    </div>
                 </div>
             </div>
         </div>
@@ -832,6 +875,7 @@
                         <li><a href="#faq5" data-i18n="faq5_question">What does "household income" include?</a></li>
                         <li><a href="#faq7" data-i18n="faq7_question">What are the current limitations and potential improvements?</a></li>
                         <li><a href="#faq8" data-i18n="faq8_question">Why are household income quintile brackets and positions approximate?</a></li>
+                        <li><a href="#faq9" data-i18n="faq9_question">What does the wage inflation adjustment option do?</a></li>
                     </ul>
                 </div>
                 <div class="toc-category">
@@ -904,6 +948,12 @@
                 </div>
             </div>
 
+            <div class="faq-item" id="faq9">
+                <div class="faq-question" data-i18n="faq9_question">What does the wage inflation adjustment option do?</div>
+                <div class="faq-answer" data-i18n="[html]faq9_answer">
+                    The wage inflation adjustment option (available for individual salary comparisons only) applies a +19.98% adjustment to all income values from the 2020 census data to make the comparison more current. This percentage represents the average wage growth from 2020 to today. When enabled, you'll see how your salary compares against inflation-adjusted figures rather than the raw 2020 census numbers. <strong>Important note:</strong> This adjustment uses an average percentage across all income levels. In reality, wage growth varies across different income percentiles—some groups may have experienced more or less than 19.98% growth. Therefore, the adjusted figures provide a useful approximation but may not perfectly reflect the actual current distribution.
+                </div>
+            </div>
 
         </div>
 
@@ -961,6 +1011,8 @@
                     age_label: "Your age",
                     age_placeholder: "30",
                     compare_button: "Compare",
+                    inflation_toggle_label: "Adjust for wage inflation since 2020 (+19.98%)",
+                    inflation_toggle_hint: "When enabled, all income values are adjusted to reflect average wage growth from 2020 to today",
                     legend_title: "📊 Income Distribution Percentiles",
                     household_legend_title: "📊 Household Income Quintiles",
                     explanation_title: "💡 Understanding Percentiles",
@@ -1020,6 +1072,8 @@
                     faq7_answer: "The individual salary comparison is based on <strong>employment income (wages and salaries)</strong>, which means it's most relevant for people who are currently employed. If you are a retiree or primarily receive income from sources other than employment (such as pensions, investments, or government transfers), these statistics may not be relevant to your situation. A future version of this tool may address this limitation by including additional income categories.<br><br>Additionally, the individual salary data is from the <strong>2020 calendar year</strong>. A future version may include an option to <strong>inflation-adjust the data</strong> to current dollars, which would provide a more accurate comparison by accounting for changes in purchasing power since 2020.<br><br>If you have suggestions for other improvements, please feel free to <a href=\"https://matthieugd.com/a-propos/\" target=\"_blank\" rel=\"noopener noreferrer\">contact me</a>.",
                     faq8_question: "Why are household income quintile brackets and positions approximate?",
                     faq8_answer: "The household income data only provides quintile averages (5 groups of 20% each), unlike the individual salary data which has detailed percentiles. We use mathematical interpolation to estimate your position within a quintile, which means your exact percentile and bracket are approximations. Future versions may include more sophisticated income interpolations for improved accuracy.",
+                    faq9_question: "What does the wage inflation adjustment option do?",
+                    faq9_answer: "The wage inflation adjustment option (available for individual salary comparisons only) applies a +19.98% adjustment to all income values from the 2020 census data to make the comparison more current. This percentage represents the average wage growth from 2020 to today. When enabled, you'll see how your salary compares against inflation-adjusted figures rather than the raw 2020 census numbers. <strong>Important note:</strong> This adjustment uses an average percentage across all income levels. In reality, wage growth varies across different income percentiles—some groups may have experienced more or less than 19.98% growth. Therefore, the adjusted figures provide a useful approximation but may not perfectly reflect the actual current distribution.",
                     toc_title: "📑 Table of Contents",
                     toc_faq_title: "Frequently Asked Questions",
                     toc_other_title: "Other Sections",
@@ -1053,6 +1107,8 @@
                     age_label: "Votre âge",
                     age_placeholder: "30",
                     compare_button: "Comparer",
+                    inflation_toggle_label: "Ajuster pour l'inflation salariale depuis 2020 (+19,98 %)",
+                    inflation_toggle_hint: "Lorsque activé, toutes les valeurs de revenu sont ajustées pour refléter la croissance salariale moyenne de 2020 à aujourd'hui",
                     legend_title: "📊 Percentiles de Distribution des Revenus",
                     household_legend_title: "📊 Quintiles de Revenu des Ménages",
                     explanation_title: "💡 Comprendre les Percentiles",
@@ -1112,6 +1168,8 @@
                     faq7_answer: "La comparaison de salaire individuel est basée sur le <strong>revenu d'emploi (salaires et traitements)</strong>, ce qui signifie qu'elle est plus pertinente pour les personnes actuellement employées. Si vous êtes retraité ou recevez principalement des revenus de sources autres que l'emploi (comme des pensions, des investissements ou des transferts gouvernementaux), ces statistiques peuvent ne pas être pertinentes pour votre situation. Une future version de cet outil pourrait remédier à cette limitation en incluant des catégories de revenus supplémentaires.<br><br>De plus, les données de salaire individuel proviennent de l'<strong>année civile 2020</strong>. Une future version pourrait inclure une option pour <strong>ajuster les données en fonction de l'inflation</strong> pour les convertir en dollars actuels, ce qui permettrait une comparaison plus précise en tenant compte des changements du pouvoir d'achat depuis 2020.<br><br>Si vous avez des suggestions pour d'autres améliorations, n'hésitez pas à me <a href=\"https://matthieugd.com/a-propos/\" target=\"_blank\" rel=\"noopener noreferrer\">contacter</a>.",
                     faq8_question: "Pourquoi les tranches de quintiles de revenu des ménages et les positions sont-elles approximatives?",
                     faq8_answer: "Les données de revenu des ménages ne fournissent que des moyennes de quintiles (5 groupes de 20 % chacun), contrairement aux données de salaire individuel qui ont des percentiles détaillés. Nous utilisons une interpolation mathématique pour estimer votre position dans un quintile, ce qui signifie que votre percentile exact et votre tranche sont des approximations. Les futures versions pourraient inclure des interpolations de revenu plus sophistiquées pour améliorer la précision.",
+                    faq9_question: "Que fait l'option d'ajustement pour l'inflation salariale?",
+                    faq9_answer: "L'option d'ajustement pour l'inflation salariale (disponible uniquement pour les comparaisons de salaire individuel) applique un ajustement de +19,98 % à toutes les valeurs de revenu des données du recensement de 2020 pour rendre la comparaison plus actuelle. Ce pourcentage représente la croissance salariale moyenne de 2020 à aujourd'hui. Lorsqu'elle est activée, vous verrez comment votre salaire se compare aux chiffres ajustés pour l'inflation plutôt qu'aux chiffres bruts du recensement de 2020. <strong>Note importante:</strong> Cet ajustement utilise un pourcentage moyen pour tous les niveaux de revenu. En réalité, la croissance salariale varie selon les différents percentiles de revenu—certains groupes peuvent avoir connu une croissance supérieure ou inférieure à 19,98 %. Par conséquent, les chiffres ajustés fournissent une approximation utile mais peuvent ne pas refléter parfaitement la distribution actuelle réelle.",
                     toc_title: "📑 Table des Matières",
                     toc_faq_title: "Questions Fréquemment Posées",
                     toc_other_title: "Autres Sections",
@@ -1916,7 +1974,26 @@
             document.getElementById('medianExample').innerHTML =
                 i18next.t('household_quintile_middle', { q3_avg: q3_avg });
         }
-        
+
+        // Helper function to apply inflation adjustment to distribution data
+        function applyInflationAdjustment(distribution) {
+            const inflationRate = distribution.inflationAdjustment / 100;
+            const adjustedDistribution = JSON.parse(JSON.stringify(distribution)); // Deep copy
+
+            // Adjust all percentile values
+            Object.keys(adjustedDistribution.percentiles).forEach(key => {
+                adjustedDistribution.percentiles[key] = Math.round(
+                    adjustedDistribution.percentiles[key] * (1 + inflationRate)
+                );
+            });
+
+            // Adjust median and average
+            adjustedDistribution.median = Math.round(adjustedDistribution.median * (1 + inflationRate));
+            adjustedDistribution.average = Math.round(adjustedDistribution.average * (1 + inflationRate));
+
+            return adjustedDistribution;
+        }
+
         async function calculateIndividual() {
             const income = parseFloat(document.getElementById('income').value);
             const age = parseInt(document.getElementById('age').value);
@@ -1937,10 +2014,16 @@
 
                 // Fetch distribution data from local JSON
                 const filename = getDataFilename(age);
-                const distribution = await dataCache.getData(filename);
+                let distribution = await dataCache.getData(filename);
 
                 if (!distribution) {
                     throw new Error(`No data found for age group: ${age}`);
+                }
+
+                // Apply inflation adjustment if the toggle is enabled
+                const inflationEnabled = document.getElementById('inflation-adjustment').checked;
+                if (inflationEnabled && distribution.inflationAdjustment) {
+                    distribution = applyInflationAdjustment(distribution);
                 }
 
                 // Calculate percentile using client-side function
@@ -2017,6 +2100,11 @@
                 const url = new URL(window.location.href);
                 url.searchParams.set('income', income);
                 url.searchParams.set('age', age);
+                if (inflationEnabled) {
+                    url.searchParams.set('inflation', 'true');
+                } else {
+                    url.searchParams.delete('inflation');
+                }
                 window.history.pushState({}, '', url);
 
                 // Show results and message box
@@ -2355,6 +2443,7 @@
             const income = urlParams.get('income');
             const age = urlParams.get('age');
             const householdIncome = urlParams.get('household-income');
+            const inflation = urlParams.get('inflation');
 
             // Determine which mode to use
             if (householdIncome || mode === 'household') {
@@ -2371,6 +2460,10 @@
                 if (income && age) {
                     document.getElementById('income').value = income;
                     document.getElementById('age').value = age;
+                    // Set inflation adjustment checkbox state
+                    if (inflation === 'true') {
+                        document.getElementById('inflation-adjustment').checked = true;
+                    }
                     // Automatically calculate
                     calculateIndividual();
                 }
@@ -2396,6 +2489,18 @@
         document.getElementById('household-income').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 calculateHousehold();
+            }
+        });
+
+        // Automatically recalculate when inflation toggle changes
+        document.getElementById('inflation-adjustment').addEventListener('change', function() {
+            // Only recalculate if results are currently displayed
+            const resultsShown = document.getElementById('results').classList.contains('show');
+            const income = document.getElementById('income').value;
+            const age = document.getElementById('age').value;
+
+            if (resultsShown && income && age) {
+                calculateIndividual();
             }
         });
     </script>

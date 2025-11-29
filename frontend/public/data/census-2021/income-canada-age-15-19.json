@@ -6,6 +6,7 @@
   "demographic": "age-15-19",
   "demographicLabel": "Age 15-19",
   "demographicType": "age",
+  "inflationAdjustment": 19.98,
   "percentiles": {
     "p10": 960,
     "p25": 2600,

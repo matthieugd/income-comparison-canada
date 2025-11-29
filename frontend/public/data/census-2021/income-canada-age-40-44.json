@@ -6,6 +6,7 @@
   "demographic": "age-40-44",
   "demographicLabel": "Age 40-44",
   "demographicType": "age",
+  "inflationAdjustment": 19.98,
   "percentiles": {
     "p10": 10800,
     "p25": 30800,
