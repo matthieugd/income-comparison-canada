@@ -1262,7 +1262,7 @@
 
                 // Fetch from server
                 try {
-                    const response = await fetch(`data/census-2021/${filename}.json`);
+                    const response = await fetch(`data/${filename}.json`);
                     if (!response.ok) {
                         throw new Error(`HTTP error! status: ${response.status}`);
                     }

@@ -94,18 +94,17 @@ income-comparison-canada/
     ├── index.html                  # Complete standalone application
     └── data/
         ├── manifest.json           # Version control for cache invalidation
-        └── census-2021/
-            ├── income-canada-age-15-19.json
-            ├── income-canada-age-20-24.json
-            ├── ... (11 age group files)
-            └── household-income-canada.json
+        ├── income-canada-age-15-19.json
+        ├── income-canada-age-20-24.json
+        ├── ... (11 age group files)
+        └── household-income-canada.json
 ```
 
 ## Updating Data
 
 When you need to update the income data:
 
-1. **Update JSON files** in `frontend/public/data/census-2021/`
+1. **Update JSON files** in `frontend/public/data/`
 2. **Increment version** in `frontend/public/data/manifest.json`:
    ```json
    {

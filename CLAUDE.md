@@ -25,19 +25,18 @@ income-comparison-canada/
     ├── index.html                      # Complete standalone application (~100KB)
     └── data/
         ├── manifest.json               # Version control for cache invalidation
-        └── census-2021/
-            ├── income-canada-age-15-19.json
-            ├── income-canada-age-20-24.json
-            ├── income-canada-age-25-29.json
-            ├── income-canada-age-30-34.json
-            ├── income-canada-age-35-39.json
-            ├── income-canada-age-40-44.json
-            ├── income-canada-age-45-49.json
-            ├── income-canada-age-50-54.json
-            ├── income-canada-age-55-59.json
-            ├── income-canada-age-60-64.json
-            ├── income-canada-age-65plus.json
-            └── household-income-canada.json
+        ├── income-canada-age-15-19.json
+        ├── income-canada-age-20-24.json
+        ├── income-canada-age-25-29.json
+        ├── income-canada-age-30-34.json
+        ├── income-canada-age-35-39.json
+        ├── income-canada-age-40-44.json
+        ├── income-canada-age-45-49.json
+        ├── income-canada-age-50-54.json
+        ├── income-canada-age-55-59.json
+        ├── income-canada-age-60-64.json
+        ├── income-canada-age-65plus.json
+        └── household-income-canada.json
 ```
 
 ## Key Concepts
@@ -201,14 +200,14 @@ Cache invalidation triggers:
 ## When Making Changes
 
 ### Adding New Age Groups
-1. Create new JSON file in `frontend/public/data/census-2021/`
+1. Create new JSON file in `frontend/public/data/`
 2. Update `getAgeDemographic()` function in `index.html`
 3. Update `getAgeGroupLabel()` function in `index.html`
 4. Update frontend age validation
 5. Add filename to `manifest.json`
 
 ### Updating Income Data
-1. Edit JSON files in `frontend/public/data/census-2021/`
+1. Edit JSON files in `frontend/public/data/`
 2. Increment version in `frontend/public/data/manifest.json`:
    ```json
    {
@@ -323,7 +322,7 @@ Potential features to add:
 
 ### Data Not Loading
 1. **Check browser console** for errors
-2. **Verify JSON files exist** in `frontend/public/data/census-2021/`
+2. **Verify JSON files exist** in `frontend/public/data/`
 3. **Check manifest.json** is valid JSON
 4. **Test with cleared cache**: `localStorage.clear()` in console
 5. **Verify CORS**: Must serve via HTTP server, not `file://` protocol
