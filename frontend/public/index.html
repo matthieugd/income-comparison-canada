@@ -186,11 +186,39 @@
             font-weight: 500;
         }
 
-        .toggle-checkbox {
-            width: 20px;
-            height: 20px;
+        .toggle-button {
+            width: 50px;
+            height: 26px;
+            border-radius: 13px;
+            border: none;
+            background-color: #ccc;
             cursor: pointer;
-            accent-color: #d52b1e;
+            position: relative;
+            transition: background-color 0.3s ease;
+            padding: 0;
+            margin: 0;
+            flex-shrink: 0;
+        }
+
+        .toggle-button::after {
+            content: '';
+            position: absolute;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background-color: white;
+            top: 2px;
+            left: 2px;
+            transition: left 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .toggle-button[aria-checked="true"] {
+            background-color: #d52b1e;
+        }
+
+        .toggle-button[aria-checked="true"]::after {
+            left: 26px;
         }
 
         .toggle-text {
@@ -806,7 +834,7 @@
                     </div>
                     <div class="inflation-toggle">
                         <label class="toggle-label">
-                            <input type="checkbox" id="inflation-adjustment" class="toggle-checkbox">
+                            <button type="button" id="inflation-adjustment" class="toggle-button" role="switch" aria-checked="false"></button>
                             <span class="toggle-text" data-i18n="inflation_toggle_label">Adjust for wage inflation since 2020</span>
                         </label>
                     </div>
@@ -2029,7 +2057,7 @@
                 }
 
                 // Apply inflation adjustment if the toggle is enabled
-                const inflationEnabled = document.getElementById('inflation-adjustment').checked;
+                const inflationEnabled = document.getElementById('inflation-adjustment').getAttribute('aria-checked') === 'true';
                 if (inflationEnabled && distribution.inflationAdjustment) {
                     distribution = applyInflationAdjustment(distribution);
                 }
@@ -2468,9 +2496,9 @@
                 if (income && age) {
                     document.getElementById('income').value = income;
                     document.getElementById('age').value = age;
-                    // Set inflation adjustment checkbox state
+                    // Set inflation adjustment toggle state
                     if (inflation === 'true') {
-                        document.getElementById('inflation-adjustment').checked = true;
+                        document.getElementById('inflation-adjustment').setAttribute('aria-checked', 'true');
                     }
                     // Automatically calculate
                     calculateIndividual();
@@ -2500,8 +2528,12 @@
             }
         });
 
-        // Automatically recalculate when inflation toggle changes
-        document.getElementById('inflation-adjustment').addEventListener('change', function() {
+        // Toggle button click handler
+        document.getElementById('inflation-adjustment').addEventListener('click', function(e) {
+            e.preventDefault();
+            const isChecked = this.getAttribute('aria-checked') === 'true';
+            this.setAttribute('aria-checked', !isChecked);
+
             // Only recalculate if results are currently displayed
             const resultsShown = document.getElementById('results').classList.contains('show');
             const income = document.getElementById('income').value;
