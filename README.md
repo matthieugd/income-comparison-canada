@@ -82,16 +82,15 @@ This application requires **no backend server**. All calculations happen in the 
 - **Population**: Persons aged 15+ with employment income
 - **Age Groups**: 11 groups (15-19, 20-24, 25-29, 30-34, 35-39, 40-44, 45-49, 50-54, 55-59, 60-64, 65+)
 - **Geography**: Canada (national), 10 provinces (AB, BC, MB, NB, NL, NS, ON, PE, QC, SK), 3 territories (NT, NU, YT)
-- **Note**: Provincial data currently uses placeholder values; Canada data is complete
 
 ### Regional Comparisons
 
-Individual salary comparisons support 14 regions:
-- **Canada (CA)**: National data (complete)
+Individual salary comparisons support 14 regions with complete data:
+- **Canada (CA)**: National data
 - **10 Provinces**: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland and Labrador, Nova Scotia, Ontario, Prince Edward Island, Quebec, Saskatchewan
 - **3 Territories**: Northwest Territories, Nunavut, Yukon
 
-**Note**: Only Canada (CA) currently has complete income data. Provincial/territorial data uses placeholder values and will be updated with real Statistics Canada data in future releases.
+All regional data is sourced from Statistics Canada Census 2021.
 
 ### Household Income Data
 - **Source**: Statistics Canada, Household Income Survey (Table 36-10-0587-01)

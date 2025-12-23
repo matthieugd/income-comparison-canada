@@ -110,8 +110,8 @@ Each age group JSON file (e.g., `income-canada-age-30-34.json`) contains:
 
 ### Provincial/Territorial Selection
 
-The application supports 14 regions:
-- **Canada (CA)**: National data (complete)
+The application supports 14 regions with complete data:
+- **Canada (CA)**: National data
 - **10 Provinces**: AB, BC, MB, NB, NL, NS, ON, PE, QC, SK
 - **3 Territories**: NT, NU, YT
 
@@ -122,7 +122,7 @@ const regionData = distribution.regions[provinceCode];
 const percentile = calculatePercentile(income, regionData);
 ```
 
-**Note**: Only Canada (CA) has complete data. Provincial/territorial data uses placeholder zeros pending real Statistics Canada data.
+All regional data is sourced from Statistics Canada Census 2021.
 
 ### Household Income Data Structure
 The `household-income-canada.json` file contains:
@@ -383,17 +383,16 @@ vercel --prod
 
 1. **Individual data from 2020**: Most recent complete Census data available (Census 2021 reports 2020 income)
 2. **Household data from 2024**: Annual household survey data
-3. **Provincial data incomplete**: Only Canada has complete individual salary data; provinces/territories use placeholder data pending real Statistics Canada data
-4. **Household data Canada-wide only**: No provincial breakdown for household income comparisons
-5. **Employment income only (individual)**: Excludes investment income, pensions, transfers
-6. **Browser storage limits**: localStorage has ~5-10MB limit (we use ~50KB)
-7. **Requires JavaScript**: No fallback for JavaScript-disabled browsers
+3. **Household data Canada-wide only**: No provincial breakdown for household income comparisons
+4. **Employment income only (individual)**: Excludes investment income, pensions, transfers
+5. **Browser storage limits**: localStorage has ~5-10MB limit (we use ~50KB)
+6. **Requires JavaScript**: No fallback for JavaScript-disabled browsers
 
 ## Future Enhancements
 
 Potential features to add:
-- **Complete provincial data**: Populate real Statistics Canada provincial income data
 - **City-level filters**: Add city-level geographic segmentation
+- **Provincial household data**: Add provincial breakdown for household income comparisons
 - **After-tax calculator**: Show post-tax income comparisons
 - **Occupation filters**: Compare by job type
 - **Historical trends**: Compare 2015 vs 2020 vs 2025 census data
