@@ -2229,7 +2229,7 @@
 
                 // Generate message using data with translations
                 let message = `<p><strong>${i18next.t('result_message_main', {
-                    geography: data.geography,
+                    geography: i18next.t(`region_${data.geographyCode}`),
                     age: age,
                     percentile: data.percentile.toFixed(1),
                     ageGroup: data.ageGroup
