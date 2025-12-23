@@ -57,32 +57,72 @@ income-comparison-canada/
 Each age group JSON file (e.g., `income-canada-age-30-34.json`) contains:
 ```json
 {
-  "geography": "Canada",
-  "geographyCode": "CA",
-  "geographyType": "country",
   "year": 2020,
   "demographic": "age-30-34",
   "demographicLabel": "Age 30-34",
   "demographicType": "age",
   "inflationAdjustment": 19.98,
-  "percentiles": {
-    "p10": 7700,
-    "p25": 22600,
-    "p50": 46400,
-    "p75": 72500,
-    "p90": 99000,
-    "p95": 119000,
-    "p96": 127000,
-    "p97": 137000,
-    "p98": 153000,
-    "p99": 186000
-  },
-  "median": 46400,
-  "average": 52550
+  "regions": {
+    "CA": {
+      "name": "Canada",
+      "code": "CA",
+      "type": "country",
+      "percentiles": {
+        "p10": 7700,
+        "p25": 22600,
+        "p50": 46400,
+        "p75": 72500,
+        "p90": 99000,
+        "p95": 119000,
+        "p96": 127000,
+        "p97": 137000,
+        "p98": 153000,
+        "p99": 186000
+      },
+      "median": 46400,
+      "average": 52550
+    },
+    "AB": {
+      "name": "Alberta",
+      "code": "AB",
+      "type": "province",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    }
+    // ... 12 more regions (BC, MB, NB, NL, NS, NT, NU, ON, PE, QC, SK, YT)
+  }
 }
 ```
 
 **Note**: The `inflationAdjustment` field (19.98) represents the average wage growth percentage from 2020 to 2025. When users enable the wage inflation toggle in the UI, all income values are multiplied by 1.1998 to provide a more current comparison.
+
+### Provincial/Territorial Selection
+
+The application supports 14 regions:
+- **Canada (CA)**: National data (complete)
+- **10 Provinces**: AB, BC, MB, NB, NL, NS, ON, PE, QC, SK
+- **3 Territories**: NT, NU, YT
+
+**Data Access Pattern:**
+```javascript
+const distribution = await dataCache.getData(filename);
+const regionData = distribution.regions[provinceCode];
+const percentile = calculatePercentile(income, regionData);
+```
+
+**Note**: Only Canada (CA) has complete data. Provincial/territorial data uses placeholder zeros pending real Statistics Canada data.
 
 ### Household Income Data Structure
 The `household-income-canada.json` file contains:
@@ -173,15 +213,14 @@ The application includes an optional wage inflation adjustment for individual sa
 - `getDataFilename(age)`: Constructs filename (e.g., "income-canada-age-30-34")
 
 **Calculation Functions:**
-- `calculatePercentile(income, distribution)`: Linear interpolation between percentiles
+- `calculatePercentile(income, regionData)`: Linear interpolation between percentiles
 - `getIncomeBracket(percentile)`: Returns bracket label (Top 1%, Top 5%, etc.)
 - `calculateHouseholdQuintile(income, quintiles)`: Determines quintile using midpoints
 - `calculateHouseholdPercentile(income, quintiles)`: Interpolates percentile within quintile
 - `getHouseholdBracket(quintile)`: Returns quintile label
-- `applyInflationAdjustment(distribution)`: Applies wage inflation adjustment to all income values
 
 **Main Calculation Functions:**
-- `calculateIndividual()`: Handles individual salary comparison (with optional inflation adjustment)
+- `calculateIndividual()`: Handles individual salary comparison with province selection and optional inflation adjustment
 - `calculateHousehold()`: Handles household income comparison
 
 ## Important Design Decisions
@@ -344,15 +383,17 @@ vercel --prod
 
 1. **Individual data from 2020**: Most recent complete Census data available (Census 2021 reports 2020 income)
 2. **Household data from 2024**: Annual household survey data
-3. **Canada-wide only**: No provincial or city-level data currently
-4. **Employment income only (individual)**: Excludes investment income, pensions, transfers
-5. **Browser storage limits**: localStorage has ~5-10MB limit (we use ~50KB)
-6. **Requires JavaScript**: No fallback for JavaScript-disabled browsers
+3. **Provincial data incomplete**: Only Canada has complete individual salary data; provinces/territories use placeholder data pending real Statistics Canada data
+4. **Household data Canada-wide only**: No provincial breakdown for household income comparisons
+5. **Employment income only (individual)**: Excludes investment income, pensions, transfers
+6. **Browser storage limits**: localStorage has ~5-10MB limit (we use ~50KB)
+7. **Requires JavaScript**: No fallback for JavaScript-disabled browsers
 
 ## Future Enhancements
 
 Potential features to add:
-- **Provincial/city filters**: Add geographic segmentation
+- **Complete provincial data**: Populate real Statistics Canada provincial income data
+- **City-level filters**: Add city-level geographic segmentation
 - **After-tax calculator**: Show post-tax income comparisons
 - **Occupation filters**: Compare by job type
 - **Historical trends**: Compare 2015 vs 2020 vs 2025 census data
@@ -437,6 +478,6 @@ When asking Claude for help:
 
 ---
 
-**Last Updated**: November 29, 2025
-**Project Version**: 3.1 (Static Architecture + Inflation Adjustment)
+**Last Updated**: December 23, 2025
+**Project Version**: 4.0 (Provincial/Territorial Selection)
 **Architecture**: 100% Static (No Backend)

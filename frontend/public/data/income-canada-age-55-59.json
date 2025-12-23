@@ -1,24 +1,275 @@
 {
-  "geography": "Canada",
-  "geographyCode": "CA",
-  "geographyType": "country",
   "year": 2020,
   "demographic": "age-55-59",
   "demographicLabel": "Age 55-59",
   "demographicType": "age",
   "inflationAdjustment": 19.98,
-  "percentiles": {
-    "p10": 8700,
-    "p25": 27000,
-    "p50": 51600,
-    "p75": 84000,
-    "p90": 122000,
-    "p95": 158000,
-    "p96": 172000,
-    "p97": 192000,
-    "p98": 226000,
-    "p99": 304000
-  },
-  "median": 51600,
-  "average": 66200
+  "regions": {
+    "CA": {
+      "name": "Canada",
+      "code": "CA",
+      "type": "country",
+      "percentiles": {
+        "p10": 8700,
+        "p25": 27000,
+        "p50": 51600,
+        "p75": 84000,
+        "p90": 122000,
+        "p95": 158000,
+        "p96": 172000,
+        "p97": 192000,
+        "p98": 226000,
+        "p99": 304000
+      },
+      "median": 51600,
+      "average": 66200
+    },
+    "AB": {
+      "name": "Alberta",
+      "code": "AB",
+      "type": "province",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    },
+    "BC": {
+      "name": "British Columbia",
+      "code": "BC",
+      "type": "province",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    },
+    "MB": {
+      "name": "Manitoba",
+      "code": "MB",
+      "type": "province",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    },
+    "NB": {
+      "name": "New Brunswick",
+      "code": "NB",
+      "type": "province",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    },
+    "NL": {
+      "name": "Newfoundland and Labrador",
+      "code": "NL",
+      "type": "province",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    },
+    "NS": {
+      "name": "Nova Scotia",
+      "code": "NS",
+      "type": "province",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    },
+    "NT": {
+      "name": "Northwest Territories",
+      "code": "NT",
+      "type": "territory",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    },
+    "NU": {
+      "name": "Nunavut",
+      "code": "NU",
+      "type": "territory",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    },
+    "ON": {
+      "name": "Ontario",
+      "code": "ON",
+      "type": "province",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    },
+    "PE": {
+      "name": "Prince Edward Island",
+      "code": "PE",
+      "type": "province",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    },
+    "QC": {
+      "name": "Quebec",
+      "code": "QC",
+      "type": "province",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    },
+    "SK": {
+      "name": "Saskatchewan",
+      "code": "SK",
+      "type": "province",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    },
+    "YT": {
+      "name": "Yukon",
+      "code": "YT",
+      "type": "territory",
+      "percentiles": {
+        "p10": 0,
+        "p25": 0,
+        "p50": 0,
+        "p75": 0,
+        "p90": 0,
+        "p95": 0,
+        "p96": 0,
+        "p97": 0,
+        "p98": 0,
+        "p99": 0
+      },
+      "median": 0,
+      "average": 0
+    }
+  }
 }

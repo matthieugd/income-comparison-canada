@@ -6,7 +6,8 @@ Compare your employment income against other Canadians in your age group using S
 
 ## Features
 
-- 📊 **Individual Salary Comparison**: Compare by 11 age groups (15-19, 20-24, 25-29, etc.)
+- 📊 **Individual Salary Comparison**: Compare by 11 age groups (15-19, 20-24, 25-29, etc.) and 14 regions (Canada + provinces/territories)
+- 🗺️ **Provincial Selection**: Choose from Canada, 10 provinces, or 3 territories for individual comparisons
 - 🏠 **Household Income Comparison**: Compare household income by quintiles
 - 💰 **Wage Inflation Adjustment**: Optional adjustment to reflect average wage growth since 2020 (+19.98%)
 - 📈 Real-time percentile calculation using client-side processing
@@ -80,6 +81,17 @@ This application requires **no backend server**. All calculations happen in the 
 - **Variable**: Employment income (wages, salaries, commissions)
 - **Population**: Persons aged 15+ with employment income
 - **Age Groups**: 11 groups (15-19, 20-24, 25-29, 30-34, 35-39, 40-44, 45-49, 50-54, 55-59, 60-64, 65+)
+- **Geography**: Canada (national), 10 provinces (AB, BC, MB, NB, NL, NS, ON, PE, QC, SK), 3 territories (NT, NU, YT)
+- **Note**: Provincial data currently uses placeholder values; Canada data is complete
+
+### Regional Comparisons
+
+Individual salary comparisons support 14 regions:
+- **Canada (CA)**: National data (complete)
+- **10 Provinces**: Alberta, British Columbia, Manitoba, New Brunswick, Newfoundland and Labrador, Nova Scotia, Ontario, Prince Edward Island, Quebec, Saskatchewan
+- **3 Territories**: Northwest Territories, Nunavut, Yukon
+
+**Note**: Only Canada (CA) currently has complete income data. Provincial/territorial data uses placeholder values and will be updated with real Statistics Canada data in future releases.
 
 ### Household Income Data
 - **Source**: Statistics Canada, Household Income Survey (Table 36-10-0587-01)

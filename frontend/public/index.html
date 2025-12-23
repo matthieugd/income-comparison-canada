@@ -830,6 +830,27 @@
                                 step="1"
                             >
                         </div>
+                        <div class="input-field">
+                            <label for="province" data-i18n="province_label">Province/Territory</label>
+                            <select id="province">
+                                <option value="CA" data-i18n="region_CA">Canada</option>
+                                <option value="AB" data-i18n="region_AB">Alberta</option>
+                                <option value="BC" data-i18n="region_BC">British Columbia</option>
+                                <option value="MB" data-i18n="region_MB">Manitoba</option>
+                                <option value="NB" data-i18n="region_NB">New Brunswick</option>
+                                <option value="NL" data-i18n="region_NL">Newfoundland and Labrador</option>
+                                <option value="NS" data-i18n="region_NS">Nova Scotia</option>
+                                <option value="NT" data-i18n="region_NT">Northwest Territories</option>
+                                <option value="NU" data-i18n="region_NU">Nunavut</option>
+                                <option value="ON" data-i18n="region_ON">Ontario</option>
+                                <option value="PE" data-i18n="region_PE">Prince Edward Island</option>
+                                <option value="QC" data-i18n="region_QC">Quebec</option>
+                                <option value="SK" data-i18n="region_SK">Saskatchewan</option>
+                                <option value="YT" data-i18n="region_YT">Yukon</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 1rem;">
                         <button onclick="calculateIndividual()" data-i18n="compare_button">Compare</button>
                     </div>
                     <div class="inflation-toggle">
@@ -982,7 +1003,20 @@
 
         <div class="changelog" id="changelog">
             <h2 data-i18n="changelog_title">Change Log</h2>
-            <div class="changelog-entry">   
+            <div class="changelog-entry">
+                <div class="changelog-version">
+                    <span data-i18n="changelog_version_2">Version 2.0</span>
+                    <span class="changelog-date" data-i18n="changelog_date_2">December 23rd, 2025</span>
+                </div>
+                <ul class="changelog-items">
+                    <li data-i18n="changelog_2_item_1">Added provincial/territorial selection for individual salary comparisons</li>
+                    <li data-i18n="changelog_2_item_2">Compare your salary across Canada, 10 provinces, or 3 territories</li>
+                    <li data-i18n="changelog_2_item_3">New dropdown selector with 14 regions (Canada + all provinces/territories)</li>
+                    <li data-i18n="changelog_2_item_4">Restructured data format to support multi-region comparisons</li>
+                    <li data-i18n="changelog_2_item_5">Note: Provincial data currently uses placeholder values; Canada data is complete</li>
+                </ul>
+            </div>
+            <div class="changelog-entry">
                 <div class="changelog-version">
                     <span data-i18n="changelog_version_1_1">Version 1.1</span>
                     <span class="changelog-date" data-i18n="changelog_date_1_1">November, 29th 2025</span>
@@ -1043,6 +1077,21 @@
                     age_label: "Your age",
                     age_placeholder: "30",
                     compare_button: "Compare",
+                    province_label: "Province/Territory",
+                    region_CA: "Canada",
+                    region_AB: "Alberta",
+                    region_BC: "British Columbia",
+                    region_MB: "Manitoba",
+                    region_NB: "New Brunswick",
+                    region_NL: "Newfoundland and Labrador",
+                    region_NS: "Nova Scotia",
+                    region_NT: "Northwest Territories",
+                    region_NU: "Nunavut",
+                    region_ON: "Ontario",
+                    region_PE: "Prince Edward Island",
+                    region_QC: "Quebec",
+                    region_SK: "Saskatchewan",
+                    region_YT: "Yukon",
                     inflation_toggle_label: "Adjust for wage inflation since 2020",
                     legend_title: "📊 Income Distribution Percentiles",
                     household_legend_title: "📊 Household Income Quintiles",
@@ -1074,7 +1123,7 @@
                     chart_y_axis: "Percentage of Population (%)",
                     chart_tooltip_canadians: "of Canadians",
                     chart_tooltip_percentile: "Percentile range",
-                    result_message_main: "At age {{age}}, you earn more than {{percentile}}% of Canadians with employment income in your age group ({{ageGroup}}).",
+                    result_message_main: "In {{geography}}, at age {{age}}, you earn more than {{percentile}}% of Canadians with employment income in your age group ({{ageGroup}}).",
                     result_message_more: "You earn ${{diff}} ({{percentDiff}}%) <strong>more</strong> than the median income for your age group (${{median}}).",
                     result_message_less: "You earn ${{diff}} ({{percentDiff}}%) <strong>less</strong> than the median income for your age group (${{median}}).",
                     result_message_exact: "You earn exactly the median income for your age group (${{median}}).",
@@ -1122,6 +1171,13 @@
                     changelog_date_1_1: "November, 29th 2025",
                     changelog_version_1_1: "Version 1.1",
                     changelog_1_item_6: "Added support to adjust census data with the average wage inflation since 2020",
+                    changelog_version_2: "Version 2.0",
+                    changelog_date_2: "December 23rd, 2025",
+                    changelog_2_item_1: "Added provincial/territorial selection for individual salary comparisons",
+                    changelog_2_item_2: "Compare your salary across Canada, 10 provinces, or 3 territories",
+                    changelog_2_item_3: "New dropdown selector with 14 regions (Canada + all provinces/territories)",
+                    changelog_2_item_4: "Restructured data format to support multi-region comparisons",
+                    changelog_2_item_5: "Note: Provincial data currently uses placeholder values; Canada data is complete",
                     contribute_title: "🤝 Contribute",
                     contribute_message: "This is a personal project born of my personal interest in the economy. If you have suggestions to improve this website, please feel free to submit a change request on <a href=\"https://github.com/matthieugd/income-comparison-canada\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>.",
                     footer_author: "Created by <a href=\"https://matthieugd.com\" target=\"_blank\" rel=\"noopener noreferrer\">Matthieu Guyonnet-Duluc</a>.",
@@ -1141,6 +1197,21 @@
                     age_label: "Votre âge",
                     age_placeholder: "30",
                     compare_button: "Comparer",
+                    province_label: "Province/Territoire",
+                    region_CA: "Canada",
+                    region_AB: "Alberta",
+                    region_BC: "Colombie-Britannique",
+                    region_MB: "Manitoba",
+                    region_NB: "Nouveau-Brunswick",
+                    region_NL: "Terre-Neuve-et-Labrador",
+                    region_NS: "Nouvelle-Écosse",
+                    region_NT: "Territoires du Nord-Ouest",
+                    region_NU: "Nunavut",
+                    region_ON: "Ontario",
+                    region_PE: "Île-du-Prince-Édouard",
+                    region_QC: "Québec",
+                    region_SK: "Saskatchewan",
+                    region_YT: "Yukon",
                     inflation_toggle_label: "Ajuster pour l'inflation salariale depuis 2020",
                     legend_title: "📊 Percentiles de Distribution des Revenus",
                     household_legend_title: "📊 Quintiles de Revenu des Ménages",
@@ -1172,7 +1243,7 @@
                     chart_y_axis: "Pourcentages de la Population (%)",
                     chart_tooltip_canadians: "des Canadiens",
                     chart_tooltip_percentile: "Plage de percentile",
-                    result_message_main: "À {{age}} ans, vous gagnez plus que {{percentile}} % des Canadiens ayant un revenu d'emploi dans votre groupe d'âge ({{ageGroup}}).",
+                    result_message_main: "Au {{geography}}, à {{age}} ans, vous gagnez plus que {{percentile}} % des Canadiens ayant un revenu d'emploi dans votre groupe d'âge ({{ageGroup}}).",
                     result_message_more: "Vous gagnez {{diff}} $ ({{percentDiff}} %) de <strong>plus</strong> que le revenu médian pour votre groupe d'âge ({{median}} $).",
                     result_message_less: "Vous gagnez {{diff}} $ ({{percentDiff}} %) de <strong>moins</strong> que le revenu médian pour votre groupe d'âge ({{median}} $).",
                     result_message_exact: "Vous gagnez exactement le revenu médian pour votre groupe d'âge ({{median}} $).",
@@ -1220,6 +1291,13 @@
                     changelog_date_1_1: "29 Novembre 2025",
                     changelog_version_1_1: "Version 1.1",
                     changelog_1_item_6: "Ajout du support pour ajuster les données du recensement avec l'inflation salariale moyenne depuis 2020",
+                    changelog_version_2: "Version 2.0",
+                    changelog_date_2: "23 Décembre 2025",
+                    changelog_2_item_1: "Ajout de la sélection provinciale/territoriale pour les comparaisons de salaire individuel",
+                    changelog_2_item_2: "Comparez votre salaire à travers le Canada, 10 provinces ou 3 territoires",
+                    changelog_2_item_3: "Nouveau sélecteur déroulant avec 14 régions (Canada + toutes les provinces/territoires)",
+                    changelog_2_item_4: "Format de données restructuré pour supporter les comparaisons multi-régions",
+                    changelog_2_item_5: "Note : Les données provinciales utilisent actuellement des valeurs de remplacement; les données du Canada sont complètes",
                     contribute_title: "🤝 Contribuer",
                     contribute_message: "Ceci est un projet personnel né de mon intérêt personnel pour l'économie. Si vous avez des suggestions pour améliorer ce site web, n'hésitez pas à soumettre une demande de modification sur <a href=\"https://github.com/matthieugd/income-comparison-canada\" target=\"_blank\" rel=\"noopener noreferrer\">GitHub</a>.",
                     footer_author: "Créé par <a href=\"https://matthieugd.com\" target=\"_blank\" rel=\"noopener noreferrer\">Matthieu Guyonnet-Duluc</a>.",
@@ -1785,13 +1863,14 @@
             return bracketIndex - halfBarWidth + (positionInBracket * barWidth);
         }
 
-        function createChart(userIncome, percentiles) {
+        function createChart(regionData, userIncome, ageGroup, geography) {
             const ctx = document.getElementById('distributionChart').getContext('2d');
 
             if (chart) {
                 chart.destroy();
             }
 
+            const percentiles = regionData.percentiles;
             const brackets = generateDistributionData(percentiles);
 
             // Find which bracket the user falls into
@@ -1869,6 +1948,18 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
+                        title: {
+                            display: true,
+                            text: `${geography} - Income Distribution - Age ${ageGroup}`,
+                            font: {
+                                size: 16,
+                                weight: 'bold'
+                            },
+                            padding: {
+                                top: 10,
+                                bottom: 20
+                            }
+                        },
                         legend: {
                             display: false
                         },
@@ -2011,28 +2102,10 @@
                 i18next.t('household_quintile_middle', { q3_avg: q3_avg });
         }
 
-        // Helper function to apply inflation adjustment to distribution data
-        function applyInflationAdjustment(distribution) {
-            const inflationRate = distribution.inflationAdjustment / 100;
-            const adjustedDistribution = JSON.parse(JSON.stringify(distribution)); // Deep copy
-
-            // Adjust all percentile values
-            Object.keys(adjustedDistribution.percentiles).forEach(key => {
-                adjustedDistribution.percentiles[key] = Math.round(
-                    adjustedDistribution.percentiles[key] * (1 + inflationRate)
-                );
-            });
-
-            // Adjust median and average
-            adjustedDistribution.median = Math.round(adjustedDistribution.median * (1 + inflationRate));
-            adjustedDistribution.average = Math.round(adjustedDistribution.average * (1 + inflationRate));
-
-            return adjustedDistribution;
-        }
-
         async function calculateIndividual() {
             const income = parseFloat(document.getElementById('income').value);
             const age = parseInt(document.getElementById('age').value);
+            const province = document.getElementById('province').value;
 
             if (isNaN(income) || income < 0) {
                 alert(i18next.t('error_invalid_income'));
@@ -2050,30 +2123,51 @@
 
                 // Fetch distribution data from local JSON
                 const filename = getDataFilename(age);
-                let distribution = await dataCache.getData(filename);
+                const distribution = await dataCache.getData(filename);
 
                 if (!distribution) {
                     throw new Error(`No data found for age group: ${age}`);
                 }
 
+                // Extract region-specific data
+                const regionData = distribution.regions[province];
+
+                if (!regionData) {
+                    throw new Error(`No data found for region: ${province}`);
+                }
+
                 // Apply inflation adjustment if the toggle is enabled
                 const inflationEnabled = document.getElementById('inflation-adjustment').getAttribute('aria-checked') === 'true';
+                let adjustedRegionData = regionData;
+
                 if (inflationEnabled && distribution.inflationAdjustment) {
-                    distribution = applyInflationAdjustment(distribution);
+                    const inflationRate = distribution.inflationAdjustment / 100;
+                    adjustedRegionData = JSON.parse(JSON.stringify(regionData)); // Deep copy
+
+                    // Adjust percentiles
+                    Object.keys(adjustedRegionData.percentiles).forEach(key => {
+                        adjustedRegionData.percentiles[key] = Math.round(
+                            adjustedRegionData.percentiles[key] * (1 + inflationRate)
+                        );
+                    });
+
+                    // Adjust median and average
+                    adjustedRegionData.median = Math.round(adjustedRegionData.median * (1 + inflationRate));
+                    adjustedRegionData.average = Math.round(adjustedRegionData.average * (1 + inflationRate));
                 }
 
                 // Calculate percentile using client-side function
-                const percentile = calculatePercentile(income, distribution);
+                const percentile = calculatePercentile(income, adjustedRegionData);
                 const belowYou = Math.floor(percentile);
                 const bracket = getIncomeBracket(percentile);
 
                 // Calculate comparison to median
-                const median = distribution.median;
+                const median = adjustedRegionData.median;
                 const diffFromMedian = income - median;
                 const percentDiffFromMedian = ((diffFromMedian / median) * 100).toFixed(1);
 
                 // Calculate comparison to average
-                const average = distribution.average;
+                const average = adjustedRegionData.average;
                 const diffFromAverage = income - average;
                 const percentDiffFromAverage = ((diffFromAverage / average) * 100).toFixed(1);
 
@@ -2082,7 +2176,8 @@
                     income,
                     age,
                     ageGroup: getAgeGroupLabel(age),
-                    geography: distribution.geography,
+                    geography: regionData.name,
+                    geographyCode: regionData.code,
                     demographic: distribution.demographicLabel,
                     year: distribution.year,
                     percentile: percentile,
@@ -2102,6 +2197,7 @@
 
                 // Generate message using data with translations
                 let message = `<p><strong>${i18next.t('result_message_main', {
+                    geography: data.geography,
                     age: age,
                     percentile: data.percentile.toFixed(1),
                     ageGroup: data.ageGroup
@@ -2136,6 +2232,7 @@
                 const url = new URL(window.location.href);
                 url.searchParams.set('income', income);
                 url.searchParams.set('age', age);
+                url.searchParams.set('province', province);
                 if (inflationEnabled) {
                     url.searchParams.set('inflation', 'true');
                 } else {
@@ -2146,9 +2243,9 @@
                 // Show results and message box
                 document.getElementById('message').style.display = 'block';
                 document.getElementById('results').classList.add('show');
-                updateLegend(distribution.percentiles);
-                updatePercentileExamples(distribution.percentiles);
-                createChart(income, distribution.percentiles);
+                updateLegend(adjustedRegionData.percentiles);
+                updatePercentileExamples(adjustedRegionData.percentiles);
+                createChart(adjustedRegionData, income, data.ageGroup, data.geography);
 
                 // Scroll to results
                 document.getElementById('results').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
@@ -2478,6 +2575,7 @@
             const mode = urlParams.get('mode');
             const income = urlParams.get('income');
             const age = urlParams.get('age');
+            const province = urlParams.get('province');
             const householdIncome = urlParams.get('household-income');
             const inflation = urlParams.get('inflation');
 
@@ -2496,6 +2594,12 @@
                 if (income && age) {
                     document.getElementById('income').value = income;
                     document.getElementById('age').value = age;
+                    // Set province dropdown value (default to Canada if not specified)
+                    if (province) {
+                        document.getElementById('province').value = province;
+                    } else {
+                        document.getElementById('province').value = 'CA';
+                    }
                     // Set inflation adjustment toggle state
                     if (inflation === 'true') {
                         document.getElementById('inflation-adjustment').setAttribute('aria-checked', 'true');
