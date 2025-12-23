@@ -2,7 +2,7 @@
 
 Compare your employment income against other Canadians in your age group using Statistics Canada Census 2021 data.
 
-**Live Demo**: [https://your-deployment-url.com](https://your-deployment-url.com)
+**Live Demo**: [https://compareyoursalary.ca/](https://compareyoursalary.ca/)
 
 ## Features
 
