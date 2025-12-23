@@ -1128,6 +1128,13 @@
                     result_message_less: "You earn ${{diff}} ({{percentDiff}}%) <strong>less</strong> than the median income for your age group (${{median}}).",
                     result_message_exact: "You earn exactly the median income for your age group (${{median}}).",
                     result_message_bracket: "Income bracket: <strong>{{bracket}}</strong>",
+                    bracket_top1: "Top 1%",
+                    bracket_top5: "Top 5%",
+                    bracket_top10: "Top 10%",
+                    bracket_top25: "Top 25%",
+                    bracket_above_median: "Above Median",
+                    bracket_below_median: "Below Median",
+                    bracket_bottom25: "Bottom 25%",
                     error_invalid_income: "Please enter a valid income amount",
                     error_invalid_age: "Please enter a valid age (15-100)",
                     error_api_connection: "Error connecting to the backend API. Please make sure the server is running.",
@@ -1243,11 +1250,18 @@
                     chart_y_axis: "Pourcentages de la Population (%)",
                     chart_tooltip_canadians: "des Canadiens",
                     chart_tooltip_percentile: "Plage de percentile",
-                    result_message_main: "Au {{geography}}, à {{age}} ans, vous gagnez plus que {{percentile}} % des Canadiens ayant un revenu d'emploi dans votre groupe d'âge ({{ageGroup}}).",
+                    result_message_main: "Dans la province ou territoire {{geography}}, à {{age}} ans, vous gagnez plus que {{percentile}} % des Canadiens ayant un revenu d'emploi dans votre groupe d'âge ({{ageGroup}}).",
                     result_message_more: "Vous gagnez {{diff}} $ ({{percentDiff}} %) de <strong>plus</strong> que le revenu médian pour votre groupe d'âge ({{median}} $).",
                     result_message_less: "Vous gagnez {{diff}} $ ({{percentDiff}} %) de <strong>moins</strong> que le revenu médian pour votre groupe d'âge ({{median}} $).",
                     result_message_exact: "Vous gagnez exactement le revenu médian pour votre groupe d'âge ({{median}} $).",
                     result_message_bracket: "Tranche de revenu : <strong>{{bracket}}</strong>",
+                    bracket_top1: "Top 1 %",
+                    bracket_top5: "Top 5 %",
+                    bracket_top10: "Top 10 %",
+                    bracket_top25: "Top 25 %",
+                    bracket_above_median: "Au-dessus de la médiane",
+                    bracket_below_median: "En-dessous de la médiane",
+                    bracket_bottom25: "Bottom 25 %",
                     error_invalid_income: "Veuillez entrer un montant de revenu valide",
                     error_invalid_age: "Veuillez entrer un âge valide (15-100)",
                     error_api_connection: "Erreur de connexion à l'API backend. Veuillez vous assurer que le serveur fonctionne.",
@@ -1498,13 +1512,13 @@
         }
 
         function getIncomeBracket(percentile) {
-            if (percentile >= 99) return 'Top 1%';
-            if (percentile >= 95) return 'Top 5%';
-            if (percentile >= 90) return 'Top 10%';
-            if (percentile >= 75) return 'Top 25%';
-            if (percentile >= 50) return 'Above Median';
-            if (percentile >= 25) return 'Below Median';
-            return 'Bottom 25%';
+            if (percentile >= 99) return i18next.t('bracket_top1');
+            if (percentile >= 95) return i18next.t('bracket_top5');
+            if (percentile >= 90) return i18next.t('bracket_top10');
+            if (percentile >= 75) return i18next.t('bracket_top25');
+            if (percentile >= 50) return i18next.t('bracket_above_median');
+            if (percentile >= 25) return i18next.t('bracket_below_median');
+            return i18next.t('bracket_bottom25');
         }
 
         function calculateHouseholdQuintile(income, quintiles) {
